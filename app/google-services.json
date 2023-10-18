@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "692133800678",
+    "firebase_url": "https://dansk-flashcards-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "dansk-flashcards",
+    "storage_bucket": "dansk-flashcards.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:692133800678:android:b7d64c00075c75a24a6927",
+        "android_client_info": {
+          "package_name": "com.antsfamily.danskflashcards"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "692133800678-0gjt5vk15m36hf87rbfqm72pssv1meaq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPG1g91DIB6sE3FiZBiYIM7VGwsStiSuk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "692133800678-0gjt5vk15m36hf87rbfqm72pssv1meaq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
