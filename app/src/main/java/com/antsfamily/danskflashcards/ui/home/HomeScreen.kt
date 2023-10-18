@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
@@ -25,6 +26,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.antsfamily.danskflashcards.data.Word
+import com.antsfamily.danskflashcards.data.Words
 
 @Composable
 fun HomeScreen(
@@ -41,7 +44,7 @@ fun HomeScreen(
 }
 
 @Composable
-fun HomeScreenPostsContent(content: List<String>) {
+fun HomeScreenPostsContent(content: List<Word>) {
     Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)) {
         Text(text = "Matching game", fontSize = 20.sp)
         Text(
@@ -65,11 +68,11 @@ fun HomeScreenPostsContent(content: List<String>) {
 }
 
 @Composable
-fun GridWithCards(items: List<String>) {
+fun GridWithCards(words: List<Word>) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         content = {
-            items(items.take(8)) { item ->
+            itemsIndexed(words.take(8)) { index, item ->
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -84,7 +87,7 @@ fun GridWithCards(items: List<String>) {
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = item,
+                            text = if (index / 2 == 0) item.danish else item.english,
                             fontSize = 20.sp,
                             color = Color.White
                         )
@@ -120,18 +123,17 @@ fun HomeScreenLoadingPreview() {
 fun HomeScreenContentPreview() {
     HomeScreenPostsContent(
         listOf(
-            "test",
-            "test",
-            "test",
-            "test",
-            "test",
-            "test",
-            "test",
-            "test",
-            "test",
-            "test",
-            "test",
-            "test"
+            Word(danish = "kolonne", english = "column", id = 986, russian = "колонка"),
+            Word(danish = "molekyle", english = "molecule", id = 987, russian = "молекула"),
+            Word(danish = "Vælg", english = "select", id = 988, russian = "выбирать"),
+            Word(danish = "forkert", english = "wrong", id = 989, russian = "неправильно"),
+            Word(danish = "grå", english = "gray", id = 990, russian = "серый"),
+            Word(danish = "gentagelse", english = "repeat", id = 991, russian = "повторение"),
+            Word(danish = "kræver", english = "require", id = 992, russian = "требовать"),
+            Word(danish = "bred", english = "broad", id = 993, russian = "широкий"),
+            Word(danish = "forberede", english = "prepare", id = 994, russian = "подготовить"),
+            Word(danish = "salt", english = "salt", id = 995, russian = "соль"),
+            Word(danish = "næse", english = "nose", id = 996, russian = "нос"),
         )
     )
 }
