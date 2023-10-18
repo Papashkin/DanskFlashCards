@@ -1,7 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'com.google.devtools.ksp'
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
 }
 
 android {
@@ -19,6 +20,7 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+        compileSdkPreview = "UpsideDownCake"
     }
 
     buildTypes {
@@ -38,7 +40,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.4.6'
+        kotlinCompilerExtensionVersion '1.5.0'
     }
     packagingOptions {
         resources {
@@ -48,23 +50,18 @@ android {
 }
 
 dependencies {
-
-    implementation 'androidx.core:core-ktx:1.10.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
-    implementation 'androidx.activity:activity-compose:1.7.1'
-    implementation 'androidx.compose.ui:ui:1.4.2'
-    implementation 'androidx.compose.material3:material3:1.0.1'
-    implementation 'androidx.compose.ui:ui-graphics:1.4.2'
-    implementation 'androidx.compose.ui:ui-tooling-preview:1.4.2'
-
-    implementation 'io.github.raamcosta.compose-destinations:core:1.8.41-beta'
-    implementation 'androidx.core:core-ktx:+'
-    ksp 'io.github.raamcosta.compose-destinations:ksp:1.8.41-beta'
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.2'
+    implementation 'androidx.activity:activity-compose:1.8.0'
+    implementation 'androidx.compose.ui:ui:1.5.0'
+    implementation 'androidx.compose.material3:material3:1.1.2'
+    implementation 'androidx.compose.ui:ui-graphics:1.5.0'
+    implementation 'androidx.compose.ui:ui-tooling-preview:1.5.0'
 
     // DI
-    implementation 'com.google.dagger:hilt-android:2.39.1'
-    ksp 'com.google.dagger:hilt-android-compiler:2.39.1'
-    implementation "androidx.hilt:hilt-navigation-fragment:1.0.0"
+    implementation 'com.google.dagger:hilt-android:2.44'
+    implementation "androidx.hilt:hilt-navigation-compose:1.1.0-beta01"
+    kapt 'com.google.dagger:hilt-android-compiler:2.44'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
