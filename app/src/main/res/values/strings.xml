@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">DanskFlashCards</string>
+    <string name="home_title">Matching game</string>
+    <string name="home_description">Find pairs as fast as possible</string>
 </resources>
