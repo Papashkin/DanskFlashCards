@@ -1,9 +1,9 @@
 package com.antsfamily.danskflashcards.ui.home
 
-import com.antsfamily.danskflashcards.data.Word
+import com.antsfamily.danskflashcards.data.WordModel
 
 sealed class HomeUiState {
-    object Loading: HomeUiState()
-    data class Content(val content: List<Word>): HomeUiState()
+    data object Loading: HomeUiState()
+    data class Content(val danish: List<WordModel>, val english: List<WordModel>): HomeUiState()
     data class Error(val errorMessage: String): HomeUiState()
 }
