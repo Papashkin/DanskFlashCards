@@ -13,8 +13,11 @@ import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -43,8 +46,27 @@ class HomeViewModel @Inject constructor(
     val state: StateFlow<HomeUiState>
         get() = _state.asStateFlow()
 
+    private val _showSnackbarEvent = MutableSharedFlow<String>()
+    val showSnackbarEvent: SharedFlow<String> = _showSnackbarEvent.asSharedFlow()
+
     init {
         getData()
+    }
+
+    fun onWordCardClick(word: WordModel, isDanish: Boolean) = viewModelScope.launch {
+        (_state.value as? HomeUiState.Content)?.let { content ->
+            _state.update { _ ->
+                content.copy(
+                    danish = if (!isDanish) content.danish else content.danish.map { danishWord ->
+                        danishWord.copy(isSelected = danishWord.id == word.id)
+                    },
+                    english = if (isDanish) content.english else content.english.map { englishWord ->
+                        englishWord.copy(isSelected = englishWord.id == word.id)
+                    },
+                )
+            }
+        }
+        checkGuessedPairs()
     }
 
     private fun getData() = viewModelScope.launch {
@@ -56,8 +78,8 @@ class HomeViewModel @Inject constructor(
 
             _state.update {
                 HomeUiState.Content(
-                    danish = danishWords.take(5),
-                    english = englishWords.take(5),
+                    danish = danishWords.takeWhile { !it.isGuessed }.take(5),
+                    english = englishWords.takeWhile { !it.isGuessed }.take(5),
                 )
             }
         } catch (e: Exception) {
@@ -83,6 +105,35 @@ class HomeViewModel @Inject constructor(
             }
         } catch (e: Exception) {
             it.resumeWithException(e)
+        }
+    }
+
+    private suspend fun checkGuessedPairs() {
+        (_state.value as? HomeUiState.Content)?.let { content ->
+            _state.update { _ ->
+                content.copy(
+                    danish = content.danish.map { word ->
+                        if (word.isGuessed) {
+                            word
+                        } else {
+                            word.copy(
+                                isGuessed = word.isSelected && (content.english.firstOrNull { it.id == word.id }?.isSelected
+                                    ?: false)
+                            )
+                        }
+                    },
+                    english = content.english.map { word ->
+                        if (word.isGuessed) {
+                            word
+                        } else {
+                            word.copy(
+                                isGuessed = word.isSelected && (content.danish.firstOrNull { it.id == word.id }?.isSelected
+                                    ?: false)
+                            )
+                        }
+                    },
+                )
+            }
         }
     }
 }
