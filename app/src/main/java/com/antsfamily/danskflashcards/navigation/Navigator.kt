@@ -24,7 +24,7 @@ fun Navigator() {
                 startDestination = Screen.Home.route
             ) {
                 composable(Screen.Home.route) {
-                    HomeScreen()
+                    HomeScreen(snackbarHostState)
                 }
             }
         }

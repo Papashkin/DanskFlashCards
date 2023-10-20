@@ -24,7 +24,8 @@ data class Word(
             return WordModel(
                 id = this!!.id,
                 value = if (isDanish) this.danish else this.english,
-                guessed = false,
+                isSelected = false,
+                isGuessed = false,
             )
         }
     }
