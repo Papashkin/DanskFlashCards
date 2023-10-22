@@ -16,14 +16,9 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,26 +34,18 @@ import com.antsfamily.danskflashcards.ui.theme.FontSize
 import com.antsfamily.danskflashcards.ui.theme.Padding
 
 @Composable
-fun HomeScreen(
-    snackbarHostState: SnackbarHostState,
-    viewModel: HomeViewModel = hiltViewModel()
-) {
+fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
     val state = viewModel.state.collectAsState()
     when (val stateValue = state.value) {
         HomeUiState.Loading -> FullScreenLoading()
         is HomeUiState.Content -> HomeScreenPostsContent(
-            stateValue.danish,
-            stateValue.english
-        ) { word, isDanish -> viewModel.onWordCardClick(word, isDanish) }
-
+            danish = stateValue.danish,
+            english = stateValue.english,
+            onDanishWordClick = { viewModel.onDanishWordCardClick(it) },
+            onEnglishWordClick = { viewModel.onEnglishWordCardClick(it) },
+        )
         is HomeUiState.Error -> {
             //TODO add error handler
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.showSnackbarEvent.collect {
-            snackbarHostState.showSnackbar(it, duration = SnackbarDuration.Short)
         }
     }
 }
@@ -67,7 +54,8 @@ fun HomeScreen(
 fun HomeScreenPostsContent(
     danish: List<WordModel>,
     english: List<WordModel>,
-    onClick: (WordModel, Boolean) -> Unit
+    onDanishWordClick: (WordModel) -> Unit,
+    onEnglishWordClick: (WordModel) -> Unit,
 ) {
     Column(modifier = Modifier.padding(horizontal = Padding.xLarge, vertical = Padding.medium)) {
         Text(
@@ -98,18 +86,14 @@ fun HomeScreenPostsContent(
                         .weight(1f)
                         .padding(end = Padding.small)
                 ) {
-                    GridWithCards(danish) {
-                        onClick(it, true)
-                    }
+                    GridWithCards(danish) { onDanishWordClick(it) }
                 }
                 Column(
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = Padding.small)
                 ) {
-                    GridWithCards(english) {
-                        onClick(it, false)
-                    }
+                    GridWithCards(english) { onEnglishWordClick(it) }
                 }
             }
         }
@@ -188,8 +172,8 @@ fun HomeScreenContentPreview() {
             WordModel(value = "select", id = 993, isGuessed = false, isSelected = false),
             WordModel(value = "wrong", id = 994, isGuessed = false, isSelected = true),
             WordModel(value = "gray", id = 996, isGuessed = false, isSelected = false),
-        )
-    ) { _, _ ->
-        /* no-op */
-    }
+        ),
+        {},
+        {}
+    )
 }

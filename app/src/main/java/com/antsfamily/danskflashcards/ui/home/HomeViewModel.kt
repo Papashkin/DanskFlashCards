@@ -5,40 +5,19 @@ import androidx.lifecycle.viewModelScope
 import com.antsfamily.danskflashcards.data.Word
 import com.antsfamily.danskflashcards.data.Word.Companion.mapToModel
 import com.antsfamily.danskflashcards.data.WordModel
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.getValue
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.antsfamily.danskflashcards.domain.FetchDataUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    private val fetchDataUseCase: FetchDataUseCase,
 ) : ViewModel() {
-
-    companion object {
-        private const val FIREBASE_DB_CHILD_PATH = "words"
-    }
-
-    private var databaseRef: DatabaseReference = FirebaseDatabase.getInstance().reference
-
-    private val gson: Gson by lazy {
-        Gson()
-    }
 
     private var words = emptyList<Word?>()
 
@@ -46,32 +25,65 @@ class HomeViewModel @Inject constructor(
     val state: StateFlow<HomeUiState>
         get() = _state.asStateFlow()
 
-    private val _showSnackbarEvent = MutableSharedFlow<String>()
-    val showSnackbarEvent: SharedFlow<String> = _showSnackbarEvent.asSharedFlow()
-
     init {
         getData()
     }
 
-    fun onWordCardClick(word: WordModel, isDanish: Boolean) = viewModelScope.launch {
-        (_state.value as? HomeUiState.Content)?.let { content ->
-            _state.update { _ ->
+    fun onDanishWordCardClick(word: WordModel) = viewModelScope.launch {
+        if (word.isGuessed) return@launch
+
+        if (!word.isSelected) {
+            invalidateDanishWordSelection(word.id)
+            val englishWord = getEnglishSelectedWord()
+            when {
+                (englishWord == null) -> {
+                    markDanishWordSelected(word.id)
+                }
+            }
+        }
+    }
+
+    fun onEnglishWordCardClick(word: WordModel) = viewModelScope.launch {
+        if (word.isGuessed) return@launch
+
+        if (!word.isSelected) {
+            invalidateEnglishWordSelection(word.id)
+            val danishWord = getDanishSelectedWord()
+            when {
+                (danishWord == null) -> {
+                    markEnglishWordSelected(word.id)
+                }
+            }
+        }
+    }
+
+    private fun markDanishWordSelected(id: Int) {
+        getContentOrNull()?.let { content ->
+            _state.update {
                 content.copy(
-                    danish = if (!isDanish) content.danish else content.danish.map { danishWord ->
-                        danishWord.copy(isSelected = danishWord.id == word.id)
-                    },
-                    english = if (isDanish) content.english else content.english.map { englishWord ->
-                        englishWord.copy(isSelected = englishWord.id == word.id)
-                    },
+                    danish = content.danish.map {
+                        if (it.id == id) it.copy(isSelected = true) else it
+                    }
                 )
             }
         }
-        checkGuessedPairs()
+    }
+
+    private fun markEnglishWordSelected(id: Int) {
+        getContentOrNull()?.let { content ->
+            _state.update {
+                content.copy(
+                    english = content.english.map {
+                        if (it.id == id) it.copy(isSelected = true) else it
+                    }
+                )
+            }
+        }
     }
 
     private fun getData() = viewModelScope.launch {
         try {
-            words = async(Dispatchers.IO) { fetchWords() }.await()
+            words = fetchDataUseCase.run(Unit)
 
             val danishWords = words.mapNotNull { it.mapToModel(true) }
             val englishWords = words.mapNotNull { it.mapToModel(false) }
@@ -87,51 +99,40 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchWords(): List<Word?> = suspendCancellableCoroutine {
-        try {
-            databaseRef.child(FIREBASE_DB_CHILD_PATH).get().addOnSuccessListener { snapshot ->
-                val words = if (snapshot.exists()) {
-                    val snapshotValue =
-                        snapshot.getValue<ArrayList<HashMap<String, Object>>>().orEmpty()
-                    val jsonData = gson.toJson(snapshotValue)
-                    val listType = object : TypeToken<List<Word>>() {}.type
-                    Gson().fromJson<List<Word?>>(jsonData, listType)
-                } else {
-                    emptyList()
-                }
-                it.resume(words)
-            }.addOnFailureListener { exception ->
-                it.resumeWithException(exception)
+    private fun getContentOrNull() = (_state.value as? HomeUiState.Content)
+
+    private fun getEnglishSelectedWord(): WordModel? =
+        getContentOrNull()?.english?.firstOrNull { it.isSelected }
+
+    private fun getDanishSelectedWord(): WordModel? =
+        getContentOrNull()?.danish?.firstOrNull { it.isSelected }
+
+    private fun invalidateDanishWordSelection(id: Int) {
+        getContentOrNull()?.let { content ->
+            _state.update {
+                content.copy(
+                    danish = content.danish.map { it.copy(isSelected = it.id == id) }
+                )
             }
-        } catch (e: Exception) {
-            it.resumeWithException(e)
         }
     }
 
-    private suspend fun checkGuessedPairs() {
-        (_state.value as? HomeUiState.Content)?.let { content ->
-            _state.update { _ ->
+    private fun invalidateEnglishWordSelection(id: Int) {
+        getContentOrNull()?.let { content ->
+            _state.update {
                 content.copy(
-                    danish = content.danish.map { word ->
-                        if (word.isGuessed) {
-                            word
-                        } else {
-                            word.copy(
-                                isGuessed = word.isSelected && (content.english.firstOrNull { it.id == word.id }?.isSelected
-                                    ?: false)
-                            )
-                        }
-                    },
-                    english = content.english.map { word ->
-                        if (word.isGuessed) {
-                            word
-                        } else {
-                            word.copy(
-                                isGuessed = word.isSelected && (content.danish.firstOrNull { it.id == word.id }?.isSelected
-                                    ?: false)
-                            )
-                        }
-                    },
+                    english = content.english.map { it.copy(isSelected = it.id == id) }
+                )
+            }
+        }
+    }
+
+    private fun unselectAllWords() {
+        getContentOrNull()?.let { content ->
+            _state.update {
+                content.copy(
+                    danish = content.danish.map { it.copy(isSelected = false) },
+                    english = content.english.map { it.copy(isSelected = false) }
                 )
             }
         }
