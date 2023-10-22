@@ -5,4 +5,5 @@ data class WordModel(
     val value: String,
     val isSelected: Boolean,
     val isGuessed: Boolean,
+    val isWrong: Boolean,
 )

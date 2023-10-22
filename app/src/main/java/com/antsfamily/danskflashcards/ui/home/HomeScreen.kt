@@ -15,7 +15,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -101,48 +100,50 @@ fun HomeScreenPostsContent(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GridWithCards(
-    words: List<WordModel>,
-    onClick: (WordModel) -> Unit,
-) {
+fun GridWithCards(words: List<WordModel>, onClick: (WordModel) -> Unit) {
     LazyColumn {
         items(words.size) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable(enabled = !words[it].isGuessed) {
-                        onClick.invoke(words[it])
-                    }
-                    .border(
-                        2.dp,
-                        when {
-                            words[it].isSelected && !words[it].isGuessed -> Color.DarkGray
-                            words[it].isGuessed -> Color.Green
-                            else -> Color.LightGray
-                        },
-                        RoundedCornerShape(Padding.medium)
-                    ),
-            ) {
-                Box(
-                    modifier = Modifier.padding(vertical = Padding.medium)
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .padding(vertical = Padding.xLarge)
-                            .fillMaxWidth(),
-                        text = words[it].value,
-                        fontSize = FontSize.H6,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.height(Padding.large))
+            WordCard(words[it], onClick)
         }
     }
+}
+
+@Composable
+fun WordCard(word: WordModel, onClick: (WordModel) -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(enabled = !word.isGuessed) {
+                onClick(word)
+            }
+            .border(
+                2.dp,
+                when {
+                    word.isSelected && !word.isGuessed -> Color.DarkGray
+                    word.isGuessed -> Color.Green
+                    word.isWrong -> Color.Red
+                    else -> Color.LightGray
+                },
+                RoundedCornerShape(Padding.medium)
+            ),
+    ) {
+        Box(
+            modifier = Modifier.padding(vertical = Padding.medium)
+        ) {
+            Text(
+                modifier = Modifier
+                    .padding(vertical = Padding.xLarge)
+                    .fillMaxWidth(),
+                text = word.value,
+                fontSize = FontSize.H6,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+    Spacer(modifier = Modifier.height(Padding.large))
 }
 
 @Composable
@@ -163,18 +164,18 @@ fun FullScreenLoading() {
 fun HomeScreenContentPreview() {
     HomeScreenPostsContent(
         listOf(
-            WordModel(value = "kolonne", id = 986, isGuessed = false, isSelected = false),
-            WordModel(value = "molekyle", id = 987, isGuessed = false, isSelected = true),
-            WordModel(value = "vælg", id = 988, isGuessed = true, isSelected = true),
-            WordModel(value = "forkert", id = 989, isGuessed = false, isSelected = false),
-            WordModel(value = "grå", id = 990, isGuessed = false, isSelected = false),
+            WordModel(value = "kolonne", id = 986, isGuessed = false, isSelected = false, isWrong = false),
+            WordModel(value = "molekyle", id = 987, isGuessed = false, isSelected = true, isWrong = false),
+            WordModel(value = "vælg", id = 988, isGuessed = true, isSelected = true, isWrong = false),
+            WordModel(value = "forkert", id = 989, isGuessed = false, isSelected = false, isWrong = false),
+            WordModel(value = "grå", id = 990, isGuessed = false, isSelected = false, isWrong = true),
         ),
         listOf(
-            WordModel(value = "column", id = 991, isGuessed = false, isSelected = true),
-            WordModel(value = "molecule", id = 992, isGuessed = true, isSelected = false),
-            WordModel(value = "select", id = 993, isGuessed = false, isSelected = false),
-            WordModel(value = "wrong", id = 994, isGuessed = false, isSelected = true),
-            WordModel(value = "gray", id = 996, isGuessed = false, isSelected = false),
+            WordModel(value = "column", id = 991, isGuessed = false, isSelected = true, isWrong = false),
+            WordModel(value = "molecule", id = 992, isGuessed = true, isSelected = false, isWrong = false),
+            WordModel(value = "select", id = 993, isGuessed = false, isSelected = false, isWrong = false),
+            WordModel(value = "wrong", id = 994, isGuessed = false, isSelected = true, isWrong = false),
+            WordModel(value = "gray", id = 996, isGuessed = false, isSelected = false, isWrong = false),
         ),
         {},
         {}
