@@ -1,6 +1,7 @@
 package com.antsfamily.danskflashcards.ui.home
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -111,6 +112,9 @@ fun GridWithCards(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .clickable(enabled = !words[it].isGuessed) {
+                        onClick.invoke(words[it])
+                    }
                     .border(
                         2.dp,
                         when {
@@ -120,7 +124,6 @@ fun GridWithCards(
                         },
                         RoundedCornerShape(Padding.medium)
                     ),
-                onClick = { onClick.invoke(words[it]) }
             ) {
                 Box(
                     modifier = Modifier.padding(vertical = Padding.medium)
