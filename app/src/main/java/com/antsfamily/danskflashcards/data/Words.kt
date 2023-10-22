@@ -1,6 +1,5 @@
 package com.antsfamily.danskflashcards.data
 
-import android.util.Log
 import com.google.gson.annotations.SerializedName
 
 data class Words(val words: List<Word>)
@@ -17,15 +16,15 @@ data class Word(
 ) {
 
     companion object {
-        fun Word?.mapToModel(isDanish: Boolean): WordModel {
-            if ((this == null) || (this.id == null) || (this.danish == null) || (this.english == null)) {
-                Log.wtf(Word::class.java.simpleName, "Break!")
-            }
+        fun Word?.mapToModel(isDanish: Boolean): WordModel? {
+            if (this == null) return null
+
             return WordModel(
-                id = this!!.id,
+                id = this.id,
                 value = if (isDanish) this.danish else this.english,
                 isSelected = false,
                 isGuessed = false,
+                isWrong = false,
             )
         }
     }

@@ -7,10 +7,10 @@ import com.antsfamily.danskflashcards.data.Word.Companion.mapToModel
 import com.antsfamily.danskflashcards.data.WordModel
 import com.antsfamily.danskflashcards.domain.FetchDataUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,7 +38,7 @@ class HomeViewModel @Inject constructor(
                 if (englishWord.id == word.id) {
                     markWordsAsGuessed(word.id)
                 } else {
-                    unselectAllWords()
+                    markWordsAsWrong(danishWordId = word.id, englishWordId = englishWord.id, duration = 200)
                 }
             } ?: run {
                 markDanishWordSelected(word.id)
@@ -55,7 +55,7 @@ class HomeViewModel @Inject constructor(
                 if (danishWord.id == word.id) {
                     markWordsAsGuessed(word.id)
                 } else {
-                    unselectAllWords()
+                    markWordsAsWrong(danishWordId = danishWord.id, englishWordId = word.id, duration = 200)
                 }
             } ?: run {
                 markEnglishWordSelected(word.id)
@@ -65,25 +65,19 @@ class HomeViewModel @Inject constructor(
 
     private fun markDanishWordSelected(id: Int) {
         getContentOrNull()?.let { content ->
-            _state.update {
-                content.copy(
-                    danish = content.danish.map {
-                        if (it.id == id) it.copy(isSelected = true) else it
-                    }
-                )
-            }
+            _state.value = content.copy(
+                danish = content.danish.map { if (it.id == id) it.copy(isSelected = true) else it }
+            )
         }
     }
 
     private fun markEnglishWordSelected(id: Int) {
         getContentOrNull()?.let { content ->
-            _state.update {
-                content.copy(
-                    english = content.english.map {
-                        if (it.id == id) it.copy(isSelected = true) else it
-                    }
-                )
-            }
+            _state.value = content.copy(
+                english = content.english.map {
+                    if (it.id == id) it.copy(isSelected = true) else it
+                }
+            )
         }
     }
 
@@ -94,14 +88,12 @@ class HomeViewModel @Inject constructor(
             val danishWords = words.mapNotNull { it.mapToModel(true) }
             val englishWords = words.mapNotNull { it.mapToModel(false) }
 
-            _state.update {
-                HomeUiState.Content(
-                    danish = danishWords.takeWhile { !it.isGuessed }.take(5),
-                    english = englishWords.takeWhile { !it.isGuessed }.take(5),
-                )
-            }
+            _state.value = HomeUiState.Content(
+                danish = danishWords.takeWhile { !it.isGuessed }.take(5),
+                english = englishWords.takeWhile { !it.isGuessed }.take(5),
+            )
         } catch (e: Exception) {
-            _state.update { HomeUiState.Error(errorMessage = e.message.orEmpty()) }
+            _state.value = HomeUiState.Error(errorMessage = e.message.orEmpty())
         }
     }
 
@@ -115,47 +107,58 @@ class HomeViewModel @Inject constructor(
 
     private fun invalidateDanishWordSelection(id: Int) {
         getContentOrNull()?.let { content ->
-            _state.update {
-                content.copy(
-                    danish = content.danish.map { it.copy(isSelected = it.id == id) }
-                )
-            }
+            _state.value = content.copy(
+                danish = content.danish.map { it.copy(isSelected = it.id == id) }
+            )
         }
     }
 
     private fun invalidateEnglishWordSelection(id: Int) {
         getContentOrNull()?.let { content ->
-            _state.update {
-                content.copy(
-                    english = content.english.map { it.copy(isSelected = it.id == id) }
-                )
-            }
+            _state.value = content.copy(
+                english = content.english.map { it.copy(isSelected = it.id == id) }
+            )
         }
     }
 
     private fun markWordsAsGuessed(id: Int) {
         getContentOrNull()?.let { content ->
-            _state.update {
-                content.copy(
-                    danish = content.danish.map {
-                        if (it.id == id) it.copy(isSelected = false, isGuessed = true) else it
-                    },
-                    english = content.english.map {
-                        if (it.id == id) it.copy(isSelected = false, isGuessed = true) else it
-                    }
-                )
-            }
+            _state.value = content.copy(
+                danish = content.danish.map {
+                    if (it.id == id) it.copy(isSelected = false, isGuessed = true) else it
+                },
+                english = content.english.map {
+                    if (it.id == id) it.copy(isSelected = false, isGuessed = true) else it
+                }
+            )
         }
     }
 
-    private fun unselectAllWords() {
+    private suspend fun markWordsAsWrong(danishWordId: Int, englishWordId: Int, duration: Long) {
         getContentOrNull()?.let { content ->
-            _state.update {
-                content.copy(
-                    danish = content.danish.map { it.copy(isSelected = false) },
-                    english = content.english.map { it.copy(isSelected = false) }
-                )
-            }
+            _state.value = content.copy(
+                danish = content.danish.map {
+                    if (it.id == danishWordId) it.copy(isSelected = false, isWrong = true) else it
+                },
+                english = content.english.map {
+                    if (it.id == englishWordId) it.copy(isSelected = false, isWrong = true) else it
+                }
+            )
+            delay(duration)
+            invalidateWrongWords(danishWordId, englishWordId)
+        }
+    }
+
+    private fun invalidateWrongWords(danishWordId: Int, englishWordId: Int) {
+        getContentOrNull()?.let { content ->
+            _state.value = content.copy(
+                danish = content.danish.map {
+                    if (it.id == danishWordId) it.copy(isSelected = false, isWrong = false) else it
+                },
+                english = content.english.map {
+                    if (it.id == englishWordId) it.copy(isSelected = false, isWrong = false) else it
+                }
+            )
         }
     }
 }
