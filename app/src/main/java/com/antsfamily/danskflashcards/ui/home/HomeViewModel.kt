@@ -34,11 +34,14 @@ class HomeViewModel @Inject constructor(
 
         if (!word.isSelected) {
             invalidateDanishWordSelection(word.id)
-            val englishWord = getEnglishSelectedWord()
-            when {
-                (englishWord == null) -> {
-                    markDanishWordSelected(word.id)
+            getEnglishSelectedWord()?.let { englishWord ->
+                if (englishWord.id == word.id) {
+                    markWordsAsGuessed(word.id)
+                } else {
+                    unselectAllWords()
                 }
+            } ?: run {
+                markDanishWordSelected(word.id)
             }
         }
     }
@@ -48,11 +51,14 @@ class HomeViewModel @Inject constructor(
 
         if (!word.isSelected) {
             invalidateEnglishWordSelection(word.id)
-            val danishWord = getDanishSelectedWord()
-            when {
-                (danishWord == null) -> {
-                    markEnglishWordSelected(word.id)
+            getDanishSelectedWord()?.let { danishWord ->
+                if (danishWord.id == word.id) {
+                    markWordsAsGuessed(word.id)
+                } else {
+                    unselectAllWords()
                 }
+            } ?: run {
+                markEnglishWordSelected(word.id)
             }
         }
     }
@@ -122,6 +128,21 @@ class HomeViewModel @Inject constructor(
             _state.update {
                 content.copy(
                     english = content.english.map { it.copy(isSelected = it.id == id) }
+                )
+            }
+        }
+    }
+
+    private fun markWordsAsGuessed(id: Int) {
+        getContentOrNull()?.let { content ->
+            _state.update {
+                content.copy(
+                    danish = content.danish.map {
+                        if (it.id == id) it.copy(isSelected = false, isGuessed = true) else it
+                    },
+                    english = content.english.map {
+                        if (it.id == id) it.copy(isSelected = false, isGuessed = true) else it
+                    }
                 )
             }
         }
