@@ -2,7 +2,7 @@ package com.antsfamily.danskflashcards.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.antsfamily.danskflashcards.data.Word
+import com.antsfamily.danskflashcards.data.GuessingItem
 import com.antsfamily.danskflashcards.data.Word.Companion.mapToModel
 import com.antsfamily.danskflashcards.data.WordModel
 import com.antsfamily.danskflashcards.domain.FetchDataUseCase
@@ -19,7 +19,9 @@ class HomeViewModel @Inject constructor(
     private val fetchDataUseCase: FetchDataUseCase,
 ) : ViewModel() {
 
-    private var words = emptyList<Word?>()
+    private var guessingItems = emptyList<GuessingItem>()
+    private var danishWords = emptyList<WordModel>()
+    private var englishWords = emptyList<WordModel>()
 
     private val _state = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
     val state: StateFlow<HomeUiState>
@@ -38,7 +40,11 @@ class HomeViewModel @Inject constructor(
                 if (englishWord.id == word.id) {
                     markWordsAsGuessed(word.id)
                 } else {
-                    markWordsAsWrong(danishWordId = word.id, englishWordId = englishWord.id, duration = 200)
+                    markWordsAsWrong(
+                        danishWordId = word.id,
+                        englishWordId = englishWord.id,
+                        duration = 200
+                    )
                 }
             } ?: run {
                 markDanishWordSelected(word.id)
@@ -55,7 +61,11 @@ class HomeViewModel @Inject constructor(
                 if (danishWord.id == word.id) {
                     markWordsAsGuessed(word.id)
                 } else {
-                    markWordsAsWrong(danishWordId = danishWord.id, englishWordId = word.id, duration = 200)
+                    markWordsAsWrong(
+                        danishWordId = danishWord.id,
+                        englishWordId = word.id,
+                        duration = 200
+                    )
                 }
             } ?: run {
                 markEnglishWordSelected(word.id)
@@ -83,18 +93,24 @@ class HomeViewModel @Inject constructor(
 
     private fun getData() = viewModelScope.launch {
         try {
-            words = fetchDataUseCase.run(Unit)
-
-            val danishWords = words.mapNotNull { it.mapToModel(true) }
-            val englishWords = words.mapNotNull { it.mapToModel(false) }
-
-            _state.value = HomeUiState.Content(
-                danish = danishWords.takeWhile { !it.isGuessed }.take(5),
-                english = englishWords.takeWhile { !it.isGuessed }.take(5),
-            )
+            fetchDataUseCase(Unit) { data ->
+                guessingItems = data.filterNotNull().map { GuessingItem(it.id, false) }
+                danishWords = data.mapNotNull { it.mapToModel(true) }
+                englishWords = data.mapNotNull { it.mapToModel(false) }
+                showPackOfWords()
+            }
         } catch (e: Exception) {
             _state.value = HomeUiState.Error(errorMessage = e.message.orEmpty())
         }
+    }
+
+    private fun showPackOfWords() {
+        val pack = guessingItems.filter { !it.isGuessed }.shuffled().take(5)
+        val packIds = pack.map { it.id }
+        _state.value = HomeUiState.Content(
+            danish = danishWords.filter { it.id in packIds }.shuffled(),
+            english = englishWords.filter { it.id in packIds }.shuffled(),
+        )
     }
 
     private fun getContentOrNull() = (_state.value as? HomeUiState.Content)
@@ -132,6 +148,10 @@ class HomeViewModel @Inject constructor(
                 }
             )
         }
+        when {
+            isWholePackGuessed() -> updatePackOfWords()
+            isAllWordsGuessed() -> invalidateAllWords()
+        }
     }
 
     private suspend fun markWordsAsWrong(danishWordId: Int, englishWordId: Int, duration: Long) {
@@ -160,5 +180,31 @@ class HomeViewModel @Inject constructor(
                 }
             )
         }
+    }
+
+    private fun isWholePackGuessed(): Boolean {
+        val isGuessed = getContentOrNull()?.let { content ->
+            val isAllEnglishWordsGuessed = content.english.all { it.isGuessed }
+            val isAllDanishWordsGuessed = content.danish.all { it.isGuessed }
+            isAllEnglishWordsGuessed && isAllDanishWordsGuessed
+        } ?: false
+        return isGuessed
+    }
+
+    private fun updatePackOfWords() {
+        val currentPackIds = getContentOrNull()?.danish.orEmpty().map { it.id }
+        guessingItems = guessingItems.map { item ->
+            if (item.id in currentPackIds) item.copy(isGuessed = true) else item
+        }
+        showPackOfWords()
+    }
+
+    private fun isAllWordsGuessed(): Boolean {
+        return guessingItems.all { it.isGuessed }
+    }
+
+    private fun invalidateAllWords() {
+        guessingItems = guessingItems.map { it.copy(isGuessed = false) }
+        showPackOfWords()
     }
 }
