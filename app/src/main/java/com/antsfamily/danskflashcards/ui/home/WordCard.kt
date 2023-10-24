@@ -17,16 +17,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.antsfamily.danskflashcards.data.GameStatus
 import com.antsfamily.danskflashcards.data.WordModel
 import com.antsfamily.danskflashcards.ui.theme.FontSize
 import com.antsfamily.danskflashcards.ui.theme.Padding
 
 @Composable
-fun WordCard(word: WordModel, onClick: (WordModel) -> Unit) {
+fun WordCard(status: GameStatus, word: WordModel, onClick: (WordModel) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(enabled = !word.isGuessed) {
+            .clickable(enabled = status == GameStatus.STARTED && !word.isGuessed) {
                 onClick(word)
             }
             .border(
