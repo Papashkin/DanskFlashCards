@@ -4,6 +4,11 @@ import com.antsfamily.danskflashcards.data.WordModel
 
 sealed class HomeUiState {
     data object Loading: HomeUiState()
-    data class Content(val danish: List<WordModel>, val english: List<WordModel>): HomeUiState()
+    data class Content(
+        val danish: List<WordModel> = emptyList(),
+        val english: List<WordModel> = emptyList(),
+        val totalCountdownTime: Long = 60L,
+        val remainingCountdownTime: Long = 60L,
+    ): HomeUiState()
     data class Error(val errorMessage: String): HomeUiState()
 }

@@ -5,23 +5,34 @@ import androidx.lifecycle.viewModelScope
 import com.antsfamily.danskflashcards.data.GuessingItem
 import com.antsfamily.danskflashcards.data.Word.Companion.mapToModel
 import com.antsfamily.danskflashcards.data.WordModel
+import com.antsfamily.danskflashcards.domain.CountdownTimerFlow
 import com.antsfamily.danskflashcards.domain.FetchDataUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.cancellable
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val fetchDataUseCase: FetchDataUseCase,
+    private val timerFlow: CountdownTimerFlow,
 ) : ViewModel() {
+
+    companion object {
+        private const val DURATION = 200L
+        private const val COUNTDOWN_STEP = 1000L
+        private const val COUNTDOWN_TIME_SEC = 120L
+    }
 
     private var guessingItems = emptyList<GuessingItem>()
     private var danishWords = emptyList<WordModel>()
     private var englishWords = emptyList<WordModel>()
+    private var isTimerStarted: Boolean = false
 
     private val _state = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
     val state: StateFlow<HomeUiState>
@@ -40,11 +51,7 @@ class HomeViewModel @Inject constructor(
                 if (englishWord.id == word.id) {
                     markWordsAsGuessed(word.id)
                 } else {
-                    markWordsAsWrong(
-                        danishWordId = word.id,
-                        englishWordId = englishWord.id,
-                        duration = 200
-                    )
+                    markWordsAsWrong(danishWordId = word.id, englishWordId = englishWord.id)
                 }
             } ?: run {
                 markDanishWordSelected(word.id)
@@ -61,11 +68,7 @@ class HomeViewModel @Inject constructor(
                 if (danishWord.id == word.id) {
                     markWordsAsGuessed(word.id)
                 } else {
-                    markWordsAsWrong(
-                        danishWordId = danishWord.id,
-                        englishWordId = word.id,
-                        duration = 200
-                    )
+                    markWordsAsWrong(danishWordId = danishWord.id, englishWordId = word.id)
                 }
             } ?: run {
                 markEnglishWordSelected(word.id)
@@ -97,20 +100,40 @@ class HomeViewModel @Inject constructor(
                 guessingItems = data.filterNotNull().map { GuessingItem(it.id, false) }
                 danishWords = data.mapNotNull { it.mapToModel(true) }
                 englishWords = data.mapNotNull { it.mapToModel(false) }
-                showPackOfWords()
+                showPackOfWords(true)
             }
         } catch (e: Exception) {
             _state.value = HomeUiState.Error(errorMessage = e.message.orEmpty())
         }
     }
 
-    private fun showPackOfWords() {
+    private fun showPackOfWords(isInit: Boolean) {
+        val additionalTime = if (isInit) 0 else 5
         val pack = guessingItems.filter { !it.isGuessed }.shuffled().take(5)
         val packIds = pack.map { it.id }
         _state.value = HomeUiState.Content(
             danish = danishWords.filter { it.id in packIds }.shuffled(),
             english = englishWords.filter { it.id in packIds }.shuffled(),
+            getContentOrNull()?.totalCountdownTime ?: COUNTDOWN_TIME_SEC,
+            (getContentOrNull()?.remainingCountdownTime ?: COUNTDOWN_TIME_SEC) + additionalTime,
         )
+
+        if (isInit && !isTimerStarted) {
+            startTimer()
+        }
+    }
+
+    private fun startTimer() = viewModelScope.launch {
+        isTimerStarted = true
+        val flow = timerFlow(COUNTDOWN_STEP)
+        flow
+            .cancellable()
+            .collect {
+            getContentOrNull()?.let { content ->
+                val remainingTime = content.remainingCountdownTime - 1
+                _state.value = content.copy(remainingCountdownTime = remainingTime)
+            }
+        }
     }
 
     private fun getContentOrNull() = (_state.value as? HomeUiState.Content)
@@ -154,7 +177,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun markWordsAsWrong(danishWordId: Int, englishWordId: Int, duration: Long) {
+    private suspend fun markWordsAsWrong(danishWordId: Int, englishWordId: Int) {
         getContentOrNull()?.let { content ->
             _state.value = content.copy(
                 danish = content.danish.map {
@@ -164,7 +187,7 @@ class HomeViewModel @Inject constructor(
                     if (it.id == englishWordId) it.copy(isSelected = false, isWrong = true) else it
                 }
             )
-            delay(duration)
+            delay(DURATION)
             invalidateWrongWords(danishWordId, englishWordId)
         }
     }
@@ -196,7 +219,7 @@ class HomeViewModel @Inject constructor(
         guessingItems = guessingItems.map { item ->
             if (item.id in currentPackIds) item.copy(isGuessed = true) else item
         }
-        showPackOfWords()
+        showPackOfWords(false)
     }
 
     private fun isAllWordsGuessed(): Boolean {
@@ -205,6 +228,6 @@ class HomeViewModel @Inject constructor(
 
     private fun invalidateAllWords() {
         guessingItems = guessingItems.map { it.copy(isGuessed = false) }
-        showPackOfWords()
+        showPackOfWords(false)
     }
 }
