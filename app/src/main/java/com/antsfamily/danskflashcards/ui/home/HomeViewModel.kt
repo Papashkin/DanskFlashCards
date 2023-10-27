@@ -2,18 +2,20 @@ package com.antsfamily.danskflashcards.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.antsfamily.danskflashcards.data.DialogData
+import com.antsfamily.danskflashcards.data.GameStatus
 import com.antsfamily.danskflashcards.data.GuessingItem
 import com.antsfamily.danskflashcards.data.Word.Companion.mapToModel
 import com.antsfamily.danskflashcards.data.WordModel
 import com.antsfamily.danskflashcards.domain.CountdownTimerFlow
 import com.antsfamily.danskflashcards.domain.FetchDataUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.cancellable
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,7 +26,9 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     companion object {
+        private const val ZERO = 0L
         private const val DURATION = 200L
+        private const val ADDITIONAL_TIME = 5L
         private const val COUNTDOWN_STEP = 1000L
         private const val COUNTDOWN_TIME_SEC = 120L
     }
@@ -33,10 +37,16 @@ class HomeViewModel @Inject constructor(
     private var danishWords = emptyList<WordModel>()
     private var englishWords = emptyList<WordModel>()
     private var isTimerStarted: Boolean = false
+    private var countdownJob: Job? = null
+    private var pairsCounter: Int = 0
 
     private val _state = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
     val state: StateFlow<HomeUiState>
         get() = _state.asStateFlow()
+
+    private val _dialogData = MutableStateFlow(DialogData())
+    val dialogData: StateFlow<DialogData>
+        get() = _dialogData.asStateFlow()
 
     init {
         getData()
@@ -76,6 +86,25 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun onStartClick() {
+        getContentOrNull()?.let { content ->
+            if (!isTimerStarted) {
+                val packIds = getPackIds()
+                _state.value = content.copy(
+                    status = GameStatus.STARTED,
+                    danish = getPackOfDanishWords(packIds),
+                    english = getPackOfEnglishWords(packIds)
+                )
+                startTimer()
+            }
+        }
+    }
+
+    fun hideDialog() {
+        pairsCounter = 0
+        _dialogData.value = DialogData(false, pairsCounter)
+    }
+
     private fun markDanishWordSelected(id: Int) {
         getContentOrNull()?.let { content ->
             _state.value = content.copy(
@@ -100,38 +129,72 @@ class HomeViewModel @Inject constructor(
                 guessingItems = data.filterNotNull().map { GuessingItem(it.id, false) }
                 danishWords = data.mapNotNull { it.mapToModel(true) }
                 englishWords = data.mapNotNull { it.mapToModel(false) }
-                showPackOfWords(true)
+                showPackOfWords()
             }
         } catch (e: Exception) {
             _state.value = HomeUiState.Error(errorMessage = e.message.orEmpty())
         }
     }
 
-    private fun showPackOfWords(isInit: Boolean) {
-        val additionalTime = if (isInit) 0 else 5
-        val pack = guessingItems.filter { !it.isGuessed }.shuffled().take(5)
-        val packIds = pack.map { it.id }
+    private fun showPackOfWords(additionalTime: Long = 0) {
+        val packIds = getPackIds()
         _state.value = HomeUiState.Content(
-            danish = danishWords.filter { it.id in packIds }.shuffled(),
-            english = englishWords.filter { it.id in packIds }.shuffled(),
+            danish = getPackOfDanishWords(packIds),
+            english = getPackOfEnglishWords(packIds),
             getContentOrNull()?.totalCountdownTime ?: COUNTDOWN_TIME_SEC,
             (getContentOrNull()?.remainingCountdownTime ?: COUNTDOWN_TIME_SEC) + additionalTime,
+            status = getContentOrNull()?.status ?: GameStatus.READY
         )
+    }
 
-        if (isInit && !isTimerStarted) {
-            startTimer()
-        }
+    private fun getPackIds(): List<Int> {
+        val pack = guessingItems.filter { !it.isGuessed }.shuffled().take(5)
+        return pack.map { it.id }
+    }
+
+    private fun getPackOfDanishWords(ids: List<Int>): List<WordModel> {
+        return danishWords.filter { it.id in ids }.shuffled()
+    }
+
+    private fun getPackOfEnglishWords(ids: List<Int>): List<WordModel> {
+        return englishWords.filter { it.id in ids }.shuffled()
     }
 
     private fun startTimer() = viewModelScope.launch {
         isTimerStarted = true
-        val flow = timerFlow(COUNTDOWN_STEP)
-        flow
+        countdownJob = launchTimerFlow()
+    }
+
+    private fun launchTimerFlow(): Job = viewModelScope.launch {
+        timerFlow(COUNTDOWN_STEP)
             .cancellable()
             .collect {
-            getContentOrNull()?.let { content ->
-                val remainingTime = content.remainingCountdownTime - 1
-                _state.value = content.copy(remainingCountdownTime = remainingTime)
+                getContentOrNull()?.let { content ->
+                    val remainingTime = content.remainingCountdownTime - 1
+                    _state.value = content.copy(remainingCountdownTime = remainingTime)
+                }
+                checkRemainingTime()
+            }
+    }
+
+    private fun checkRemainingTime() {
+        getContentOrNull()?.let { content ->
+            if (content.remainingCountdownTime < ZERO) {
+                countdownJob?.cancel()
+                isTimerStarted = false
+                _state.value = content.copy(
+                    remainingCountdownTime = COUNTDOWN_TIME_SEC,
+                    totalCountdownTime = COUNTDOWN_TIME_SEC,
+                    status = GameStatus.FINISHED,
+                    danish = content.danish.map {
+                        it.copy(isSelected = false, isGuessed = false, isWrong = false)
+                    },
+                    english = content.english.map {
+                        it.copy(isSelected = false, isGuessed = false, isWrong = false)
+                    }
+                )
+                guessingItems = guessingItems.map { if (it.isGuessed) it.copy(isGuessed = false) else it }
+                _dialogData.value = DialogData(true, pairsCounter)
             }
         }
     }
@@ -162,6 +225,7 @@ class HomeViewModel @Inject constructor(
 
     private fun markWordsAsGuessed(id: Int) {
         getContentOrNull()?.let { content ->
+            pairsCounter += 1
             _state.value = content.copy(
                 danish = content.danish.map {
                     if (it.id == id) it.copy(isSelected = false, isGuessed = true) else it
@@ -219,7 +283,7 @@ class HomeViewModel @Inject constructor(
         guessingItems = guessingItems.map { item ->
             if (item.id in currentPackIds) item.copy(isGuessed = true) else item
         }
-        showPackOfWords(false)
+        showPackOfWords(ADDITIONAL_TIME)
     }
 
     private fun isAllWordsGuessed(): Boolean {
@@ -228,6 +292,6 @@ class HomeViewModel @Inject constructor(
 
     private fun invalidateAllWords() {
         guessingItems = guessingItems.map { it.copy(isGuessed = false) }
-        showPackOfWords(false)
+        showPackOfWords(ADDITIONAL_TIME)
     }
 }
