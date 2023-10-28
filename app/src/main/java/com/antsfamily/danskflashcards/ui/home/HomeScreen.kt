@@ -50,7 +50,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
     }
 
     if (dialogData.value.isVisible) {
-        GameOverDialog(pairsAmount = dialogData.value.pairsAmount) {
+        GameOverDialog(data = dialogData.value) {
             viewModel.hideDialog()
         }
     }

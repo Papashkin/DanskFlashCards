@@ -7,3 +7,5 @@ fun Long.toTimeFormat(): String {
 
     return String.format("%02d:%02d", minutes, remainingSeconds)
 }
+
+inline fun <reified T: Number> T?.orZero(): T = this ?: 0 as T

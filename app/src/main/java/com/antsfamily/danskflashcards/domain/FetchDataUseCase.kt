@@ -1,7 +1,6 @@
 package com.antsfamily.danskflashcards.domain
 
 import com.antsfamily.danskflashcards.data.Word
-import com.antsfamily.danskflashcards.ui.home.HomeViewModel
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.getValue
@@ -12,7 +11,9 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-class FetchDataUseCase @Inject constructor(): BaseUseCase<Unit, List<Word?>>() {
+class FetchDataUseCase @Inject constructor(
+    private val gson: Gson
+): BaseUseCase<Unit, List<Word?>>() {
 
     companion object {
         private const val FIREBASE_DB_CHILD_PATH = "words"
@@ -23,10 +24,10 @@ class FetchDataUseCase @Inject constructor(): BaseUseCase<Unit, List<Word?>>() {
             getDatabase().child(FIREBASE_DB_CHILD_PATH).get().addOnSuccessListener { snapshot ->
                 val words = if (snapshot.exists()) {
                     val snapshotValue =
-                        snapshot.getValue<ArrayList<HashMap<String, Object>>>().orEmpty()
-                    val jsonData = Gson().toJson(snapshotValue)
+                        snapshot.getValue<ArrayList<HashMap<String, Any>>>().orEmpty()
+                    val jsonData = gson.toJson(snapshotValue)
                     val listType = object : TypeToken<List<Word>>() {}.type
-                    Gson().fromJson<List<Word?>>(jsonData, listType)
+                    gson.fromJson<List<Word?>>(jsonData, listType)
                 } else {
                     emptyList()
                 }
