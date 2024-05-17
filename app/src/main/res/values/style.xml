@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.SplashScreen.DanskFlashCards" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">#4CAF50</item>
-        <item name="windowSplashScreenAnimationDuration">1000</item>
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="windowSplashScreenBackground">#9da9e1</item>
+        <item name="windowSplashScreenAnimationDuration">2000</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_app_launcher</item>
         <item name="postSplashScreenTheme">@style/Theme.SplashScreen</item>
     </style>
 </resources>
