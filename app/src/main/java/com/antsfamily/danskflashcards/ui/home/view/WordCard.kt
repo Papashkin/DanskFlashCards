@@ -91,6 +91,16 @@ fun startedWordCard() {
 
 @Preview
 @Composable
+fun selectedWordCard() {
+    WordCard(
+        status = GameStatus.FINISHED,
+        word = WordModel(1, "mock", true, false, false),
+        onClick = {}
+    )
+}
+
+@Preview
+@Composable
 fun startedWrongWordCard() {
     WordCard(
         status = GameStatus.STARTED,
@@ -101,20 +111,10 @@ fun startedWrongWordCard() {
 
 @Preview
 @Composable
-fun startedRightWordCard() {
+fun finishedRightWordCard() {
     WordCard(
         status = GameStatus.STARTED,
         word = WordModel(1, "mock", false, true, false),
-        onClick = {}
-    )
-}
-
-@Preview
-@Composable
-fun finishedWordCard() {
-    WordCard(
-        status = GameStatus.FINISHED,
-        word = WordModel(1, "mock", true, false, false),
         onClick = {}
     )
 }
