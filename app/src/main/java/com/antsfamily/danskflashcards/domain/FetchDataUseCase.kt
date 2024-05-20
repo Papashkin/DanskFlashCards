@@ -13,15 +13,11 @@ import kotlin.coroutines.resumeWithException
 
 class FetchDataUseCase @Inject constructor(
     private val gson: Gson
-): BaseUseCase<Unit, List<Word?>>() {
-
-    companion object {
-        private const val FIREBASE_DB_CHILD_PATH = "words"
-    }
+) : BaseUseCase<Unit, List<Word?>>() {
 
     override suspend fun run(params: Unit): List<Word?> = suspendCancellableCoroutine {
         try {
-            getDatabase().child(FIREBASE_DB_CHILD_PATH).get().addOnSuccessListener { snapshot ->
+            getDatabase().get().addOnSuccessListener { snapshot ->
                 val words = if (snapshot.exists()) {
                     val snapshotValue =
                         snapshot.getValue<ArrayList<HashMap<String, Any>>>().orEmpty()
@@ -40,7 +36,5 @@ class FetchDataUseCase @Inject constructor(
         }
     }
 
-
     private fun getDatabase(): DatabaseReference = FirebaseDatabase.getInstance().reference
-
 }

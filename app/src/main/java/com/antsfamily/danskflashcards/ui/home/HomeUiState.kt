@@ -11,6 +11,7 @@ sealed class HomeUiState {
         val english: List<WordModel> = emptyList(),
         val totalCountdownTime: Long = COUNTDOWN_TIME_SEC,
         val remainingCountdownTime: Long = COUNTDOWN_TIME_SEC,
+        val timerProgress: Float = 1f,
         val status: GameStatus = GameStatus.READY,
     ): HomeUiState()
     data class Error(val errorMessage: String): HomeUiState()

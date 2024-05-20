@@ -1,4 +1,4 @@
-package com.antsfamily.danskflashcards.ui.home
+package com.antsfamily.danskflashcards.ui.home.view
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button

@@ -141,11 +141,14 @@ class HomeViewModel @Inject constructor(
 
     private fun showPackOfWords(additionalTime: Long = ZERO) {
         val packIds = getPackIds()
+        val totalTime = getContentOrNull()?.totalCountdownTime ?: COUNTDOWN_TIME_SEC
+        val remainTime = (getContentOrNull()?.remainingCountdownTime ?: COUNTDOWN_TIME_SEC) + additionalTime
         _state.value = HomeUiState.Content(
             danish = getPackOfDanishWords(packIds),
             english = getPackOfEnglishWords(packIds),
-            getContentOrNull()?.totalCountdownTime ?: COUNTDOWN_TIME_SEC,
-            (getContentOrNull()?.remainingCountdownTime ?: COUNTDOWN_TIME_SEC) + additionalTime,
+            totalCountdownTime = totalTime,
+            remainingCountdownTime = remainTime,
+            timerProgress = remainTime.toFloat().div(totalTime),
             status = getContentOrNull()?.status ?: GameStatus.READY
         )
     }
@@ -173,8 +176,11 @@ class HomeViewModel @Inject constructor(
             .cancellable()
             .collect {
                 getContentOrNull()?.let { content ->
-                    val remainingTime = content.remainingCountdownTime - 1
-                    _state.value = content.copy(remainingCountdownTime = remainingTime)
+                    val remainTime = content.remainingCountdownTime - 1
+                    _state.value = content.copy(
+                        remainingCountdownTime = remainTime,
+                        timerProgress = remainTime.toFloat().div(content.totalCountdownTime)
+                    )
                 }
                 checkRemainingTime()
             }
