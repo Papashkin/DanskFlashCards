@@ -2,7 +2,6 @@ package com.antsfamily.danskflashcards.domain
 
 import com.antsfamily.danskflashcards.data.Word
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.getValue
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -12,12 +11,13 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 class FetchDataUseCase @Inject constructor(
+    private val firebaseDatabase: DatabaseReference,
     private val gson: Gson
 ) : BaseUseCase<Unit, List<Word?>>() {
 
     override suspend fun run(params: Unit): List<Word?> = suspendCancellableCoroutine {
         try {
-            getDatabase().get().addOnSuccessListener { snapshot ->
+            firebaseDatabase.get().addOnSuccessListener { snapshot ->
                 val words = if (snapshot.exists()) {
                     val snapshotValue =
                         snapshot.getValue<ArrayList<HashMap<String, Any>>>().orEmpty()
@@ -35,6 +35,4 @@ class FetchDataUseCase @Inject constructor(
             it.resumeWithException(e)
         }
     }
-
-    private fun getDatabase(): DatabaseReference = FirebaseDatabase.getInstance().reference
 }

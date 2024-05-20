@@ -14,6 +14,7 @@ import com.antsfamily.danskflashcards.domain.SaveResultUseCase
 import com.antsfamily.danskflashcards.util.COUNTDOWN_STEP
 import com.antsfamily.danskflashcards.util.COUNTDOWN_TIME_SEC
 import com.antsfamily.danskflashcards.util.GUESSED_ADDITIONAL_TIME
+import com.antsfamily.danskflashcards.util.HOME_SCREEN_PAIRS_AMOUNT
 import com.antsfamily.danskflashcards.util.WRONG_GUESS_ERROR_DURATION
 import com.antsfamily.danskflashcards.util.ZERO
 import com.antsfamily.danskflashcards.util.orZero
@@ -47,8 +48,8 @@ class HomeViewModel @Inject constructor(
     val state: StateFlow<HomeUiState>
         get() = _state.asStateFlow()
 
-    private val _dialogData = MutableStateFlow(DialogData())
-    val dialogData: StateFlow<DialogData>
+    private val _dialogData = MutableStateFlow<DialogData?>(null)
+    val dialogData: StateFlow<DialogData?>
         get() = _dialogData.asStateFlow()
 
     init {
@@ -105,7 +106,7 @@ class HomeViewModel @Inject constructor(
 
     fun hideDialog() {
         pairsCounter = 0
-        _dialogData.value = DialogData(false, pairsCounter)
+        _dialogData.value = null
     }
 
     private fun markDanishWordSelected(id: Int) {
@@ -154,7 +155,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getPackIds(): List<Int> {
-        val pack = guessingItems.filter { !it.isGuessed }.shuffled().take(5)
+        val pack = guessingItems.filter { !it.isGuessed }.shuffled().take(HOME_SCREEN_PAIRS_AMOUNT)
         return pack.map { it.id }
     }
 
@@ -192,16 +193,27 @@ class HomeViewModel @Inject constructor(
             resetScreenContent()
             invalidateGuessingItems()
             val result = getResultUseCase(Unit).firstOrNull().orZero()
+            showFinalDialog(result)
             if (pairsCounter > result) {
                 saveBestResult(pairsCounter)
             }
             _dialogData.value = DialogData(
-                isVisible = true,
                 bestResult = result,
                 pairsAmount = pairsCounter,
                 isNewRecord = pairsCounter > result
             )
         }
+    }
+
+    private fun showFinalDialog(personalBest: Int) {
+        if (pairsCounter > personalBest) {
+            saveBestResult(pairsCounter)
+        }
+        _dialogData.value = DialogData(
+            bestResult = personalBest,
+            pairsAmount = pairsCounter,
+            isNewRecord = pairsCounter > personalBest
+        )
     }
 
     private fun stopTimer() {

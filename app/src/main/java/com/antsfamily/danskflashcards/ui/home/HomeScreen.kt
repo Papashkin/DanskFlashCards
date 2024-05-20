@@ -1,14 +1,10 @@
 package com.antsfamily.danskflashcards.ui.home
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -19,8 +15,9 @@ import com.antsfamily.danskflashcards.data.GameStatus
 import com.antsfamily.danskflashcards.data.WordModel
 import com.antsfamily.danskflashcards.ui.home.view.FullScreenLoading
 import com.antsfamily.danskflashcards.ui.home.view.GameOverDialog
-import com.antsfamily.danskflashcards.ui.home.view.TestCountdownTimer
-import com.antsfamily.danskflashcards.ui.home.view.WordCard
+import com.antsfamily.danskflashcards.ui.home.view.HomeScreenContent
+import com.antsfamily.danskflashcards.ui.home.view.StartButton
+import com.antsfamily.danskflashcards.ui.home.view.StartedTimer
 import com.antsfamily.danskflashcards.ui.theme.Padding
 
 @Composable
@@ -41,10 +38,8 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
         }
     }
 
-    if (dialogData.value.isVisible) {
-        GameOverDialog(data = dialogData.value) {
-            viewModel.hideDialog()
-        }
+    dialogData.value?.let {
+        GameOverDialog(data = it, viewModel::hideDialog)
     }
 }
 
@@ -57,50 +52,21 @@ fun HomeScreenPostsContent(
 ) {
     Column(
         modifier = Modifier
-            .padding(horizontal = Padding.large, vertical = Padding.xSmall)
+            .padding(horizontal = Padding.large, vertical = Padding.medium)
             .fillMaxSize(),
     ) {
-        TestCountdownTimer(
-            modifier = Modifier.padding(vertical = Padding.medium),
-            remainingTimeSec = content.remainingCountdownTime,
-            timerProgress = content.timerProgress,
-            status = content.status,
-            onClick = onStartClick
-        )
-
-        if (content.status == GameStatus.STARTED) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(Padding.small),
-                    modifier = Modifier.align(Alignment.Center)
-                ) {
-                    LazyColumn(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(Padding.small),
-                        verticalArrangement = Arrangement.spacedBy(Padding.small)
-                    ) {
-                        items(content.danish.size) {
-                            WordCard(content.status, content.danish[it]) { model ->
-                                onDanishWordClick(model)
-                            }
-                            Spacer(modifier = Modifier.height(Padding.small))
-                        }
-                    }
-                    LazyColumn(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(Padding.small),
-                        verticalArrangement = Arrangement.spacedBy(Padding.small)
-                    ) {
-                        items(content.english.size) {
-                            WordCard(content.status, content.english[it]) { model ->
-                                onEnglishWordClick(model)
-                            }
-                            Spacer(modifier = Modifier.height(Padding.small))
-                        }
-                    }
+        with(content) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                when (status) {
+                    GameStatus.STARTED -> StartedTimer(remainingCountdownTime, timerProgress)
+                    else -> StartButton(onClick = onStartClick)
                 }
+            }
+            if (status == GameStatus.STARTED) {
+                HomeScreenContent(content, onDanishWordClick, onEnglishWordClick)
             }
         }
     }
@@ -111,80 +77,8 @@ fun HomeScreenPostsContent(
 fun HomeScreenContent1Preview() {
     HomeScreenPostsContent(
         HomeUiState.Content(
-            danish = listOf(
-                WordModel(
-                    value = "kolonne",
-                    id = 986,
-                    isGuessed = false,
-                    isSelected = false,
-                    isWrong = false
-                ),
-                WordModel(
-                    value = "molekyle",
-                    id = 987,
-                    isGuessed = false,
-                    isSelected = true,
-                    isWrong = false
-                ),
-                WordModel(
-                    value = "vælg",
-                    id = 988,
-                    isGuessed = true,
-                    isSelected = true,
-                    isWrong = false
-                ),
-                WordModel(
-                    value = "forkert",
-                    id = 989,
-                    isGuessed = false,
-                    isSelected = false,
-                    isWrong = false
-                ),
-                WordModel(
-                    value = "grå",
-                    id = 990,
-                    isGuessed = false,
-                    isSelected = false,
-                    isWrong = true
-                ),
-            ),
-            english = listOf(
-                WordModel(
-                    value = "column",
-                    id = 991,
-                    isGuessed = false,
-                    isSelected = true,
-                    isWrong = false
-                ),
-                WordModel(
-                    value = "molecule",
-                    id = 992,
-                    isGuessed = true,
-                    isSelected = false,
-                    isWrong = false
-                ),
-                WordModel(
-                    value = "select",
-                    id = 993,
-                    isGuessed = false,
-                    isSelected = false,
-                    isWrong = false
-                ),
-                WordModel(
-                    value = "wrong",
-                    id = 994,
-                    isGuessed = false,
-                    isSelected = true,
-                    isWrong = false
-                ),
-                WordModel(
-                    value = "gray",
-                    id = 996,
-                    isGuessed = false,
-                    isSelected = false,
-                    isWrong = false
-                ),
-            ),
+            danish = listOf(),
+            english = listOf(),
             1000,
             500,
             status = GameStatus.READY,

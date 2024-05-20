@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.antsfamily.danskflashcards.data.LocalDataStore
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -18,9 +20,12 @@ object DataModule {
 
     @Singleton
     @Provides
-    fun provideLocalDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
-        return context.LocalDataStore
-    }
+    fun provideLocalDataStore(@ApplicationContext context: Context): DataStore<Preferences> =
+        context.LocalDataStore
+
+    @Singleton
+    @Provides
+    fun provideFirebaseInstance(): DatabaseReference = FirebaseDatabase.getInstance().reference
 
     @Singleton
     @Provides
