@@ -1,72 +1,135 @@
 package com.antsfamily.danskflashcards.ui.home
 
+import android.app.Activity.RESULT_OK
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.antsfamily.danskflashcards.data.GameStatus
-import com.antsfamily.danskflashcards.data.WordModel
-import com.antsfamily.danskflashcards.ui.home.view.FullScreenLoading
-import com.antsfamily.danskflashcards.ui.home.view.GameOverDialog
-import com.antsfamily.danskflashcards.ui.home.view.HomeScreenContent
-import com.antsfamily.danskflashcards.ui.home.view.StartButton
-import com.antsfamily.danskflashcards.ui.home.view.StartedTimer
+import androidx.navigation.NavController
+import com.antsfamily.danskflashcards.R
+import com.antsfamily.danskflashcards.ui.home.view.ButtonWithLeadingIcon
 import com.antsfamily.danskflashcards.ui.theme.Padding
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
+fun HomeScreen(
+    navController: NavController,
+    viewModel: HomeViewModel = hiltViewModel()
+) {
     val state = viewModel.state.collectAsState()
-    val dialogData = viewModel.dialogData.collectAsState()
-    when (val stateValue = state.value) {
-        HomeUiState.Loading -> FullScreenLoading()
-        is HomeUiState.Content -> HomeScreenPostsContent(
-            stateValue,
-            onDanishWordClick = { viewModel.onDanishWordCardClick(it) },
-            onEnglishWordClick = { viewModel.onEnglishWordCardClick(it) },
-            onStartClick = { viewModel.onStartClick() }
-        )
 
-        is HomeUiState.Error -> {
-            //TODO add error handler
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult(),
+        onResult = {
+            if (it.resultCode == RESULT_OK) {
+                viewModel.signIn(it.data)
+            } else {
+                viewModel.cancelSignIn()
+            }
+        })
+
+    LaunchedEffect(Unit) {
+        viewModel.signInFlow.collect {
+            launcher.launch(IntentSenderRequest.Builder(it).build())
         }
     }
 
-    dialogData.value?.let {
-        GameOverDialog(data = it, viewModel::hideDialog)
+    LaunchedEffect(Unit) {
+        viewModel.navigationFlow.collect {
+            navController.navigate(it)
+        }
+    }
+
+    HomeScreenContent(state.value) {
+        viewModel.onGoogleClick()
     }
 }
 
 @Composable
-fun HomeScreenPostsContent(
-    content: HomeUiState.Content,
-    onDanishWordClick: (WordModel) -> Unit,
-    onEnglishWordClick: (WordModel) -> Unit,
-    onStartClick: () -> Unit,
-) {
+fun HomeScreenContent(state: HomeUiState, onGoogleClick: () -> Unit) {
     Column(
         modifier = Modifier
-            .padding(horizontal = Padding.large, vertical = Padding.medium)
-            .fillMaxSize(),
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    endY = 20f,
+                    colors = listOf(
+                        MaterialTheme.colorScheme.background,
+                        Color(0xffa0cfff),
+                    )
+                )
+            ),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
-        with(content) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
+        Spacer(modifier = Modifier.height(24.dp))
+        Image(painterResource(R.drawable.ic_home_image_bg), "null")
+        Box(
+            modifier = Modifier
+                .background(
+                    brush = Brush.verticalGradient(
+                        endY = 120f,
+                        colors = listOf(
+                            Color(0xff7CBBff),
+                            MaterialTheme.colorScheme.background
+                        )
+                    )
+                )
+        ) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.SpaceEvenly
             ) {
-                when (status) {
-                    GameStatus.STARTED -> StartedTimer(remainingCountdownTime, timerProgress)
-                    else -> StartButton(onClick = onStartClick)
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "Welcome!",
+                        style = MaterialTheme.typography.headlineLarge,
+                        textAlign = TextAlign.Center,
+                    )
+                    Text(
+                        text = "Please login to access to the cards",
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(top = Padding.xSmall)
+                    )
                 }
-            }
-            if (status == GameStatus.STARTED) {
-                HomeScreenContent(content, onDanishWordClick, onEnglishWordClick)
+                Column(
+                    modifier = Modifier.padding(Padding.xLarge),
+                    verticalArrangement = Arrangement.Bottom
+                ) {
+                    ButtonWithLeadingIcon(
+                        iconId = R.drawable.ic_google,
+                        stringId = R.string.sign_up_google,
+                        isLoading = state is HomeUiState.Loading,
+                        errorText = (state as? HomeUiState.Error)?.errorMessage
+                    ) {
+                        onGoogleClick()
+                    }
+                }
             }
         }
     }
@@ -74,106 +137,18 @@ fun HomeScreenPostsContent(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun HomeScreenContent1Preview() {
-    HomeScreenPostsContent(
-        HomeUiState.Content(
-            danish = listOf(),
-            english = listOf(),
-            1000,
-            500,
-            status = GameStatus.READY,
-        ),
-        {},
-        {},
-        {}
-    )
+fun HomeScreenDefaultStatePreview() {
+    HomeScreenContent(HomeUiState.Default) {}
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun HomeScreenContent2Preview() {
-    HomeScreenPostsContent(
-        HomeUiState.Content(
-            danish = listOf(
-                WordModel(
-                    value = "kolonne",
-                    id = 986,
-                    isGuessed = false,
-                    isSelected = false,
-                    isWrong = false
-                ),
-                WordModel(
-                    value = "molekyle",
-                    id = 987,
-                    isGuessed = false,
-                    isSelected = true,
-                    isWrong = false
-                ),
-                WordModel(
-                    value = "vælg",
-                    id = 988,
-                    isGuessed = true,
-                    isSelected = true,
-                    isWrong = false
-                ),
-                WordModel(
-                    value = "forkert",
-                    id = 989,
-                    isGuessed = false,
-                    isSelected = false,
-                    isWrong = false
-                ),
-                WordModel(
-                    value = "grå",
-                    id = 990,
-                    isGuessed = false,
-                    isSelected = false,
-                    isWrong = true
-                ),
-            ),
-            english = listOf(
-                WordModel(
-                    value = "column",
-                    id = 991,
-                    isGuessed = false,
-                    isSelected = true,
-                    isWrong = false
-                ),
-                WordModel(
-                    value = "molecule",
-                    id = 992,
-                    isGuessed = true,
-                    isSelected = false,
-                    isWrong = false
-                ),
-                WordModel(
-                    value = "select",
-                    id = 993,
-                    isGuessed = false,
-                    isSelected = false,
-                    isWrong = false
-                ),
-                WordModel(
-                    value = "wrong",
-                    id = 994,
-                    isGuessed = false,
-                    isSelected = true,
-                    isWrong = false
-                ),
-                WordModel(
-                    value = "gray",
-                    id = 996,
-                    isGuessed = false,
-                    isSelected = false,
-                    isWrong = false
-                ),
-            ),
-            1000,
-            500,
-            status = GameStatus.STARTED,
-        ),
-        {},
-        {},
-        {}
-    )
+fun HomeScreenLoadingStatePreview() {
+    HomeScreenContent(HomeUiState.Loading) {}
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun HomeScreenErrorStatePreview() {
+    HomeScreenContent(HomeUiState.Error("Test test test")) {}
 }

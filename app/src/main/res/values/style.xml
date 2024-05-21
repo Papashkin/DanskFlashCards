@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.SplashScreen.DanskFlashCards" parent="Theme.SplashScreen">
+    <style name="Theme.SplashScreen.DanskFlashCards" parent="android:Theme.Material.Light.NoActionBar">
         <item name="windowSplashScreenBackground">#9da9e1</item>
         <item name="windowSplashScreenAnimationDuration">2000</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_app_launcher</item>

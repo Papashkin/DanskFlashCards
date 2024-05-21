@@ -1,4 +1,4 @@
-package com.antsfamily.danskflashcards.ui.home.view
+package com.antsfamily.danskflashcards.ui.game.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
