@@ -1,4 +1,4 @@
-package com.antsfamily.danskflashcards.ui.home.view
+package com.antsfamily.danskflashcards.ui.game.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,12 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.antsfamily.danskflashcards.data.WordModel
-import com.antsfamily.danskflashcards.ui.home.HomeUiState
+import com.antsfamily.danskflashcards.ui.game.GameUiState
 import com.antsfamily.danskflashcards.ui.theme.Padding
 
 @Composable
-fun HomeScreenContent(
-    content: HomeUiState.Content,
+fun GameScreenContent(
+    content: GameUiState.Content,
     onDanishWordClick: (WordModel) -> Unit,
     onEnglishWordClick: (WordModel) -> Unit,
 ) {

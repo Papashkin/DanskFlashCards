@@ -1,343 +1,57 @@
 package com.antsfamily.danskflashcards.ui.home
 
+import android.content.Intent
+import android.content.IntentSender
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.antsfamily.danskflashcards.data.DialogData
-import com.antsfamily.danskflashcards.data.GameStatus
-import com.antsfamily.danskflashcards.data.GuessingItem
-import com.antsfamily.danskflashcards.data.Word.Companion.mapToModel
-import com.antsfamily.danskflashcards.data.WordModel
-import com.antsfamily.danskflashcards.domain.CountdownTimerFlow
-import com.antsfamily.danskflashcards.domain.FetchDataUseCase
-import com.antsfamily.danskflashcards.domain.GetResultUseCase
-import com.antsfamily.danskflashcards.domain.SaveResultUseCase
-import com.antsfamily.danskflashcards.util.COUNTDOWN_STEP
-import com.antsfamily.danskflashcards.util.COUNTDOWN_TIME_SEC
-import com.antsfamily.danskflashcards.util.GUESSED_ADDITIONAL_TIME
-import com.antsfamily.danskflashcards.util.HOME_SCREEN_PAIRS_AMOUNT
-import com.antsfamily.danskflashcards.util.WRONG_GUESS_ERROR_DURATION
-import com.antsfamily.danskflashcards.util.ZERO
-import com.antsfamily.danskflashcards.util.orZero
+import com.antsfamily.danskflashcards.data.GoogleAuthUiClient
+import com.antsfamily.danskflashcards.navigation.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.cancellable
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val fetchDataUseCase: FetchDataUseCase,
-    private val saveResultUseCase: SaveResultUseCase,
-    private val getResultUseCase: GetResultUseCase,
-    private val timerFlow: CountdownTimerFlow,
+    private val client: GoogleAuthUiClient
 ) : ViewModel() {
 
-    private var guessingItems = emptyList<GuessingItem>()
-    private var danishWords = emptyList<WordModel>()
-    private var englishWords = emptyList<WordModel>()
-    private var isTimerStarted: Boolean = false
-    private var countdownJob: Job? = null
-    private var pairsCounter: Int = 0
+    private val _signInFlow = MutableSharedFlow<IntentSender>()
+    val signInFlow: SharedFlow<IntentSender> = _signInFlow.asSharedFlow()
 
-    private val _state = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
+    private val _navigationFlow = MutableSharedFlow<String>()
+    val navigationFlow: SharedFlow<String> = _navigationFlow.asSharedFlow()
+
+    private val _state = MutableStateFlow<HomeUiState>(HomeUiState.Default)
     val state: StateFlow<HomeUiState>
         get() = _state.asStateFlow()
 
-    private val _dialogData = MutableStateFlow<DialogData?>(null)
-    val dialogData: StateFlow<DialogData?>
-        get() = _dialogData.asStateFlow()
+    fun onGoogleClick() = viewModelScope.launch {
+        _state.value = HomeUiState.Loading
 
-    init {
-        getData()
-    }
-
-    fun onDanishWordCardClick(word: WordModel) = viewModelScope.launch {
-        if (word.isGuessed) return@launch
-
-        if (!word.isSelected) {
-            invalidateDanishWordSelection(word.id)
-            getEnglishSelectedWord()?.let { englishWord ->
-                if (englishWord.id == word.id) {
-                    markWordsAsGuessed(word.id)
-                } else {
-                    markWordsAsWrong(danishWordId = word.id, englishWordId = englishWord.id)
-                }
-            } ?: run {
-                markDanishWordSelected(word.id)
-            }
+        val intentSender = client.signIn()
+        intentSender?.let {
+            _signInFlow.emit(it)
+        } ?: run {
+            _state.value = HomeUiState.Default
         }
     }
 
-    fun onEnglishWordCardClick(word: WordModel) = viewModelScope.launch {
-        if (word.isGuessed) return@launch
-
-        if (!word.isSelected) {
-            invalidateEnglishWordSelection(word.id)
-            getDanishSelectedWord()?.let { danishWord ->
-                if (danishWord.id == word.id) {
-                    markWordsAsGuessed(word.id)
-                } else {
-                    markWordsAsWrong(danishWordId = danishWord.id, englishWordId = word.id)
-                }
-            } ?: run {
-                markEnglishWordSelected(word.id)
-            }
-        }
-    }
-
-    fun onStartClick() {
-        getContentOrNull()?.let { content ->
-            if (!isTimerStarted) {
-                val packIds = getPackIds()
-                _state.value = content.copy(
-                    status = GameStatus.STARTED,
-                    danish = getPackOfDanishWords(packIds),
-                    english = getPackOfEnglishWords(packIds)
-                )
-                startTimer()
-            }
-        }
-    }
-
-    fun hideDialog() {
-        pairsCounter = 0
-        _dialogData.value = null
-    }
-
-    private fun markDanishWordSelected(id: Int) {
-        getContentOrNull()?.let { content ->
-            _state.value = content.copy(
-                danish = content.danish.map { if (it.id == id) it.copy(isSelected = true) else it }
-            )
-        }
-    }
-
-    private fun markEnglishWordSelected(id: Int) {
-        getContentOrNull()?.let { content ->
-            _state.value = content.copy(
-                english = content.english.map {
-                    if (it.id == id) it.copy(isSelected = true) else it
-                }
-            )
-        }
-    }
-
-    private fun getData() = viewModelScope.launch {
-        try {
-            fetchDataUseCase(Unit) { data ->
-                guessingItems = data.filterNotNull().map { GuessingItem(it.id, false) }
-                danishWords = data.mapNotNull { it.mapToModel(true) }
-                englishWords = data.mapNotNull { it.mapToModel(false) }
-                showPackOfWords()
-            }
-        } catch (e: Exception) {
-            _state.value = HomeUiState.Error(errorMessage = e.message.orEmpty())
-        }
-    }
-
-    private fun showPackOfWords(additionalTime: Long = ZERO) {
-        val packIds = getPackIds()
-        val totalTime = getContentOrNull()?.totalCountdownTime ?: COUNTDOWN_TIME_SEC
-        val remainTime = (getContentOrNull()?.remainingCountdownTime ?: COUNTDOWN_TIME_SEC) + additionalTime
-        _state.value = HomeUiState.Content(
-            danish = getPackOfDanishWords(packIds),
-            english = getPackOfEnglishWords(packIds),
-            totalCountdownTime = totalTime,
-            remainingCountdownTime = remainTime,
-            timerProgress = remainTime.toFloat().div(totalTime),
-            status = getContentOrNull()?.status ?: GameStatus.READY
+    fun signIn(intent: Intent?) = viewModelScope.launch {
+        val result = client.signInWithIntent(
+            intent = intent ?: return@launch
         )
-    }
-
-    private fun getPackIds(): List<Int> {
-        val pack = guessingItems.filter { !it.isGuessed }.shuffled().take(HOME_SCREEN_PAIRS_AMOUNT)
-        return pack.map { it.id }
-    }
-
-    private fun getPackOfDanishWords(ids: List<Int>): List<WordModel> {
-        return danishWords.filter { it.id in ids }.shuffled()
-    }
-
-    private fun getPackOfEnglishWords(ids: List<Int>): List<WordModel> {
-        return englishWords.filter { it.id in ids }.shuffled()
-    }
-
-    private fun startTimer() = viewModelScope.launch {
-        isTimerStarted = true
-        countdownJob = launchTimerFlow()
-    }
-
-    private fun launchTimerFlow(): Job = viewModelScope.launch {
-        timerFlow(COUNTDOWN_STEP)
-            .cancellable()
-            .collect {
-                getContentOrNull()?.let { content ->
-                    val remainTime = content.remainingCountdownTime - 1
-                    _state.value = content.copy(
-                        remainingCountdownTime = remainTime,
-                        timerProgress = remainTime.toFloat().div(content.totalCountdownTime)
-                    )
-                }
-                checkRemainingTime()
-            }
-    }
-
-    private fun checkRemainingTime() = viewModelScope.launch {
-        if (getContentOrNull()?.remainingCountdownTime.orZero() < ZERO) {
-            stopTimer()
-            resetScreenContent()
-            invalidateGuessingItems()
-            val result = getResultUseCase(Unit).firstOrNull().orZero()
-            showFinalDialog(result)
-            if (pairsCounter > result) {
-                saveBestResult(pairsCounter)
-            }
-            _dialogData.value = DialogData(
-                bestResult = result,
-                pairsAmount = pairsCounter,
-                isNewRecord = pairsCounter > result
-            )
+        result.data?.let {
+            _navigationFlow.emit(Screen.Game.route)
         }
     }
 
-    private fun showFinalDialog(personalBest: Int) {
-        if (pairsCounter > personalBest) {
-            saveBestResult(pairsCounter)
-        }
-        _dialogData.value = DialogData(
-            bestResult = personalBest,
-            pairsAmount = pairsCounter,
-            isNewRecord = pairsCounter > personalBest
-        )
-    }
-
-    private fun stopTimer() {
-        countdownJob?.cancel()
-        isTimerStarted = false
-    }
-
-    private fun getContentOrNull() = (_state.value as? HomeUiState.Content)
-
-    private fun getEnglishSelectedWord(): WordModel? =
-        getContentOrNull()?.english?.firstOrNull { it.isSelected }
-
-    private fun getDanishSelectedWord(): WordModel? =
-        getContentOrNull()?.danish?.firstOrNull { it.isSelected }
-
-    private fun invalidateDanishWordSelection(id: Int) {
-        getContentOrNull()?.let { content ->
-            _state.value = content.copy(
-                danish = content.danish.map { it.copy(isSelected = it.id == id) }
-            )
-        }
-    }
-
-    private fun invalidateEnglishWordSelection(id: Int) {
-        getContentOrNull()?.let { content ->
-            _state.value = content.copy(
-                english = content.english.map { it.copy(isSelected = it.id == id) }
-            )
-        }
-    }
-
-    private fun markWordsAsGuessed(id: Int) {
-        getContentOrNull()?.let { content ->
-            pairsCounter += 1
-            _state.value = content.copy(
-                danish = content.danish.map {
-                    if (it.id == id) it.copy(isSelected = false, isGuessed = true) else it
-                },
-                english = content.english.map {
-                    if (it.id == id) it.copy(isSelected = false, isGuessed = true) else it
-                }
-            )
-        }
-        when {
-            isWholePackGuessed() -> updatePackOfWords()
-            isAllWordsGuessed() -> invalidateAllWords()
-        }
-    }
-
-    private suspend fun markWordsAsWrong(danishWordId: Int, englishWordId: Int) {
-        getContentOrNull()?.let { content ->
-            _state.value = content.copy(
-                danish = content.danish.map {
-                    if (it.id == danishWordId) it.copy(isSelected = false, isWrong = true) else it
-                },
-                english = content.english.map {
-                    if (it.id == englishWordId) it.copy(isSelected = false, isWrong = true) else it
-                }
-            )
-            delay(WRONG_GUESS_ERROR_DURATION)
-            invalidateWrongWords(danishWordId, englishWordId)
-        }
-    }
-
-    private fun invalidateWrongWords(danishWordId: Int, englishWordId: Int) {
-        getContentOrNull()?.let { content ->
-            _state.value = content.copy(
-                danish = content.danish.map {
-                    if (it.id == danishWordId) it.copy(isSelected = false, isWrong = false) else it
-                },
-                english = content.english.map {
-                    if (it.id == englishWordId) it.copy(isSelected = false, isWrong = false) else it
-                }
-            )
-        }
-    }
-
-    private fun isWholePackGuessed(): Boolean {
-        val isGuessed = getContentOrNull()?.let { content ->
-            val isAllEnglishWordsGuessed = content.english.all { it.isGuessed }
-            val isAllDanishWordsGuessed = content.danish.all { it.isGuessed }
-            isAllEnglishWordsGuessed && isAllDanishWordsGuessed
-        } ?: false
-        return isGuessed
-    }
-
-    private fun updatePackOfWords() {
-        val currentPackIds = getContentOrNull()?.danish.orEmpty().map { it.id }
-        guessingItems = guessingItems.map { item ->
-            if (item.id in currentPackIds) item.copy(isGuessed = true) else item
-        }
-        showPackOfWords(GUESSED_ADDITIONAL_TIME)
-    }
-
-    private fun isAllWordsGuessed(): Boolean {
-        return guessingItems.all { it.isGuessed }
-    }
-
-    private fun invalidateAllWords() {
-        guessingItems = guessingItems.map { it.copy(isGuessed = false) }
-        showPackOfWords(GUESSED_ADDITIONAL_TIME)
-    }
-
-    private fun invalidateGuessingItems() {
-        guessingItems = guessingItems.map { if (it.isGuessed) it.copy(isGuessed = false) else it }
-    }
-
-    private fun resetScreenContent() {
-        getContentOrNull()?.let { content ->
-            _state.value = content.copy(
-                remainingCountdownTime = COUNTDOWN_TIME_SEC,
-                totalCountdownTime = COUNTDOWN_TIME_SEC,
-                status = GameStatus.FINISHED,
-                danish = content.danish.map {
-                    it.copy(isSelected = false, isGuessed = false, isWrong = false)
-                },
-                english = content.english.map {
-                    it.copy(isSelected = false, isGuessed = false, isWrong = false)
-                }
-            )
-        }
-    }
-
-    private fun saveBestResult(result: Int) = viewModelScope.launch {
-        saveResultUseCase.invoke(result)
+    fun cancelSignIn() {
+        _state.value = HomeUiState.Default
     }
 }

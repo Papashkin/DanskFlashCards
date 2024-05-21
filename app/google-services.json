@@ -15,7 +15,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "692133800678-0gjt5vk15m36hf87rbfqm72pssv1meaq.apps.googleusercontent.com",
+          "client_id": "692133800678-emv8nmfhm48jikne9s9sfbr8plu1k09l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.antsfamily.danskflashcards",
+            "certificate_hash": "b7b68aa242dd6cf16745cbc2ed8427d19deea5b8"
+          }
+        },
+        {
+          "client_id": "692133800678-v7t7jtve9s1gbci369qjd7fisu3rhca4.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

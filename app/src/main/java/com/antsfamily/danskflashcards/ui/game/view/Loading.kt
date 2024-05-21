@@ -1,4 +1,4 @@
-package com.antsfamily.danskflashcards.ui.home.view
+package com.antsfamily.danskflashcards.ui.game.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.antsfamily.danskflashcards.ui.theme.wistful_1000
 
 @Composable
 fun FullScreenLoading() {
@@ -18,7 +19,7 @@ fun FullScreenLoading() {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxSize()
         ) {
-            CircularProgressIndicator()
+            CircularProgressIndicator(trackColor = wistful_1000)
         }
     }
 }

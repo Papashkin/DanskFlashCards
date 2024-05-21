@@ -8,6 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.antsfamily.danskflashcards.ui.game.GameScreen
 import com.antsfamily.danskflashcards.ui.home.HomeScreen
 
 @Composable
@@ -24,7 +25,10 @@ fun Navigator() {
                 startDestination = Screen.Home.route
             ) {
                 composable(Screen.Home.route) {
-                    HomeScreen()
+                    HomeScreen(navController)
+                }
+                composable(Screen.Game.route) {
+                    GameScreen()
                 }
             }
         }
@@ -33,4 +37,5 @@ fun Navigator() {
 
 sealed class Screen(val route: String) {
     object Home : Screen("home")
+    object Game : Screen("game")
 }

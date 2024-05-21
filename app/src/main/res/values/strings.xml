@@ -6,4 +6,5 @@
     <string name="your_best_result">Your best result is still %1$s</string>
     <string name="game_over_dialog_description">You guessed %1$s pairs.\n%2$s</string>
     <string name="button_ok">OK</string>
+    <string name="sign_up_google">Sign up with Google</string>
 </resources>
