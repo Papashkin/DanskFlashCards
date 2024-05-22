@@ -1,6 +1,5 @@
-package com.antsfamily.danskflashcards.ui.home
+package com.antsfamily.danskflashcards.ui.auth
 
-import android.app.Activity.RESULT_OK
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -30,24 +29,21 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.antsfamily.danskflashcards.R
-import com.antsfamily.danskflashcards.ui.home.view.ButtonWithLeadingIcon
+import com.antsfamily.danskflashcards.navigation.popUpToTop
+import com.antsfamily.danskflashcards.ui.auth.view.ButtonWithLeadingIcon
 import com.antsfamily.danskflashcards.ui.theme.Padding
 
 @Composable
-fun HomeScreen(
+fun AuthScreen(
     navController: NavController,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: AuthViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsState()
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult(),
         onResult = {
-            if (it.resultCode == RESULT_OK) {
-                viewModel.signIn(it.data)
-            } else {
-                viewModel.cancelSignIn()
-            }
+            viewModel.handleSignInResult(it.resultCode, it.data)
         })
 
     LaunchedEffect(Unit) {
@@ -58,17 +54,17 @@ fun HomeScreen(
 
     LaunchedEffect(Unit) {
         viewModel.navigationFlow.collect {
-            navController.navigate(it)
+            navController.navigate(it) { popUpToTop(navController) }
         }
     }
 
-    HomeScreenContent(state.value) {
+    AuthScreenContent(state.value) {
         viewModel.onGoogleClick()
     }
 }
 
 @Composable
-fun HomeScreenContent(state: HomeUiState, onGoogleClick: () -> Unit) {
+fun AuthScreenContent(state: AuthUiState, onGoogleClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -83,7 +79,6 @@ fun HomeScreenContent(state: HomeUiState, onGoogleClick: () -> Unit) {
             ),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
         Image(painterResource(R.drawable.ic_home_image_bg), "null")
         Box(
             modifier = Modifier
@@ -124,8 +119,8 @@ fun HomeScreenContent(state: HomeUiState, onGoogleClick: () -> Unit) {
                     ButtonWithLeadingIcon(
                         iconId = R.drawable.ic_google,
                         stringId = R.string.sign_up_google,
-                        isLoading = state is HomeUiState.Loading,
-                        errorText = (state as? HomeUiState.Error)?.errorMessage
+                        isLoading = state is AuthUiState.Loading,
+                        errorText = (state as? AuthUiState.Error)?.errorMessage
                     ) {
                         onGoogleClick()
                     }
@@ -137,18 +132,18 @@ fun HomeScreenContent(state: HomeUiState, onGoogleClick: () -> Unit) {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun HomeScreenDefaultStatePreview() {
-    HomeScreenContent(HomeUiState.Default) {}
+fun AuthScreenDefaultStatePreview() {
+    AuthScreenContent(AuthUiState.Default) {}
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun HomeScreenLoadingStatePreview() {
-    HomeScreenContent(HomeUiState.Loading) {}
+fun AuthScreenLoadingStatePreview() {
+    AuthScreenContent(AuthUiState.Loading) {}
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun HomeScreenErrorStatePreview() {
-    HomeScreenContent(HomeUiState.Error("Test test test")) {}
+fun AuthScreenErrorStatePreview() {
+    AuthScreenContent(AuthUiState.Error("Test test test")) {}
 }

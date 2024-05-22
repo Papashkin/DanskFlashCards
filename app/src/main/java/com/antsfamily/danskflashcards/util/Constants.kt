@@ -9,3 +9,4 @@ const val COUNTDOWN_TIME_SEC = 120L
 const val HOME_SCREEN_PAIRS_AMOUNT = 6
 
 const val PREFERENCES_KEY_GAME_RESULT = "game_result"
+const val PREFERENCES_KEY_GAME_DATE = "game_date"

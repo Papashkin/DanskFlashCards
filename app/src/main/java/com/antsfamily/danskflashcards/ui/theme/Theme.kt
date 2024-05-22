@@ -50,7 +50,9 @@ fun DanskFlashCardsTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
+//            window.statusBarColor = Color(0X00a7ccfd).toArgb()
             window.statusBarColor = colorScheme.background.toArgb()
+            window.navigationBarColor = Color.Transparent.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }

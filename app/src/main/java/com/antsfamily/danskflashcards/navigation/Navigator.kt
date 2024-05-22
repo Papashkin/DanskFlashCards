@@ -5,11 +5,16 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.navigation.NavController
+import androidx.navigation.NavOptionsBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.antsfamily.danskflashcards.ui.game.GameScreen
-import com.antsfamily.danskflashcards.ui.home.HomeScreen
+import com.antsfamily.danskflashcards.ui.auth.AuthScreen
+import com.antsfamily.danskflashcards.ui.auth.home.HomeScreen
 
 @Composable
 fun Navigator() {
@@ -17,15 +22,27 @@ fun Navigator() {
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
+        topBar = {
+
+        },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         content = {
             print(it.toString())
             NavHost(
                 navController = navController,
-                startDestination = Screen.Home.route
+                startDestination = Screen.Auth.route
             ) {
-                composable(Screen.Home.route) {
-                    HomeScreen(navController)
+                composable(Screen.Auth.route) {
+                    AuthScreen(navController)
+                }
+                composable(
+                    Screen.Home.route,
+                    arguments = listOf(navArgument("username") { type = NavType.StringType })
+                ) { entry ->
+                    HomeScreen.Content(
+                        navController = navController,
+                        username = entry.arguments?.getString("username").orEmpty()
+                    )
                 }
                 composable(Screen.Game.route) {
                     GameScreen()
@@ -35,7 +52,8 @@ fun Navigator() {
     )
 }
 
-sealed class Screen(val route: String) {
-    object Home : Screen("home")
-    object Game : Screen("game")
+fun NavOptionsBuilder.popUpToTop(navController: NavController) {
+    popUpTo(navController.currentBackStackEntry?.destination?.route ?: return) {
+        inclusive = true
+    }
 }

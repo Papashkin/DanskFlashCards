@@ -6,5 +6,6 @@ data class SignInResult(
 )
 
 data class UserData(
-    val userId: String
+    val userId: String,
+    val username: String,
 )

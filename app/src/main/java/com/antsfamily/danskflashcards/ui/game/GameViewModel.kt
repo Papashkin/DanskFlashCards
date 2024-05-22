@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.antsfamily.danskflashcards.data.DialogData
 import com.antsfamily.danskflashcards.data.GameStatus
 import com.antsfamily.danskflashcards.data.GuessingItem
-import com.antsfamily.danskflashcards.data.Word.Companion.mapToModel
 import com.antsfamily.danskflashcards.data.WordModel
+import com.antsfamily.danskflashcards.data.mapToModel
 import com.antsfamily.danskflashcards.domain.CountdownTimerFlow
 import com.antsfamily.danskflashcards.domain.FetchDataUseCase
 import com.antsfamily.danskflashcards.domain.GetResultUseCase
@@ -192,7 +192,7 @@ class GameViewModel @Inject constructor(
             stopTimer()
             resetScreenContent()
             invalidateGuessingItems()
-            val result = getResultUseCase(Unit).firstOrNull().orZero()
+            val result = getResultUseCase(Unit).firstOrNull()?.value.orZero()
             showFinalDialog(result)
             if (pairsCounter > result) {
                 saveBestResult(pairsCounter)
