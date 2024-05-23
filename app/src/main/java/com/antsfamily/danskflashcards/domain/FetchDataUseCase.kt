@@ -1,6 +1,6 @@
 package com.antsfamily.danskflashcards.domain
 
-import com.antsfamily.danskflashcards.data.Word
+import com.antsfamily.danskflashcards.data.WordApiModel
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.getValue
 import com.google.gson.Gson
@@ -13,17 +13,17 @@ import kotlin.coroutines.resumeWithException
 class FetchDataUseCase @Inject constructor(
     private val firebaseDatabase: DatabaseReference,
     private val gson: Gson
-) : BaseUseCase<Unit, List<Word?>>() {
+) : BaseUseCase<Unit, List<WordApiModel?>>() {
 
-    override suspend fun run(params: Unit): List<Word?> = suspendCancellableCoroutine {
+    override suspend fun run(params: Unit): List<WordApiModel?> = suspendCancellableCoroutine {
         try {
             firebaseDatabase.get().addOnSuccessListener { snapshot ->
                 val words = if (snapshot.exists()) {
                     val snapshotValue =
                         snapshot.getValue<ArrayList<HashMap<String, Any>>>().orEmpty()
                     val jsonData = gson.toJson(snapshotValue)
-                    val listType = object : TypeToken<List<Word>>() {}.type
-                    gson.fromJson<List<Word?>>(jsonData, listType)
+                    val listType = object : TypeToken<List<WordApiModel>>() {}.type
+                    gson.fromJson<List<WordApiModel?>>(jsonData, listType)
                 } else {
                     emptyList()
                 }

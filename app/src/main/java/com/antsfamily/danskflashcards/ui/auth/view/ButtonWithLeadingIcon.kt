@@ -1,4 +1,4 @@
-package com.antsfamily.danskflashcards.ui.home.view
+package com.antsfamily.danskflashcards.ui.auth.view
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -59,8 +59,9 @@ fun ButtonWithLeadingIcon(
             ) {
                 if (isLoading) {
                     CircularProgressIndicator(
-                        Modifier.size(32.dp),
-                        color = wistful_1000
+                        Modifier.size(24.dp),
+                        strokeWidth = 2.dp,
+                        color = wistful_1000,
                     )
                 } else {
                     ButtonContent(modifier, stringId, iconId)

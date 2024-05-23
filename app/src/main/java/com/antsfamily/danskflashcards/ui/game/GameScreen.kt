@@ -1,5 +1,6 @@
 package com.antsfamily.danskflashcards.ui.game
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,12 +22,14 @@ import com.antsfamily.danskflashcards.ui.game.view.StartedTimer
 import com.antsfamily.danskflashcards.ui.theme.Padding
 
 @Composable
-fun GameScreen(viewModel: GameViewModel = hiltViewModel()) {
+fun GameScreen(
+    viewModel: GameViewModel = hiltViewModel()
+) {
     val state = viewModel.state.collectAsState()
     val dialogData = viewModel.dialogData.collectAsState()
     when (val stateValue = state.value) {
         GameUiState.Loading -> FullScreenLoading()
-        is GameUiState.Content -> GameScreenPostsContent(
+        is GameUiState.Content -> GameScreenContent(
             stateValue,
             onDanishWordClick = { viewModel.onDanishWordCardClick(it) },
             onEnglishWordClick = { viewModel.onEnglishWordCardClick(it) },
@@ -44,7 +47,7 @@ fun GameScreen(viewModel: GameViewModel = hiltViewModel()) {
 }
 
 @Composable
-fun GameScreenPostsContent(
+fun GameScreenContent(
     content: GameUiState.Content,
     onDanishWordClick: (WordModel) -> Unit,
     onEnglishWordClick: (WordModel) -> Unit,
@@ -54,6 +57,7 @@ fun GameScreenPostsContent(
         modifier = Modifier
             .padding(horizontal = Padding.large, vertical = Padding.medium)
             .fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
         with(content) {
             Row(
@@ -75,7 +79,7 @@ fun GameScreenPostsContent(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun GameScreenContent1Preview() {
-    GameScreenPostsContent(
+    GameScreenContent(
         GameUiState.Content(
             danish = listOf(),
             english = listOf(),
@@ -92,7 +96,7 @@ fun GameScreenContent1Preview() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun GameScreenContent2Preview() {
-    GameScreenPostsContent(
+    GameScreenContent(
         GameUiState.Content(
             danish = listOf(
                 WordModel(
