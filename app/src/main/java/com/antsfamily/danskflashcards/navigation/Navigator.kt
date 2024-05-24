@@ -16,6 +16,7 @@ import androidx.navigation.navArgument
 import com.antsfamily.danskflashcards.ui.game.GameScreen
 import com.antsfamily.danskflashcards.ui.auth.AuthScreen
 import com.antsfamily.danskflashcards.ui.home.HomeScreen
+import com.antsfamily.danskflashcards.ui.splash.SplashScreen
 
 @Composable
 fun Navigator() {
@@ -31,8 +32,11 @@ fun Navigator() {
             print(it.toString())
             NavHost(
                 navController = navController,
-                startDestination = Screen.Auth.route
+                startDestination = Screen.Splash.route
             ) {
+                composable(Screen.Splash.route) {
+                    SplashScreen(navController)
+                }
                 composable(Screen.Auth.route) {
                     AuthScreen(navController)
                 }
