@@ -1,4 +1,4 @@
-package com.antsfamily.danskflashcards.ui.auth.home
+package com.antsfamily.danskflashcards.ui.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
@@ -25,7 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.antsfamily.danskflashcards.data.PersonalBest
-import com.antsfamily.danskflashcards.ui.auth.home.view.PersonalBestCard
+import com.antsfamily.danskflashcards.ui.home.view.PersonalBestCard
 import com.antsfamily.danskflashcards.ui.game.view.FullScreenLoading
 import com.antsfamily.danskflashcards.ui.theme.Padding
 import java.math.BigDecimal
@@ -53,9 +54,11 @@ fun HomeScreen(
     val state = viewModel.state.collectAsState()
     when (val stateValue = state.value) {
         is HomeUiState.Loading -> FullScreenLoading()
-        is HomeUiState.Content -> HomeScreenContent(stateValue) {
-            viewModel.onStartClick()
-        }
+        is HomeUiState.Content -> HomeScreenContent(
+            content = stateValue,
+            onStartClick = viewModel::onStartClick,
+            onBackButtonClick = viewModel::onBackButtonClick
+        )
 
         is HomeUiState.Error -> {
             //TODO add error handler
@@ -65,16 +68,23 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         viewModel.navigationFlow.collect(navController::navigate)
     }
+
+    LaunchedEffect(Unit) {
+        viewModel.navigationBackFlow.collect {
+            navController.popBackStack()
+        }
+    }
 }
 
 @Composable
 fun HomeScreenContent(
     content: HomeUiState.Content,
     onStartClick: () -> Unit,
+    onBackButtonClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
-            .padding(start = Padding.medium, end = Padding.medium, top = Padding.huge)
+            .padding(Padding.medium)
             .fillMaxSize(),
     ) {
         Row(
@@ -84,13 +94,13 @@ fun HomeScreenContent(
             IconButton(
                 onClick = { /*TODO*/ }) {
                 Icon(
-                    imageVector = Icons.Default.Settings,
+                    imageVector = Icons.Filled.Settings,
                     contentDescription = null
                 )
             }
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = onBackButtonClick) {
                 Icon(
-                    imageVector = Icons.Default.ExitToApp,
+                    imageVector = Icons.AutoMirrored.Filled.ExitToApp,
                     contentDescription = null
                 )
             }
@@ -117,6 +127,6 @@ fun HomeScreenContentPreview() {
         HomeUiState.Content(
             userName = "Pavel Antoshkin",
             PersonalBest(43, percent, "yyyy/MM/dd HH:mm:ss")
-        )
+        ), {}
     ) {}
 }

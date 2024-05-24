@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.antsfamily.danskflashcards.data.GoogleAuthUiClient
 import com.antsfamily.danskflashcards.data.UserData
 import com.antsfamily.danskflashcards.navigation.Screen
+import com.antsfamily.danskflashcards.navigation.toNavigationRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,7 +48,7 @@ class AuthViewModel @Inject constructor(
         if (code == Activity.RESULT_OK) {
             signIn(intent)
         } else {
-            cancelSignIn()
+            setDefaultUiState()
         }
     }
 
@@ -58,13 +59,10 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    private fun cancelSignIn() {
-        setDefaultUiState()
-    }
-
     private fun proceedWithUserData(userData: UserData) = viewModelScope.launch {
-        val navigationRoute = "${Screen.Home.route.substringBefore("/")}/${userData.username}"
+        val navigationRoute =Screen.Home.toNavigationRoute(userData.username)
         _navigationFlow.emit(navigationRoute)
+        setDefaultUiState()
     }
 
     private fun setDefaultUiState() {

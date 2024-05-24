@@ -2,33 +2,31 @@ package com.antsfamily.danskflashcards.domain
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.antsfamily.danskflashcards.data.PersonalBestApiModel
 import com.antsfamily.danskflashcards.util.PREFERENCES_KEY_GAME_DATE
 import com.antsfamily.danskflashcards.util.PREFERENCES_KEY_GAME_RESULT
-import com.antsfamily.danskflashcards.util.toString
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class SaveResultUseCase @Inject constructor(
+class GetPersonalBestUseCase @Inject constructor(
     private val dataStore: DataStore<Preferences>
-): BaseUseCase<Int, Unit>() {
+): FlowUseCase<Unit, PersonalBestApiModel>() {
 
     companion object {
         private val KEY_GAME_RESULT = intPreferencesKey(PREFERENCES_KEY_GAME_RESULT)
         private val KEY_GAME_DATE = stringPreferencesKey(PREFERENCES_KEY_GAME_DATE)
+        private const val ZERO = 0
     }
 
-    override suspend fun run(params: Int) {
-        val currentTime = Calendar.getInstance().time.toString("E, dd MMM yyyy HH:mm")
-        dataStore.edit {
-            it[KEY_GAME_RESULT] = params
-            it[KEY_GAME_DATE] = currentTime
+    override fun run(params: Unit): Flow<PersonalBestApiModel> {
+        return dataStore.data.map {
+            PersonalBestApiModel(
+                value = it[KEY_GAME_RESULT] ?: ZERO,
+                date = it[KEY_GAME_DATE] ?: "-"
+            )
         }
     }
 }

@@ -1,8 +1,8 @@
 package com.antsfamily.danskflashcards.ui.game
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,28 +12,35 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.antsfamily.danskflashcards.data.GameStatus
 import com.antsfamily.danskflashcards.data.WordModel
-import com.antsfamily.danskflashcards.ui.game.view.FullScreenLoading
 import com.antsfamily.danskflashcards.ui.game.view.GameOverDialog
 import com.antsfamily.danskflashcards.ui.game.view.GameScreenContent
-import com.antsfamily.danskflashcards.ui.game.view.StartButton
+import com.antsfamily.danskflashcards.ui.game.view.StartAnimationPreloader
 import com.antsfamily.danskflashcards.ui.game.view.StartedTimer
 import com.antsfamily.danskflashcards.ui.theme.Padding
 
 @Composable
 fun GameScreen(
+    navController: NavController,
     viewModel: GameViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsState()
     val dialogData = viewModel.dialogData.collectAsState()
     when (val stateValue = state.value) {
-        GameUiState.Loading -> FullScreenLoading()
-        is GameUiState.Content -> GameScreenContent(
+        GameUiState.Loading ->
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                StartAnimationPreloader { viewModel.onAnimationFinished() }
+            }
+
+        is GameUiState.Content -> Content(
             stateValue,
             onDanishWordClick = { viewModel.onDanishWordCardClick(it) },
-            onEnglishWordClick = { viewModel.onEnglishWordCardClick(it) },
-            onStartClick = { viewModel.onStartClick() }
+            onEnglishWordClick = { viewModel.onEnglishWordCardClick(it) }
         )
 
         is GameUiState.Error -> {
@@ -42,34 +49,28 @@ fun GameScreen(
     }
 
     dialogData.value?.let {
-        GameOverDialog(data = it, viewModel::hideDialog)
+        GameOverDialog(data = it) {
+            viewModel.hideDialog()
+            navController.popBackStack()
+        }
     }
 }
 
 @Composable
-fun GameScreenContent(
+fun Content(
     content: GameUiState.Content,
     onDanishWordClick: (WordModel) -> Unit,
     onEnglishWordClick: (WordModel) -> Unit,
-    onStartClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
             .padding(horizontal = Padding.large, vertical = Padding.medium)
             .fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.SpaceAround // .SpaceBetween
     ) {
         with(content) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                when (status) {
-                    GameStatus.STARTED -> StartedTimer(remainingCountdownTime, timerProgress)
-                    else -> StartButton(onClick = onStartClick)
-                }
-            }
             if (status == GameStatus.STARTED) {
+                StartedTimer(remainingCountdownTime, timerProgress)
                 GameScreenContent(content, onDanishWordClick, onEnglishWordClick)
             }
         }
@@ -78,25 +79,18 @@ fun GameScreenContent(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun GameScreenContent1Preview() {
-    GameScreenContent(
-        GameUiState.Content(
-            danish = listOf(),
-            english = listOf(),
-            1000,
-            500,
-            status = GameStatus.READY,
-        ),
-        {},
-        {},
-        {}
-    )
+fun GameScreenLoadingPreview() {
+    Box(modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        StartAnimationPreloader { }
+    }
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun GameScreenContent2Preview() {
-    GameScreenContent(
+fun GameScreenContentPreview() {
+    Content(
         GameUiState.Content(
             danish = listOf(
                 WordModel(
@@ -176,7 +170,6 @@ fun GameScreenContent2Preview() {
             500,
             status = GameStatus.STARTED,
         ),
-        {},
         {},
         {}
     )

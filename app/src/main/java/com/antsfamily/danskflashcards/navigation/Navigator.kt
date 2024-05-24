@@ -1,5 +1,6 @@
 package com.antsfamily.danskflashcards.navigation
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -14,7 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.antsfamily.danskflashcards.ui.game.GameScreen
 import com.antsfamily.danskflashcards.ui.auth.AuthScreen
-import com.antsfamily.danskflashcards.ui.auth.home.HomeScreen
+import com.antsfamily.danskflashcards.ui.home.HomeScreen
 
 @Composable
 fun Navigator() {
@@ -39,13 +40,16 @@ fun Navigator() {
                     Screen.Home.route,
                     arguments = listOf(navArgument("username") { type = NavType.StringType })
                 ) { entry ->
+                    BackHandler(true) {
+                        //no-op
+                    }
                     HomeScreen.Content(
                         navController = navController,
                         username = entry.arguments?.getString("username").orEmpty()
                     )
                 }
                 composable(Screen.Game.route) {
-                    GameScreen()
+                    GameScreen(navController)
                 }
             }
         }

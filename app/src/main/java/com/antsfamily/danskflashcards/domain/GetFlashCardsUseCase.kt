@@ -10,24 +10,32 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-class FetchDataUseCase @Inject constructor(
+class GetFlashCardsUseCase @Inject constructor(
     private val firebaseDatabase: DatabaseReference,
     private val gson: Gson
-) : BaseUseCase<Unit, List<WordApiModel?>>() {
+) : BaseUseCase<Unit, List<WordApiModel>>() {
 
-    override suspend fun run(params: Unit): List<WordApiModel?> = suspendCancellableCoroutine {
+    private var cards: List<WordApiModel>? = null
+
+    override suspend fun run(params: Unit): List<WordApiModel> {
+        return cards ?: run { getFlashCardsRemote() }
+    }
+
+    private suspend fun getFlashCardsRemote(): List<WordApiModel> = suspendCancellableCoroutine {
         try {
             firebaseDatabase.get().addOnSuccessListener { snapshot ->
-                val words = if (snapshot.exists()) {
+                val cards = if (snapshot.exists()) {
                     val snapshotValue =
                         snapshot.getValue<ArrayList<HashMap<String, Any>>>().orEmpty()
                     val jsonData = gson.toJson(snapshotValue)
                     val listType = object : TypeToken<List<WordApiModel>>() {}.type
-                    gson.fromJson<List<WordApiModel?>>(jsonData, listType)
+                    val flashCards = gson.fromJson<List<WordApiModel?>>(jsonData, listType)
+                    cards = flashCards.mapNotNull { item -> item }
+                    flashCards
                 } else {
                     emptyList()
                 }
-                it.resume(words)
+                it.resume(cards.mapNotNull { item -> item })
             }.addOnFailureListener { exception ->
                 it.resumeWithException(exception)
             }

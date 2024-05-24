@@ -8,9 +8,9 @@ import com.antsfamily.danskflashcards.data.GuessingItem
 import com.antsfamily.danskflashcards.data.WordModel
 import com.antsfamily.danskflashcards.data.mapToModel
 import com.antsfamily.danskflashcards.domain.CountdownTimerFlow
-import com.antsfamily.danskflashcards.domain.FetchDataUseCase
-import com.antsfamily.danskflashcards.domain.GetResultUseCase
-import com.antsfamily.danskflashcards.domain.SaveResultUseCase
+import com.antsfamily.danskflashcards.domain.GetFlashCardsUseCase
+import com.antsfamily.danskflashcards.domain.GetPersonalBestUseCase
+import com.antsfamily.danskflashcards.domain.SetPersonalBestUseCase
 import com.antsfamily.danskflashcards.util.COUNTDOWN_STEP
 import com.antsfamily.danskflashcards.util.COUNTDOWN_TIME_SEC
 import com.antsfamily.danskflashcards.util.GUESSED_ADDITIONAL_TIME
@@ -31,9 +31,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GameViewModel @Inject constructor(
-    private val fetchDataUseCase: FetchDataUseCase,
-    private val saveResultUseCase: SaveResultUseCase,
-    private val getResultUseCase: GetResultUseCase,
+    private val fetchDataUseCase: GetFlashCardsUseCase,
+    private val setPersonalBestUseCase: SetPersonalBestUseCase,
+    private val getPersonalBestUseCase: GetPersonalBestUseCase,
     private val timerFlow: CountdownTimerFlow,
 ) : ViewModel() {
 
@@ -54,6 +54,11 @@ class GameViewModel @Inject constructor(
 
     init {
         getData()
+    }
+
+    fun onAnimationFinished() {
+        showPackOfWords()
+        startTimer()
     }
 
     fun onDanishWordCardClick(word: WordModel) = viewModelScope.launch {
@@ -90,20 +95,6 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    fun onStartClick() {
-        getContentOrNull()?.let { content ->
-            if (!isTimerStarted) {
-                val packIds = getPackIds()
-                _state.value = content.copy(
-                    status = GameStatus.STARTED,
-                    danish = getPackOfDanishWords(packIds),
-                    english = getPackOfEnglishWords(packIds)
-                )
-                startTimer()
-            }
-        }
-    }
-
     fun hideDialog() {
         pairsCounter = 0
         _dialogData.value = null
@@ -130,10 +121,10 @@ class GameViewModel @Inject constructor(
     private fun getData() = viewModelScope.launch {
         try {
             fetchDataUseCase(Unit) { data ->
-                guessingItems = data.filterNotNull().map { GuessingItem(it.id, false) }
+                guessingItems = data.map { GuessingItem(it.id, false) }
                 danishWords = data.mapNotNull { it.mapToModel(true) }
                 englishWords = data.mapNotNull { it.mapToModel(false) }
-                showPackOfWords()
+//                showPackOfWords()
             }
         } catch (e: Exception) {
             _state.value = GameUiState.Error(errorMessage = e.message.orEmpty())
@@ -141,16 +132,17 @@ class GameViewModel @Inject constructor(
     }
 
     private fun showPackOfWords(additionalTime: Long = ZERO) {
+        val content =  getContentOrNull()
         val packIds = getPackIds()
-        val totalTime = getContentOrNull()?.totalCountdownTime ?: COUNTDOWN_TIME_SEC
-        val remainTime = (getContentOrNull()?.remainingCountdownTime ?: COUNTDOWN_TIME_SEC) + additionalTime
+        val totalTime = content?.totalCountdownTime ?: COUNTDOWN_TIME_SEC
+        val remainTime = (content?.remainingCountdownTime ?: COUNTDOWN_TIME_SEC) + additionalTime
         _state.value = GameUiState.Content(
             danish = getPackOfDanishWords(packIds),
             english = getPackOfEnglishWords(packIds),
             totalCountdownTime = totalTime,
             remainingCountdownTime = remainTime,
             timerProgress = remainTime.toFloat().div(totalTime),
-            status = getContentOrNull()?.status ?: GameStatus.READY
+            status = content?.status ?: GameStatus.STARTED
         )
     }
 
@@ -192,7 +184,7 @@ class GameViewModel @Inject constructor(
             stopTimer()
             resetScreenContent()
             invalidateGuessingItems()
-            val result = getResultUseCase(Unit).firstOrNull()?.value.orZero()
+            val result = getPersonalBestUseCase(Unit).firstOrNull()?.value.orZero()
             showFinalDialog(result)
             if (pairsCounter > result) {
                 saveBestResult(pairsCounter)
@@ -338,6 +330,6 @@ class GameViewModel @Inject constructor(
     }
 
     private fun saveBestResult(result: Int) = viewModelScope.launch {
-        saveResultUseCase.invoke(result)
+        setPersonalBestUseCase.invoke(result)
     }
 }
