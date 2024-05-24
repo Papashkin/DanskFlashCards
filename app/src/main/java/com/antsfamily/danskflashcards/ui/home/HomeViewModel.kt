@@ -1,13 +1,15 @@
-package com.antsfamily.danskflashcards.ui.auth.home
+package com.antsfamily.danskflashcards.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.antsfamily.danskflashcards.data.GoogleAuthUiClient
 import com.antsfamily.danskflashcards.data.WordApiModel
 import com.antsfamily.danskflashcards.data.mapToModel
-import com.antsfamily.danskflashcards.domain.FetchDataUseCase
-import com.antsfamily.danskflashcards.domain.GetResultUseCase
+import com.antsfamily.danskflashcards.domain.GetFlashCardsUseCase
+import com.antsfamily.danskflashcards.domain.GetPersonalBestUseCase
 import com.antsfamily.danskflashcards.navigation.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -20,8 +22,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val fetchDataUseCase: FetchDataUseCase,
-    private val getResultUseCase: GetResultUseCase,
+    private val getFlashCardsUseCase: GetFlashCardsUseCase,
+    private val getPersonalBestUseCase: GetPersonalBestUseCase,
+    private val client: GoogleAuthUiClient
 ) : ViewModel() {
 
     private var username: String? = null
@@ -35,6 +38,10 @@ class HomeViewModel @Inject constructor(
     private val _navigationFlow = MutableSharedFlow<String>()
     val navigationFlow: SharedFlow<String> = _navigationFlow.asSharedFlow()
 
+
+    private val _navigationBackFlow = MutableSharedFlow<Unit>()
+    val navigationBackFlow: SharedFlow<Unit> = _navigationBackFlow.asSharedFlow()
+
     fun init(username: String) {
         _state.value = HomeUiState.Loading
         this.username = username
@@ -45,17 +52,27 @@ class HomeViewModel @Inject constructor(
         _navigationFlow.emit(Screen.Game.route)
     }
 
-    private fun getData(username: String) = viewModelScope.launch {
+    fun onBackButtonClick() = viewModelScope.launch {
         try {
-            val result = getResultUseCase(Unit).firstOrNull()
-            fetchDataUseCase(Unit) { data ->
+            _state.value = HomeUiState.Loading
+            client.signOut()
+        } catch (e: Exception) {
+            // no-op
+        } finally {
+            _navigationBackFlow.emit(Unit)
+        }
+    }
+
+    private fun getData(username: String) = viewModelScope.launch(Dispatchers.IO) {
+        try {
+            val result = getPersonalBestUseCase(Unit).firstOrNull()
+            getFlashCardsUseCase(Unit) { data ->
                 words = data
                 _state.value = HomeUiState.Content(
                     userName = username,
-                    personalBest =result.mapToModel(data.filterNotNull().size),
+                    personalBest = result.mapToModel(data.size),
                 )
             }
-
         } catch (e: Exception) {
             _state.value = HomeUiState.Error(errorMessage = e.message.orEmpty())
         }

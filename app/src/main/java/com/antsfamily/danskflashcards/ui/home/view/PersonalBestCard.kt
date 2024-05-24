@@ -1,4 +1,4 @@
-package com.antsfamily.danskflashcards.ui.auth.home.view
+package com.antsfamily.danskflashcards.ui.home.view
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -53,7 +53,7 @@ fun PersonalBestCard(data: PersonalBest, onClick: () -> Unit) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         modifier = Modifier.width(100.dp),
-                        text = "Personal Best",
+                        text = stringResource(R.string.personal_best),
                         style = MaterialTheme.typography.bodyMedium,
                         textAlign = TextAlign.Center,
                         color = wistful_400
@@ -72,7 +72,7 @@ fun PersonalBestCard(data: PersonalBest, onClick: () -> Unit) {
                     .padding(horizontal = Padding.small)
                 ) {
                     Text(
-                        text = "Date of the PB",
+                        text = stringResource(R.string.date_of_the_pb),
                         style = MaterialTheme.typography.bodyMedium,
                         textAlign = TextAlign.Center,
                         color = wistful_400
@@ -87,7 +87,7 @@ fun PersonalBestCard(data: PersonalBest, onClick: () -> Unit) {
 
                     Text(
                         modifier = Modifier.padding(top = Padding.medium),
-                        text = "% of all words",
+                        text = stringResource(R.string.of_all_words),
                         style = MaterialTheme.typography.bodyMedium,
                         textAlign = TextAlign.Center,
                         color = wistful_400

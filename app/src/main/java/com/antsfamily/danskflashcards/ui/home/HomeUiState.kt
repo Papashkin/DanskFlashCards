@@ -1,4 +1,4 @@
-package com.antsfamily.danskflashcards.ui.auth.home
+package com.antsfamily.danskflashcards.ui.home
 
 import com.antsfamily.danskflashcards.data.PersonalBest
 

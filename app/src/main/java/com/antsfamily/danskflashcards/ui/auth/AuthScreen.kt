@@ -8,10 +8,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,11 +23,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.antsfamily.danskflashcards.R
-import com.antsfamily.danskflashcards.navigation.popUpToTop
 import com.antsfamily.danskflashcards.ui.auth.view.ButtonWithLeadingIcon
 import com.antsfamily.danskflashcards.ui.theme.Padding
 
@@ -44,7 +40,8 @@ fun AuthScreen(
         contract = ActivityResultContracts.StartIntentSenderForResult(),
         onResult = {
             viewModel.handleSignInResult(it.resultCode, it.data)
-        })
+        }
+    )
 
     LaunchedEffect(Unit) {
         viewModel.signInFlow.collect {
@@ -53,9 +50,7 @@ fun AuthScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.navigationFlow.collect {
-            navController.navigate(it) { popUpToTop(navController) }
-        }
+        viewModel.navigationFlow.collect(navController::navigate)
     }
 
     AuthScreenContent(state.value) {
