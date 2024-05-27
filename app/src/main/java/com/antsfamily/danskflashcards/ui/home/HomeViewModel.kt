@@ -3,8 +3,8 @@ package com.antsfamily.danskflashcards.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.antsfamily.danskflashcards.data.GoogleAuthUiClient
-import com.antsfamily.danskflashcards.data.WordApiModel
-import com.antsfamily.danskflashcards.data.mapToModel
+import com.antsfamily.danskflashcards.data.model.WordApiModel
+import com.antsfamily.danskflashcards.data.model.mapToModel
 import com.antsfamily.danskflashcards.domain.GetFlashCardsUseCase
 import com.antsfamily.danskflashcards.domain.GetPersonalBestUseCase
 import com.antsfamily.danskflashcards.navigation.Screen

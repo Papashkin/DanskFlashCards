@@ -2,11 +2,11 @@ package com.antsfamily.danskflashcards.ui.game
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.antsfamily.danskflashcards.data.DialogData
-import com.antsfamily.danskflashcards.data.GameStatus
-import com.antsfamily.danskflashcards.data.GuessingItem
-import com.antsfamily.danskflashcards.data.WordModel
-import com.antsfamily.danskflashcards.data.mapToModel
+import com.antsfamily.danskflashcards.ui.game.model.DialogData
+import com.antsfamily.danskflashcards.ui.game.model.GameStatus
+import com.antsfamily.danskflashcards.ui.game.model.GuessingItem
+import com.antsfamily.danskflashcards.ui.game.model.WordModel
+import com.antsfamily.danskflashcards.data.model.mapToModel
 import com.antsfamily.danskflashcards.domain.CountdownTimerFlow
 import com.antsfamily.danskflashcards.domain.GetFlashCardsUseCase
 import com.antsfamily.danskflashcards.domain.GetPersonalBestUseCase
@@ -124,7 +124,6 @@ class GameViewModel @Inject constructor(
                 guessingItems = data.map { GuessingItem(it.id, false) }
                 danishWords = data.mapNotNull { it.mapToModel(true) }
                 englishWords = data.mapNotNull { it.mapToModel(false) }
-//                showPackOfWords()
             }
         } catch (e: Exception) {
             _state.value = GameUiState.Error(errorMessage = e.message.orEmpty())

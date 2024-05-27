@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -13,8 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.antsfamily.danskflashcards.data.GameStatus
-import com.antsfamily.danskflashcards.data.WordModel
+import com.antsfamily.danskflashcards.ui.game.model.GameStatus
+import com.antsfamily.danskflashcards.ui.game.model.WORD_CARDS_DANISH
+import com.antsfamily.danskflashcards.ui.game.model.WORD_CARDS_ENGLISH
+import com.antsfamily.danskflashcards.ui.game.model.WordModel
 import com.antsfamily.danskflashcards.ui.game.view.GameOverDialog
 import com.antsfamily.danskflashcards.ui.game.view.GameScreenContent
 import com.antsfamily.danskflashcards.ui.game.view.StartAnimationPreloader
@@ -92,80 +93,8 @@ fun GameScreenLoadingPreview() {
 fun GameScreenContentPreview() {
     Content(
         GameUiState.Content(
-            danish = listOf(
-                WordModel(
-                    value = "kolonne",
-                    id = 986,
-                    isGuessed = false,
-                    isSelected = false,
-                    isWrong = false
-                ),
-                WordModel(
-                    value = "molekyle",
-                    id = 987,
-                    isGuessed = false,
-                    isSelected = true,
-                    isWrong = false
-                ),
-                WordModel(
-                    value = "vælg",
-                    id = 988,
-                    isGuessed = true,
-                    isSelected = true,
-                    isWrong = false
-                ),
-                WordModel(
-                    value = "forkert",
-                    id = 989,
-                    isGuessed = false,
-                    isSelected = false,
-                    isWrong = false
-                ),
-                WordModel(
-                    value = "grå",
-                    id = 990,
-                    isGuessed = false,
-                    isSelected = false,
-                    isWrong = true
-                ),
-            ),
-            english = listOf(
-                WordModel(
-                    value = "column",
-                    id = 991,
-                    isGuessed = false,
-                    isSelected = true,
-                    isWrong = false
-                ),
-                WordModel(
-                    value = "molecule",
-                    id = 992,
-                    isGuessed = true,
-                    isSelected = false,
-                    isWrong = false
-                ),
-                WordModel(
-                    value = "select",
-                    id = 993,
-                    isGuessed = false,
-                    isSelected = false,
-                    isWrong = false
-                ),
-                WordModel(
-                    value = "wrong",
-                    id = 994,
-                    isGuessed = false,
-                    isSelected = true,
-                    isWrong = false
-                ),
-                WordModel(
-                    value = "gray",
-                    id = 996,
-                    isGuessed = false,
-                    isSelected = false,
-                    isWrong = false
-                ),
-            ),
+            danish = WORD_CARDS_DANISH,
+            english = WORD_CARDS_ENGLISH,
             1000,
             500,
             status = GameStatus.STARTED,

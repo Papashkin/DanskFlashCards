@@ -1,6 +1,6 @@
 package com.antsfamily.danskflashcards.domain
 
-import com.antsfamily.danskflashcards.data.WordApiModel
+import com.antsfamily.danskflashcards.data.model.WordApiModel
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.getValue
 import com.google.gson.Gson
