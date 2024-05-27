@@ -11,7 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.antsfamily.danskflashcards.data.WordModel
+import com.antsfamily.danskflashcards.ui.game.model.WordModel
 import com.antsfamily.danskflashcards.ui.game.GameUiState
 import com.antsfamily.danskflashcards.ui.theme.Padding
 

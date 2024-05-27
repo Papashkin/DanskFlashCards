@@ -1,4 +1,4 @@
-package com.antsfamily.danskflashcards.data
+package com.antsfamily.danskflashcards.ui.home.model
 
 import java.math.BigDecimal
 

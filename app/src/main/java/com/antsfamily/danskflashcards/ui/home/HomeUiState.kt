@@ -1,6 +1,6 @@
 package com.antsfamily.danskflashcards.ui.home
 
-import com.antsfamily.danskflashcards.data.PersonalBest
+import com.antsfamily.danskflashcards.ui.home.model.PersonalBest
 
 sealed class HomeUiState {
     data object Loading: HomeUiState()

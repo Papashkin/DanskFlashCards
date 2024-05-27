@@ -1,5 +1,6 @@
-package com.antsfamily.danskflashcards.data
+package com.antsfamily.danskflashcards.data.model
 
+import com.antsfamily.danskflashcards.ui.game.model.WordModel
 import com.google.gson.annotations.SerializedName
 
 data class WordApiModel(

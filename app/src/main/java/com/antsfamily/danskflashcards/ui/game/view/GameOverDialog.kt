@@ -25,7 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.antsfamily.danskflashcards.R
-import com.antsfamily.danskflashcards.data.DialogData
+import com.antsfamily.danskflashcards.ui.game.model.DialogData
 import com.antsfamily.danskflashcards.ui.theme.Padding
 import com.antsfamily.danskflashcards.ui.theme.wistful_50
 

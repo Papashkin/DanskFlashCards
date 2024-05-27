@@ -1,4 +1,4 @@
-package com.antsfamily.danskflashcards.data
+package com.antsfamily.danskflashcards.ui.game.model
 
 data class DialogData(
     val pairsAmount: Int = 0,

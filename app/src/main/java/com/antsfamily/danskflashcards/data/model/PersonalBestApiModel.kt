@@ -1,5 +1,6 @@
-package com.antsfamily.danskflashcards.data
+package com.antsfamily.danskflashcards.data.model
 
+import com.antsfamily.danskflashcards.ui.home.model.PersonalBest
 import com.antsfamily.danskflashcards.util.orZero
 import java.math.BigDecimal
 import java.math.RoundingMode

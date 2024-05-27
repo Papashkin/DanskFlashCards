@@ -1,7 +1,7 @@
 package com.antsfamily.danskflashcards.ui.game
 
-import com.antsfamily.danskflashcards.data.GameStatus
-import com.antsfamily.danskflashcards.data.WordModel
+import com.antsfamily.danskflashcards.ui.game.model.GameStatus
+import com.antsfamily.danskflashcards.ui.game.model.WordModel
 import com.antsfamily.danskflashcards.util.COUNTDOWN_TIME_SEC
 
 sealed class GameUiState {
