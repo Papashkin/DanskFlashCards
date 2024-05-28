@@ -7,6 +7,7 @@ import com.antsfamily.danskflashcards.data.model.WordApiModel
 import com.antsfamily.danskflashcards.data.model.mapToModel
 import com.antsfamily.danskflashcards.domain.GetFlashCardsUseCase
 import com.antsfamily.danskflashcards.domain.GetPersonalBestUseCase
+import com.antsfamily.danskflashcards.domain.GetUsersUseCase
 import com.antsfamily.danskflashcards.navigation.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getFlashCardsUseCase: GetFlashCardsUseCase,
+    private val getUsersUseCase: GetUsersUseCase,
     private val getPersonalBestUseCase: GetPersonalBestUseCase,
     private val client: GoogleAuthUiClient
 ) : ViewModel() {
@@ -42,17 +44,24 @@ class HomeViewModel @Inject constructor(
     private val _navigationBackFlow = MutableSharedFlow<Unit>()
     val navigationBackFlow: SharedFlow<Unit> = _navigationBackFlow.asSharedFlow()
 
-    fun init(username: String) {
+    fun init(username: String, userId: String) {
         _state.value = HomeUiState.Loading
         this.username = username
         getData(username)
+        getUsers()
     }
 
-    fun onStartClick() = viewModelScope.launch {
+    private fun getUsers() = viewModelScope.launch(Dispatchers.IO) {
+        getUsersUseCase(Unit) {
+            println(it)
+        }
+    }
+
+    fun onStartClick() = viewModelScope.launch(Dispatchers.IO) {
         _navigationFlow.emit(Screen.Game.route)
     }
 
-    fun onBackButtonClick() = viewModelScope.launch {
+    fun onBackButtonClick() = viewModelScope.launch(Dispatchers.IO) {
         try {
             _state.value = HomeUiState.Loading
             client.signOut()

@@ -60,7 +60,7 @@ class AuthViewModel @Inject constructor(
     }
 
     private fun proceedWithUserData(userData: UserData) = viewModelScope.launch {
-        val navigationRoute =Screen.Home.toNavigationRoute(userData.username)
+        val navigationRoute =Screen.Home.toNavigationRoute(userData.username, userData.userId)
         _navigationFlow.emit(navigationRoute)
         setDefaultUiState()
     }

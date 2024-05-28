@@ -42,14 +42,18 @@ fun Navigator() {
                 }
                 composable(
                     Screen.Home.route,
-                    arguments = listOf(navArgument("username") { type = NavType.StringType })
+                    arguments = listOf(
+                        navArgument("username") { type = NavType.StringType },
+                        navArgument("userId") { type = NavType.StringType },
+                    )
                 ) { entry ->
                     BackHandler(true) {
                         //no-op
                     }
-                    HomeScreen.Content(
+                    HomeScreen(
                         navController = navController,
-                        username = entry.arguments?.getString("username").orEmpty()
+                        username = entry.arguments?.getString("username").orEmpty(),
+                        userId = entry.arguments?.getString("userId").orEmpty(),
                     )
                 }
                 composable(Screen.Game.route) {
