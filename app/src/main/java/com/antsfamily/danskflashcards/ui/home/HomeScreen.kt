@@ -24,30 +24,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.antsfamily.danskflashcards.ui.game.view.FullScreenLoading
 import com.antsfamily.danskflashcards.ui.home.model.PersonalBest
 import com.antsfamily.danskflashcards.ui.home.view.PersonalBestCard
-import com.antsfamily.danskflashcards.ui.game.view.FullScreenLoading
 import com.antsfamily.danskflashcards.ui.theme.Padding
 import java.math.BigDecimal
 import java.math.RoundingMode
 
-interface HomeScreen {
-    companion object {
-        @Composable
-        fun Content(
-            username: String,
-            navController: NavController,
-            viewModel: HomeViewModel = hiltViewModel()
-        ) {
-            HomeScreen(navController)
-            viewModel.init(username)
-        }
-    }
-}
-
 @Composable
 fun HomeScreen(
     navController: NavController,
+    username: String,
+    userId: String,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsState()
@@ -62,6 +50,10 @@ fun HomeScreen(
         is HomeUiState.Error -> {
             //TODO add error handler
         }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.init(username, userId)
     }
 
     LaunchedEffect(Unit) {
