@@ -1,17 +1,17 @@
 package com.antsfamily.danskflashcards.domain
 
+import android.content.Context
 import com.antsfamily.danskflashcards.data.model.WordApiModel
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.getValue
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.suspendCancellableCoroutine
+import java.io.InputStreamReader
 import javax.inject.Inject
 import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 class GetFlashCardsUseCase @Inject constructor(
-    private val firebaseDatabase: DatabaseReference,
+    @ApplicationContext private val context: Context,
     private val gson: Gson
 ) : BaseUseCase<Unit, List<WordApiModel>>() {
 
@@ -22,25 +22,16 @@ class GetFlashCardsUseCase @Inject constructor(
     }
 
     private suspend fun getFlashCardsRemote(): List<WordApiModel> = suspendCancellableCoroutine {
-        try {
-            firebaseDatabase.get().addOnSuccessListener { snapshot ->
-                val cards = if (snapshot.exists()) {
-                    val snapshotValue =
-                        snapshot.getValue<ArrayList<HashMap<String, Any>>>().orEmpty()
-                    val jsonData = gson.toJson(snapshotValue)
-                    val listType = object : TypeToken<List<WordApiModel>>() {}.type
-                    val flashCards = gson.fromJson<List<WordApiModel?>>(jsonData, listType)
-                    cards = flashCards.mapNotNull { item -> item }
-                    flashCards
-                } else {
-                    emptyList()
-                }
-                it.resume(cards.mapNotNull { item -> item })
-            }.addOnFailureListener { exception ->
-                it.resumeWithException(exception)
-            }
+        val cards2 = try {
+            val inputStream = context.assets.open("dansk_flashcards.json")
+            val reader = InputStreamReader(inputStream)
+            val listType = object : TypeToken<List<WordApiModel>>() {}.type
+            val flashCards = gson.fromJson<List<WordApiModel?>>(reader, listType)
+            cards = flashCards.mapNotNull { item -> item }
+            flashCards
         } catch (e: Exception) {
-            it.resumeWithException(e)
+            emptyList<WordApiModel>()
         }
+        it.resume(cards2.mapNotNull { item -> item })
     }
 }

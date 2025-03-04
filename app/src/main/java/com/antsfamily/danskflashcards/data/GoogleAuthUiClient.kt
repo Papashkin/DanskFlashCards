@@ -10,7 +10,7 @@ import com.google.firebase.auth.auth
 import kotlinx.coroutines.tasks.await
 import java.util.concurrent.CancellationException
 
-private const val ID_FIREBASE_CLIENT = "692133800678-v7t7jtve9s1gbci369qjd7fisu3rhca4.apps.googleusercontent.com"
+private const val ID_FIREBASE_CLIENT = "692133800678-v9uijmnu84efrqtpgf7ql2kua9cl2afa.apps.googleusercontent.com"
 
 class GoogleAuthUiClient(
     private val oneTapClient: SignInClient,
@@ -67,7 +67,7 @@ class GoogleAuthUiClient(
                     .setFilterByAuthorizedAccounts(false)
                     .setServerClientId(ID_FIREBASE_CLIENT)
                     .build())
-            .setAutoSelectEnabled(true)
+            .setAutoSelectEnabled(false)
             .build()
     }
 }

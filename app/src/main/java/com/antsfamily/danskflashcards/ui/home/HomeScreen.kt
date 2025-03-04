@@ -36,7 +36,9 @@ fun HomeScreen(
     navController: NavController,
     username: String,
     userId: String,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel<HomeViewModel, HomeViewModel.Factory> {
+        it.create(username = username, userId = userId)
+    }
 ) {
     val state = viewModel.state.collectAsState()
     when (val stateValue = state.value) {
@@ -50,10 +52,6 @@ fun HomeScreen(
         is HomeUiState.Error -> {
             //TODO add error handler
         }
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.init(username, userId)
     }
 
     LaunchedEffect(Unit) {

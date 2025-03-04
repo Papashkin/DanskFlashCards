@@ -11,9 +11,9 @@ import kotlin.coroutines.resumeWithException
 
 class GetUsersUseCase @Inject constructor(
     private val firestore: FirebaseFirestore
-) : BaseUseCase<Unit, List<UserApiModel>>() {
+) : BaseUseCase<String, List<UserApiModel>>() {
 
-    override suspend fun run(params: Unit): List<UserApiModel> = suspendCancellableCoroutine {
+    override suspend fun run(params: String): List<UserApiModel> = suspendCancellableCoroutine {
         firestore
             .collection("users")
             .get()
@@ -28,7 +28,8 @@ class GetUsersUseCase @Inject constructor(
                         id = id.orEmpty(),
                         username = username.orEmpty(),
                         score = score.orZero().toInt(),
-                        date = date?.toDate()
+                        date = date?.toDate(),
+                        isCurrentUser = params == id
                     )
                 }
                 it.resume(users)

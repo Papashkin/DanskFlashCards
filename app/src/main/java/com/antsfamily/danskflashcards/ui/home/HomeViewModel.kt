@@ -9,6 +9,9 @@ import com.antsfamily.danskflashcards.domain.GetFlashCardsUseCase
 import com.antsfamily.danskflashcards.domain.GetPersonalBestUseCase
 import com.antsfamily.danskflashcards.domain.GetUsersUseCase
 import com.antsfamily.danskflashcards.navigation.Screen
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -19,17 +22,27 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
+import java.io.InputStream
 import javax.inject.Inject
 
-@HiltViewModel
-class HomeViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = HomeViewModel.Factory::class)
+class HomeViewModel @AssistedInject constructor(
     private val getFlashCardsUseCase: GetFlashCardsUseCase,
     private val getUsersUseCase: GetUsersUseCase,
     private val getPersonalBestUseCase: GetPersonalBestUseCase,
-    private val client: GoogleAuthUiClient
+    private val client: GoogleAuthUiClient,
+    @Assisted("userId") private val userId: String,
+    @Assisted("username") private val username: String,
 ) : ViewModel() {
 
-    private var username: String? = null
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            @Assisted("userId") userId: String,
+            @Assisted("username") username: String
+        ): HomeViewModel
+    }
+
     private var words = emptyList<WordApiModel?>()
     private var percent: Float = 0.0f
 
@@ -40,20 +53,17 @@ class HomeViewModel @Inject constructor(
     private val _navigationFlow = MutableSharedFlow<String>()
     val navigationFlow: SharedFlow<String> = _navigationFlow.asSharedFlow()
 
-
     private val _navigationBackFlow = MutableSharedFlow<Unit>()
     val navigationBackFlow: SharedFlow<Unit> = _navigationBackFlow.asSharedFlow()
 
-    fun init(username: String, userId: String) {
-        _state.value = HomeUiState.Loading
-        this.username = username
-        getData(username)
-        getUsers()
+    init {
+        getUsers(username, userId)
     }
 
-    private fun getUsers() = viewModelScope.launch(Dispatchers.IO) {
-        getUsersUseCase(Unit) {
+    private fun getUsers(username: String, userId: String) = viewModelScope.launch(Dispatchers.IO) {
+        getUsersUseCase(userId) {
             println(it)
+            getData(username)
         }
     }
 
