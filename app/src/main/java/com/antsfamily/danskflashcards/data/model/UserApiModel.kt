@@ -6,5 +6,6 @@ data class UserApiModel(
     val id: String,
     val username: String,
     val score: Int,
-    val date: Date?
+    val date: Date?,
+    val isCurrentUser: Boolean,
 )

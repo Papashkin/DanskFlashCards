@@ -3,7 +3,7 @@
     "project_number": "692133800678",
     "firebase_url": "https://dansk-flashcards-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "dansk-flashcards",
-    "storage_bucket": "dansk-flashcards.appspot.com"
+    "storage_bucket": "dansk-flashcards.firebasestorage.app"
   },
   "client": [
     {
@@ -15,15 +15,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "692133800678-emv8nmfhm48jikne9s9sfbr8plu1k09l.apps.googleusercontent.com",
+          "client_id": "692133800678-ef1fled97mo0n70vi80dpcv4ouhm0jft.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.antsfamily.danskflashcards",
-            "certificate_hash": "b7b68aa242dd6cf16745cbc2ed8427d19deea5b8"
+            "certificate_hash": "2209fd5eed6022000f0f7bf5949c6596b3efe46b"
           }
         },
         {
-          "client_id": "692133800678-v7t7jtve9s1gbci369qjd7fisu3rhca4.apps.googleusercontent.com",
+          "client_id": "692133800678-v9uijmnu84efrqtpgf7ql2kua9cl2afa.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -36,7 +36,44 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "692133800678-0gjt5vk15m36hf87rbfqm72pssv1meaq.apps.googleusercontent.com",
+              "client_id": "692133800678-v9uijmnu84efrqtpgf7ql2kua9cl2afa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:692133800678:android:ae0a16ac440b1ef54a6927",
+        "android_client_info": {
+          "package_name": "com.antsfamily.danskflashcards.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "692133800678-na1k0ib0rbsevmfmsplcmu931ajej5na.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.antsfamily.danskflashcards.debug",
+            "certificate_hash": "b7b68aa242dd6cf16745cbc2ed8427d19deea5b8"
+          }
+        },
+        {
+          "client_id": "692133800678-v9uijmnu84efrqtpgf7ql2kua9cl2afa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPG1g91DIB6sE3FiZBiYIM7VGwsStiSuk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "692133800678-v9uijmnu84efrqtpgf7ql2kua9cl2afa.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
