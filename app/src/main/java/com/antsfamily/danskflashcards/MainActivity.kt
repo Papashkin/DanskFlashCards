@@ -3,7 +3,7 @@ package com.antsfamily.danskflashcards
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.antsfamily.danskflashcards.navigation.Navigator
+import com.antsfamily.danskflashcards.core.navigation.Navigator
 import com.antsfamily.danskflashcards.ui.theme.DanskFlashCardsTheme
 import dagger.hilt.android.AndroidEntryPoint
 

@@ -3,12 +3,12 @@ package com.antsfamily.danskflashcards.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.antsfamily.danskflashcards.data.GoogleAuthUiClient
+import com.antsfamily.danskflashcards.data.UserData
 import com.antsfamily.danskflashcards.data.model.WordApiModel
 import com.antsfamily.danskflashcards.data.model.mapToModel
 import com.antsfamily.danskflashcards.domain.GetFlashCardsUseCase
 import com.antsfamily.danskflashcards.domain.GetPersonalBestUseCase
 import com.antsfamily.danskflashcards.domain.GetUsersUseCase
-import com.antsfamily.danskflashcards.navigation.Screen
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -22,8 +22,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
-import java.io.InputStream
-import javax.inject.Inject
 
 @HiltViewModel(assistedFactory = HomeViewModel.Factory::class)
 class HomeViewModel @AssistedInject constructor(
@@ -31,16 +29,12 @@ class HomeViewModel @AssistedInject constructor(
     private val getUsersUseCase: GetUsersUseCase,
     private val getPersonalBestUseCase: GetPersonalBestUseCase,
     private val client: GoogleAuthUiClient,
-    @Assisted("userId") private val userId: String,
-    @Assisted("username") private val username: String,
+    @Assisted("user") private val user: UserData
 ) : ViewModel() {
 
     @AssistedFactory
     interface Factory {
-        fun create(
-            @Assisted("userId") userId: String,
-            @Assisted("username") username: String
-        ): HomeViewModel
+        fun create(@Assisted("user") user: UserData): HomeViewModel
     }
 
     private var words = emptyList<WordApiModel?>()
@@ -50,14 +44,14 @@ class HomeViewModel @AssistedInject constructor(
     val state: StateFlow<HomeUiState>
         get() = _state.asStateFlow()
 
-    private val _navigationFlow = MutableSharedFlow<String>()
-    val navigationFlow: SharedFlow<String> = _navigationFlow.asSharedFlow()
+    private val _navigationToGameFlow = MutableSharedFlow<Unit>()
+    val navigationToGameFlow: SharedFlow<Unit> = _navigationToGameFlow.asSharedFlow()
 
     private val _navigationBackFlow = MutableSharedFlow<Unit>()
     val navigationBackFlow: SharedFlow<Unit> = _navigationBackFlow.asSharedFlow()
 
     init {
-        getUsers(username, userId)
+        getUsers(user.username, user.userId)
     }
 
     private fun getUsers(username: String, userId: String) = viewModelScope.launch(Dispatchers.IO) {
@@ -68,7 +62,7 @@ class HomeViewModel @AssistedInject constructor(
     }
 
     fun onStartClick() = viewModelScope.launch(Dispatchers.IO) {
-        _navigationFlow.emit(Screen.Game.route)
+        _navigationToGameFlow.emit(Unit)
     }
 
     fun onBackButtonClick() = viewModelScope.launch(Dispatchers.IO) {

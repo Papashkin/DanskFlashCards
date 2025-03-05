@@ -6,4 +6,7 @@ plugins {
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.google.services) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
+
+    kotlin("jvm") version "2.1.10"
 }

@@ -11,7 +11,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.antsfamily.danskflashcards.ui.game.model.GameStatus
 import com.antsfamily.danskflashcards.ui.game.model.WORD_CARDS_DANISH
 import com.antsfamily.danskflashcards.ui.game.model.WORD_CARDS_ENGLISH
@@ -24,8 +23,8 @@ import com.antsfamily.danskflashcards.ui.theme.Padding
 
 @Composable
 fun GameScreen(
-    navController: NavController,
-    viewModel: GameViewModel = hiltViewModel()
+    viewModel: GameViewModel = hiltViewModel(),
+    navigateBack: () -> Unit,
 ) {
     val state = viewModel.state.collectAsState()
     val dialogData = viewModel.dialogData.collectAsState()
@@ -52,7 +51,7 @@ fun GameScreen(
     dialogData.value?.let {
         GameOverDialog(data = it) {
             viewModel.hideDialog()
-            navController.popBackStack()
+            navigateBack()
         }
     }
 }

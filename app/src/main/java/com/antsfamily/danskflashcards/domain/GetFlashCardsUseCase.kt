@@ -22,7 +22,7 @@ class GetFlashCardsUseCase @Inject constructor(
     }
 
     private suspend fun getFlashCardsRemote(): List<WordApiModel> = suspendCancellableCoroutine {
-        val cards2 = try {
+        val cards = try {
             val inputStream = context.assets.open("dansk_flashcards.json")
             val reader = InputStreamReader(inputStream)
             val listType = object : TypeToken<List<WordApiModel>>() {}.type
@@ -32,6 +32,6 @@ class GetFlashCardsUseCase @Inject constructor(
         } catch (e: Exception) {
             emptyList<WordApiModel>()
         }
-        it.resume(cards2.mapNotNull { item -> item })
+        it.resume(cards.mapNotNull { item -> item })
     }
 }

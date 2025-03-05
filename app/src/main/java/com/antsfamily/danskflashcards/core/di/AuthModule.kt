@@ -1,4 +1,4 @@
-package com.antsfamily.danskflashcards.di
+package com.antsfamily.danskflashcards.core.di
 
 import android.content.Context
 import com.antsfamily.danskflashcards.data.GoogleAuthUiClient

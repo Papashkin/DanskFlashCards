@@ -24,15 +24,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.antsfamily.danskflashcards.R
+import com.antsfamily.danskflashcards.data.UserData
 import com.antsfamily.danskflashcards.ui.auth.view.ButtonWithLeadingIcon
 import com.antsfamily.danskflashcards.ui.theme.Padding
 
 @Composable
 fun AuthScreen(
-    navController: NavController,
-    viewModel: AuthViewModel = hiltViewModel()
+    viewModel: AuthViewModel = hiltViewModel(),
+    onNavigateToHome: (UserData) -> Unit,
 ) {
     val state = viewModel.state.collectAsState()
 
@@ -50,7 +50,9 @@ fun AuthScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.navigationFlow.collect(navController::navigate)
+        viewModel.navigationFlow.collect { user ->
+            onNavigateToHome(user)
+        }
     }
 
     AuthScreenContent(state.value) {

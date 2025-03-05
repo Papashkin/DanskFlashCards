@@ -23,7 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
+import com.antsfamily.danskflashcards.data.UserData
 import com.antsfamily.danskflashcards.ui.game.view.FullScreenLoading
 import com.antsfamily.danskflashcards.ui.home.model.PersonalBest
 import com.antsfamily.danskflashcards.ui.home.view.PersonalBestCard
@@ -33,12 +33,12 @@ import java.math.RoundingMode
 
 @Composable
 fun HomeScreen(
-    navController: NavController,
-    username: String,
-    userId: String,
+    user: UserData,
     viewModel: HomeViewModel = hiltViewModel<HomeViewModel, HomeViewModel.Factory> {
-        it.create(username = username, userId = userId)
-    }
+        it.create(user = user)
+    },
+    navigateBack: () -> Unit,
+    navigateToGame: () -> Unit
 ) {
     val state = viewModel.state.collectAsState()
     when (val stateValue = state.value) {
@@ -55,12 +55,14 @@ fun HomeScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.navigationFlow.collect(navController::navigate)
+        viewModel.navigationToGameFlow.collect {
+            navigateToGame()
+        }
     }
 
     LaunchedEffect(Unit) {
         viewModel.navigationBackFlow.collect {
-            navController.popBackStack()
+            navigateBack()
         }
     }
 }
