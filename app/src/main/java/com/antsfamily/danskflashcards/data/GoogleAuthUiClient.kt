@@ -38,9 +38,9 @@ class GoogleAuthUiClient(
 
             user?.let {
                 SignInResult(
-                    data = UserData(
+                    data = CurrentUserApiModel(
                         userId = it.uid,
-                        username = it.displayName ?: "***",
+                        username = it.displayName.orEmpty(),
                         email = it.email.orEmpty()
                     ),
                     errorMessage = null

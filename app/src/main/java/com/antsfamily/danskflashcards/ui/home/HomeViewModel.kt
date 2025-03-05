@@ -3,12 +3,11 @@ package com.antsfamily.danskflashcards.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.antsfamily.danskflashcards.data.GoogleAuthUiClient
-import com.antsfamily.danskflashcards.data.UserData
 import com.antsfamily.danskflashcards.data.model.WordApiModel
-import com.antsfamily.danskflashcards.data.model.mapToModel
 import com.antsfamily.danskflashcards.domain.GetFlashCardsUseCase
-import com.antsfamily.danskflashcards.domain.GetPersonalBestUseCase
 import com.antsfamily.danskflashcards.domain.GetUsersUseCase
+import com.antsfamily.danskflashcards.ui.auth.CurrentUserModel
+import com.antsfamily.danskflashcards.ui.home.model.UserModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -20,21 +19,19 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = HomeViewModel.Factory::class)
 class HomeViewModel @AssistedInject constructor(
     private val getFlashCardsUseCase: GetFlashCardsUseCase,
     private val getUsersUseCase: GetUsersUseCase,
-    private val getPersonalBestUseCase: GetPersonalBestUseCase,
     private val client: GoogleAuthUiClient,
-    @Assisted("user") private val user: UserData
+    @Assisted("user") private val user: CurrentUserModel
 ) : ViewModel() {
 
     @AssistedFactory
     interface Factory {
-        fun create(@Assisted("user") user: UserData): HomeViewModel
+        fun create(@Assisted("user") user: CurrentUserModel): HomeViewModel
     }
 
     private var words = emptyList<WordApiModel?>()
@@ -51,13 +48,18 @@ class HomeViewModel @AssistedInject constructor(
     val navigationBackFlow: SharedFlow<Unit> = _navigationBackFlow.asSharedFlow()
 
     init {
-        getUsers(user.username, user.userId)
+        getUsers(user)
     }
 
-    private fun getUsers(username: String, userId: String) = viewModelScope.launch(Dispatchers.IO) {
-        getUsersUseCase(userId) {
-            println(it)
-            getData(username)
+    private fun getUsers(user: CurrentUserModel) = viewModelScope.launch(Dispatchers.IO) {
+        try {
+            getUsersUseCase(user.userId) { data ->
+                val users = data.map { it.toModel(user.userId) }
+                val currentUser = users.firstOrNull { it.isCurrentUser }
+                onGetUsersSuccessResult(users, currentUser ?: user.mapToUserModel())
+            }
+        } catch (e: Exception) {
+            onGetUsersErrorResult(e)
         }
     }
 
@@ -76,18 +78,18 @@ class HomeViewModel @AssistedInject constructor(
         }
     }
 
-    private fun getData(username: String) = viewModelScope.launch(Dispatchers.IO) {
+    private fun onGetUsersSuccessResult(users: List<UserModel>, currentUser: UserModel) = viewModelScope.launch {
         try {
-            val result = getPersonalBestUseCase(Unit).firstOrNull()
             getFlashCardsUseCase(Unit) { data ->
                 words = data
-                _state.value = HomeUiState.Content(
-                    userName = username,
-                    personalBest = result.mapToModel(data.size),
-                )
+                _state.value = HomeUiState.Content(user = currentUser, cardsSize = data.size)
             }
         } catch (e: Exception) {
             _state.value = HomeUiState.Error(errorMessage = e.message.orEmpty())
         }
+    }
+
+    private fun onGetUsersErrorResult(e: Exception) = viewModelScope.launch {
+        _state.value = HomeUiState.Error(errorMessage = e.message.orEmpty())
     }
 }

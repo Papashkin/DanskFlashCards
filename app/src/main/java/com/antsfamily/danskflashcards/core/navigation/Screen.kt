@@ -14,4 +14,4 @@ object Auth: Screen()
 data class Home(val id: String, val name: String, val email: String): Screen()
 
 @Serializable
-object Game: Screen()
+data class Game(val id: String, val name: String): Screen()

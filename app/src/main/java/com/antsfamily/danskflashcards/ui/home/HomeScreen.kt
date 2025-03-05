@@ -23,17 +23,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.antsfamily.danskflashcards.data.UserData
+import com.antsfamily.danskflashcards.ui.auth.CurrentUserModel
 import com.antsfamily.danskflashcards.ui.game.view.FullScreenLoading
-import com.antsfamily.danskflashcards.ui.home.model.PersonalBest
+import com.antsfamily.danskflashcards.ui.home.model.UserModel
 import com.antsfamily.danskflashcards.ui.home.view.PersonalBestCard
 import com.antsfamily.danskflashcards.ui.theme.Padding
-import java.math.BigDecimal
-import java.math.RoundingMode
+import java.util.Date
 
 @Composable
 fun HomeScreen(
-    user: UserData,
+    user: CurrentUserModel,
     viewModel: HomeViewModel = hiltViewModel<HomeViewModel, HomeViewModel.Factory> {
         it.create(user = user)
     },
@@ -99,12 +98,16 @@ fun HomeScreenContent(
         Spacer(modifier = Modifier.height(Padding.large))
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = "Welcome, ${content.userName}!",
+            text = "Welcome, ${content.user.username}!",
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Start
         )
-        PersonalBestCard(data = content.personalBest) {
+        PersonalBestCard(
+            score = content.user.score,
+            cardsSize = content.cardsSize,
+            date = content.user.date
+        ) {
             onStartClick()
         }
     }
@@ -113,11 +116,10 @@ fun HomeScreenContent(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun HomeScreenContentPreview() {
-    val percent = BigDecimal(32.333434).setScale(1, RoundingMode.HALF_DOWN)
     HomeScreenContent(
         HomeUiState.Content(
-            userName = "Pavel Antoshkin",
-            PersonalBest(43, percent, "yyyy/MM/dd HH:mm:ss")
+            user = UserModel(id = "asdasd", username = "Pavel Antoshkin", isCurrentUser = true, score = 43, date = Date()) ,
+            cardsSize = 879,
         ), {}
     ) {}
 }

@@ -1,16 +1,18 @@
 package com.antsfamily.danskflashcards.ui.game
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.antsfamily.danskflashcards.ui.game.model.DialogData
-import com.antsfamily.danskflashcards.ui.game.model.GameStatus
-import com.antsfamily.danskflashcards.ui.game.model.GuessingItem
-import com.antsfamily.danskflashcards.ui.game.model.WordModel
 import com.antsfamily.danskflashcards.data.model.mapToModel
 import com.antsfamily.danskflashcards.domain.CountdownTimerFlow
 import com.antsfamily.danskflashcards.domain.GetFlashCardsUseCase
 import com.antsfamily.danskflashcards.domain.GetPersonalBestUseCase
 import com.antsfamily.danskflashcards.domain.SetPersonalBestUseCase
+import com.antsfamily.danskflashcards.ui.game.model.DialogData
+import com.antsfamily.danskflashcards.ui.game.model.GameStatus
+import com.antsfamily.danskflashcards.ui.game.model.GuessingItem
+import com.antsfamily.danskflashcards.ui.game.model.UserWithPersonalBestModel
+import com.antsfamily.danskflashcards.ui.game.model.WordModel
 import com.antsfamily.danskflashcards.util.COUNTDOWN_STEP
 import com.antsfamily.danskflashcards.util.COUNTDOWN_TIME_SEC
 import com.antsfamily.danskflashcards.util.GUESSED_ADDITIONAL_TIME
@@ -18,7 +20,11 @@ import com.antsfamily.danskflashcards.util.HOME_SCREEN_PAIRS_AMOUNT
 import com.antsfamily.danskflashcards.util.WRONG_GUESS_ERROR_DURATION
 import com.antsfamily.danskflashcards.util.ZERO
 import com.antsfamily.danskflashcards.util.orZero
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,15 +33,24 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class GameViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = GameViewModel.Factory::class)
+class GameViewModel @AssistedInject constructor(
     private val fetchDataUseCase: GetFlashCardsUseCase,
     private val setPersonalBestUseCase: SetPersonalBestUseCase,
     private val getPersonalBestUseCase: GetPersonalBestUseCase,
     private val timerFlow: CountdownTimerFlow,
+    @Assisted("userId") private val userId: String,
+    @Assisted("username") private val username: String,
 ) : ViewModel() {
+
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            @Assisted("userId") userId: String,
+            @Assisted("username") username: String,
+        ): GameViewModel
+    }
 
     private var guessingItems = emptyList<GuessingItem>()
     private var danishWords = emptyList<WordModel>()
@@ -131,7 +146,7 @@ class GameViewModel @Inject constructor(
     }
 
     private fun showPackOfWords(additionalTime: Long = ZERO) {
-        val content =  getContentOrNull()
+        val content = getContentOrNull()
         val packIds = getPackIds()
         val totalTime = content?.totalCountdownTime ?: COUNTDOWN_TIME_SEC
         val remainTime = (content?.remainingCountdownTime ?: COUNTDOWN_TIME_SEC) + additionalTime
@@ -328,7 +343,12 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    private fun saveBestResult(result: Int) = viewModelScope.launch {
-        setPersonalBestUseCase.invoke(result)
+    private fun saveBestResult(result: Int) = viewModelScope.launch(Dispatchers.IO) {
+        try {
+            val user = UserWithPersonalBestModel(id = userId, name = username, score = result)
+            setPersonalBestUseCase.invoke(user)
+        } catch (e: Exception) {
+            Log.e(this@GameViewModel::class.simpleName, e.message ?: e.toString())
+        }
     }
 }
