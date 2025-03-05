@@ -16,6 +16,7 @@ import com.antsfamily.danskflashcards.ui.auth.AuthScreen
 import com.antsfamily.danskflashcards.ui.game.GameScreen
 import com.antsfamily.danskflashcards.ui.home.HomeScreen
 import com.antsfamily.danskflashcards.ui.splash.SplashScreen
+import com.antsfamily.danskflashcards.util.toModel
 
 @Composable
 fun Navigator() {
@@ -38,11 +39,7 @@ fun Navigator() {
                 composable<Auth> {
                     AuthScreen { user ->
                         navController.navigate(
-                            Home(
-                                id = user.userId,
-                                name = user.username,
-                                email = user.email
-                            )
+                            Home(id = user.userId, name = user.username, email = user.email)
                         )
                     }
                 }
@@ -56,8 +53,10 @@ fun Navigator() {
                         navigateBack = {
                             navController.popBackStack()
                         },
-                        navigateToGame = {
-                            navController.navigate(Game(id = data.id, name = data.name))
+                        navigateToGame = { score ->
+                            navController.navigate(
+                                Game(id = data.id, name = data.name, score = score)
+                            )
                         }
                     )
                 }
@@ -66,6 +65,7 @@ fun Navigator() {
                     GameScreen(
                         userId = data.id,
                         username = data.name,
+                        score = data.score
                     ) {
                         navController.popBackStack()
                     }

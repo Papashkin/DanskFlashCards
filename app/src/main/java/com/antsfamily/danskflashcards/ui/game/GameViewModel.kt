@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.antsfamily.danskflashcards.data.model.mapToModel
 import com.antsfamily.danskflashcards.domain.CountdownTimerFlow
 import com.antsfamily.danskflashcards.domain.GetFlashCardsUseCase
-import com.antsfamily.danskflashcards.domain.GetPersonalBestUseCase
 import com.antsfamily.danskflashcards.domain.SetPersonalBestUseCase
 import com.antsfamily.danskflashcards.ui.game.model.DialogData
 import com.antsfamily.danskflashcards.ui.game.model.GameStatus
@@ -31,17 +30,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.cancellable
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = GameViewModel.Factory::class)
 class GameViewModel @AssistedInject constructor(
     private val fetchDataUseCase: GetFlashCardsUseCase,
     private val setPersonalBestUseCase: SetPersonalBestUseCase,
-    private val getPersonalBestUseCase: GetPersonalBestUseCase,
     private val timerFlow: CountdownTimerFlow,
     @Assisted("userId") private val userId: String,
     @Assisted("username") private val username: String,
+    @Assisted("score") private val score: Int,
 ) : ViewModel() {
 
     @AssistedFactory
@@ -49,6 +47,7 @@ class GameViewModel @AssistedInject constructor(
         fun create(
             @Assisted("userId") userId: String,
             @Assisted("username") username: String,
+            @Assisted("score") score: Int,
         ): GameViewModel
     }
 
@@ -198,27 +197,18 @@ class GameViewModel @AssistedInject constructor(
             stopTimer()
             resetScreenContent()
             invalidateGuessingItems()
-            val result = getPersonalBestUseCase(Unit).firstOrNull()?.value.orZero()
-            showFinalDialog(result)
-            if (pairsCounter > result) {
+            if (pairsCounter > score) {
                 saveBestResult(pairsCounter)
             }
-            _dialogData.value = DialogData(
-                bestResult = result,
-                pairsAmount = pairsCounter,
-                isNewRecord = pairsCounter > result
-            )
+            showFinalDialog(score, pairsCounter)
         }
     }
 
-    private fun showFinalDialog(personalBest: Int) {
-        if (pairsCounter > personalBest) {
-            saveBestResult(pairsCounter)
-        }
+    private fun showFinalDialog(oldRecord: Int, newRecord: Int) {
         _dialogData.value = DialogData(
-            bestResult = personalBest,
-            pairsAmount = pairsCounter,
-            isNewRecord = pairsCounter > personalBest
+            bestResult = if (oldRecord > newRecord) oldRecord else newRecord,
+            pairsAmount = newRecord,
+            isNewRecord = newRecord > oldRecord
         )
     }
 

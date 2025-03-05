@@ -1,13 +1,14 @@
 package com.antsfamily.danskflashcards.data.model
 
 import com.antsfamily.danskflashcards.ui.home.model.UserModel
-import java.util.Date
+import com.antsfamily.danskflashcards.util.toIsoString
+import com.google.firebase.Timestamp
 
 data class UserApiModel(
     val id: String,
     val username: String,
     val score: Int,
-    val date: Date?,
+    val date: Timestamp?,
     val isCurrentUser: Boolean,
 ) {
 
@@ -16,7 +17,7 @@ data class UserApiModel(
             id = id,
             username = username,
             score = score,
-            date = date,
+            date = date?.toIsoString(),
             isCurrentUser = id == currentUserId
         )
     }

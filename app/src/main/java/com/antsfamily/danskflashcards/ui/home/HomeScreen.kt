@@ -37,7 +37,7 @@ fun HomeScreen(
         it.create(user = user)
     },
     navigateBack: () -> Unit,
-    navigateToGame: () -> Unit
+    navigateToGame: (Int) -> Unit
 ) {
     val state = viewModel.state.collectAsState()
     when (val stateValue = state.value) {
@@ -55,7 +55,7 @@ fun HomeScreen(
 
     LaunchedEffect(Unit) {
         viewModel.navigationToGameFlow.collect {
-            navigateToGame()
+            navigateToGame(it)
         }
     }
 
@@ -118,7 +118,13 @@ fun HomeScreenContent(
 fun HomeScreenContentPreview() {
     HomeScreenContent(
         HomeUiState.Content(
-            user = UserModel(id = "asdasd", username = "Pavel Antoshkin", isCurrentUser = true, score = 43, date = Date()) ,
+            user = UserModel(
+                id = "johndoe123",
+                username = "John Doe",
+                isCurrentUser = true,
+                score = 43,
+                date = "10.02.2024 11:22:33"
+            ),
             cardsSize = 879,
         ), {}
     ) {}

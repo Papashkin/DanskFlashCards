@@ -1,6 +1,10 @@
 package com.antsfamily.danskflashcards.domain
 
 import com.antsfamily.danskflashcards.ui.game.model.UserWithPersonalBestModel
+import com.antsfamily.danskflashcards.util.FirebaseConstants.COLLECTION_USERS
+import com.antsfamily.danskflashcards.util.FirebaseConstants.FIELD_TIMESTAMP
+import com.antsfamily.danskflashcards.util.FirebaseConstants.FIELD_NAME
+import com.antsfamily.danskflashcards.util.FirebaseConstants.FIELD_SCORE
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -14,12 +18,12 @@ class SetPersonalBestUseCase @Inject constructor(
 
     override suspend fun run(params: UserWithPersonalBestModel) = suspendCancellableCoroutine {
         val userData = hashMapOf(
-            "name" to params.name,
-            "score" to params.score,
-            "timestamp" to FieldValue.serverTimestamp()
+            FIELD_NAME to params.name,
+            FIELD_SCORE to params.score,
+            FIELD_TIMESTAMP to FieldValue.serverTimestamp()
         )
         firestore
-            .collection("users")
+            .collection(COLLECTION_USERS)
             .document(params.id)
             .set(userData)
             .addOnSuccessListener { _ ->
