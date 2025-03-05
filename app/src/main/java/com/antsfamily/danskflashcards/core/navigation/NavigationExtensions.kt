@@ -1,7 +1,7 @@
 package com.antsfamily.danskflashcards.core.navigation
 
-import com.antsfamily.danskflashcards.data.UserData
+import com.antsfamily.danskflashcards.ui.auth.CurrentUserModel
 
-fun Home.toUsedData(): UserData {
-    return UserData(username = this.name, userId = this.id, email = this.email)
+fun Home.toModel(): CurrentUserModel {
+    return CurrentUserModel(username = this.name, userId = this.id, email = this.email)
 }

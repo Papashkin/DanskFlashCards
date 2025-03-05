@@ -23,7 +23,11 @@ import com.antsfamily.danskflashcards.ui.theme.Padding
 
 @Composable
 fun GameScreen(
-    viewModel: GameViewModel = hiltViewModel(),
+    userId: String,
+    username: String,
+    viewModel: GameViewModel = hiltViewModel<GameViewModel, GameViewModel.Factory> {
+        it.create(userId = userId, username = username)
+    },
     navigateBack: () -> Unit,
 ) {
     val state = viewModel.state.collectAsState()

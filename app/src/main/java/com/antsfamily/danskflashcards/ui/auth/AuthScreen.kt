@@ -25,14 +25,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.antsfamily.danskflashcards.R
-import com.antsfamily.danskflashcards.data.UserData
 import com.antsfamily.danskflashcards.ui.auth.view.ButtonWithLeadingIcon
 import com.antsfamily.danskflashcards.ui.theme.Padding
 
 @Composable
 fun AuthScreen(
     viewModel: AuthViewModel = hiltViewModel(),
-    onNavigateToHome: (UserData) -> Unit,
+    onNavigateToHome: (CurrentUserModel) -> Unit,
 ) {
     val state = viewModel.state.collectAsState()
 

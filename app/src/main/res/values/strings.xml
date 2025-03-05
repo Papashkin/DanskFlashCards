@@ -9,5 +9,5 @@
     <string name="sign_up_google">Sign up with Google</string>
     <string name="date_of_the_pb">Date of the PB</string>
     <string name="of_all_words">% of all words</string>
-    <string name="personal_best">Personal Best</string>
+    <string name="personal_best">Your best result:</string>
 </resources>

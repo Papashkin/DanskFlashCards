@@ -52,17 +52,21 @@ fun Navigator() {
                     }
                     val data = entry.toRoute<Home>()
                     HomeScreen(
-                        user = data.toUsedData(),
+                        user = data.toModel(),
                         navigateBack = {
                             navController.popBackStack()
                         },
                         navigateToGame = {
-                            navController.navigate(Game)
+                            navController.navigate(Game(id = data.id, name = data.name))
                         }
                     )
                 }
-                composable<Game> {
-                    GameScreen {
+                composable<Game> { entry ->
+                    val data = entry.toRoute<Game>()
+                    GameScreen(
+                        userId = data.id,
+                        username = data.name,
+                    ) {
                         navController.popBackStack()
                     }
                 }

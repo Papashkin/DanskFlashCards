@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,7 +29,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.antsfamily.danskflashcards.R
-import com.antsfamily.danskflashcards.ui.home.model.PersonalBest
 import com.antsfamily.danskflashcards.ui.theme.FontSize
 import com.antsfamily.danskflashcards.ui.theme.Padding
 import com.antsfamily.danskflashcards.ui.theme.wistful_0
@@ -36,11 +36,14 @@ import com.antsfamily.danskflashcards.ui.theme.wistful_100
 import com.antsfamily.danskflashcards.ui.theme.wistful_400
 import com.antsfamily.danskflashcards.ui.theme.wistful_700
 import com.antsfamily.danskflashcards.ui.theme.wistful_800
-import java.math.BigDecimal
-import java.math.RoundingMode
+import java.util.Date
 
 @Composable
-fun PersonalBestCard(data: PersonalBest, onClick: () -> Unit) {
+fun PersonalBestCard(
+    score: Int,
+    date: Date?,
+    cardsSize: Int,
+    onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .padding(top = Padding.xLarge)
@@ -52,20 +55,34 @@ fun PersonalBestCard(data: PersonalBest, onClick: () -> Unit) {
             Row(modifier = Modifier.padding(vertical = Padding.large)) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        modifier = Modifier.width(100.dp),
+                        modifier = Modifier.width(120.dp),
                         text = stringResource(R.string.personal_best),
                         style = MaterialTheme.typography.bodyMedium,
                         textAlign = TextAlign.Center,
                         color = wistful_400
                     )
-                    Text(
-                        modifier = Modifier.width(100.dp),
-                        text = data.value.toString(),
-                        fontSize = FontSize.H3,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center,
-                        color = wistful_100
-                    )
+                    Row(
+                        modifier = Modifier.width(120.dp),
+                        verticalAlignment = Alignment.Bottom,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = score.toString(),
+                            fontSize = FontSize.H2,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.End,
+                            color = wistful_100,
+                            modifier = Modifier.alignByBaseline()
+                        )
+                        Text(
+                            text = "/$cardsSize",
+                            fontSize = FontSize.Body1,
+                            fontWeight = FontWeight.Medium,
+                            textAlign = TextAlign.Start,
+                            color = wistful_100,
+                            modifier = Modifier.alignByBaseline()
+                        )
+                    }
                 }
                 Column(modifier = Modifier
                     .weight(1f)
@@ -78,22 +95,7 @@ fun PersonalBestCard(data: PersonalBest, onClick: () -> Unit) {
                         color = wistful_400
                     )
                     Text(
-                        text = data.date,
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center,
-                        color = wistful_100
-                    )
-
-                    Text(
-                        modifier = Modifier.padding(top = Padding.medium),
-                        text = stringResource(R.string.of_all_words),
-                        style = MaterialTheme.typography.bodyMedium,
-                        textAlign = TextAlign.Center,
-                        color = wistful_400
-                    )
-                    Text(
-                        text = "${data.percent}%",
+                        text = date?.toString() ?: "-",
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
@@ -101,7 +103,7 @@ fun PersonalBestCard(data: PersonalBest, onClick: () -> Unit) {
                     )
                 }
             }
-            Divider(
+            HorizontalDivider(
                 modifier = Modifier.padding(horizontal = Padding.large),
                 thickness = 1.dp,
                 color = wistful_700
@@ -139,8 +141,7 @@ fun PersonalBestCard(data: PersonalBest, onClick: () -> Unit) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PersonalBestCardPreview() {
-    val percent = BigDecimal(32.333434).setScale(1, RoundingMode.HALF_DOWN)
-    PersonalBestCard(
-        PersonalBest(45, percent, "yyyy/MM/dd HH:mm:ss")
-    ) {}
+    PersonalBestCard(score = 65, cardsSize = 982, date = Date()) {
+        // no-op
+    }
 }
