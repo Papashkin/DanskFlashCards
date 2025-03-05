@@ -15,14 +15,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -34,9 +32,9 @@ import com.antsfamily.danskflashcards.ui.theme.Padding
 import com.antsfamily.danskflashcards.ui.theme.wistful_0
 import com.antsfamily.danskflashcards.ui.theme.wistful_100
 import com.antsfamily.danskflashcards.ui.theme.wistful_400
+import com.antsfamily.danskflashcards.ui.theme.wistful_500
 import com.antsfamily.danskflashcards.ui.theme.wistful_700
 import com.antsfamily.danskflashcards.ui.theme.wistful_800
-import java.util.Date
 
 @Composable
 fun PersonalBestCard(
@@ -46,7 +44,7 @@ fun PersonalBestCard(
     onClick: () -> Unit) {
     Box(
         modifier = Modifier
-            .padding(top = Padding.xLarge)
+            .padding(top = Padding.large)
             .fillMaxWidth()
             .height(200.dp)
             .background(wistful_800, shape = RoundedCornerShape(16.dp))
@@ -55,14 +53,14 @@ fun PersonalBestCard(
             Row(modifier = Modifier.padding(vertical = Padding.large)) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        modifier = Modifier.width(120.dp),
+                        modifier = Modifier.width(160.dp),
                         text = stringResource(R.string.personal_best),
                         style = MaterialTheme.typography.bodyMedium,
                         textAlign = TextAlign.Center,
                         color = wistful_400
                     )
                     Row(
-                        modifier = Modifier.width(120.dp),
+                        modifier = Modifier.width(160.dp),
                         verticalAlignment = Alignment.Bottom,
                         horizontalArrangement = Arrangement.Center
                     ) {
@@ -95,7 +93,7 @@ fun PersonalBestCard(
                         color = wistful_400
                     )
                     Text(
-                        text = date?.toString() ?: "-",
+                        text = date ?: "-",
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
@@ -115,7 +113,7 @@ fun PersonalBestCard(
                 Button(
                     onClick = onClick,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent,
+                        containerColor = wistful_700,
                         contentColor = wistful_0
                     ),
                     shape = RoundedCornerShape(Padding.xLarge),
@@ -124,7 +122,7 @@ fun PersonalBestCard(
                         .padding(Padding.medium)
                         .width(100.dp),
                     contentPadding = PaddingValues(0.dp),
-                    border = BorderStroke(1.dp, wistful_0)
+                    border = BorderStroke(1.dp, wistful_500)
                 ) {
                     Text(
                         text = stringResource(id = R.string.start),
@@ -136,7 +134,6 @@ fun PersonalBestCard(
         }
     }
 }
-
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable

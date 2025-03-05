@@ -24,4 +24,9 @@ val wistful_900 = Color(0xFF3f4170)
 val wistful_950 = Color(0xFF252541)
 val wistful_1000 = Color(0xFF000000)
 
+val leaderboard_gold = Color(0xFFFCC200)
+val leaderboard_silver = Color(0xFFC0C0C0)
+val leaderboard_bronze = Color(0xFFCD7F32)
+val leaderboard_other = Color(0xFFCED4DA)
+
 val alert = Color(0xFFFF4D00)
