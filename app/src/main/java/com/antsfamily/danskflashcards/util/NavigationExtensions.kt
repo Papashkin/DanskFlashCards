@@ -1,5 +1,6 @@
-package com.antsfamily.danskflashcards.core.navigation
+package com.antsfamily.danskflashcards.util
 
+import com.antsfamily.danskflashcards.core.navigation.Home
 import com.antsfamily.danskflashcards.ui.auth.CurrentUserModel
 
 fun Home.toModel(): CurrentUserModel {

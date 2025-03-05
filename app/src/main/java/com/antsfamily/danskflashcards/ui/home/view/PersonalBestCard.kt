@@ -41,7 +41,7 @@ import java.util.Date
 @Composable
 fun PersonalBestCard(
     score: Int,
-    date: Date?,
+    date: String?,
     cardsSize: Int,
     onClick: () -> Unit) {
     Box(
@@ -141,7 +141,7 @@ fun PersonalBestCard(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PersonalBestCardPreview() {
-    PersonalBestCard(score = 65, cardsSize = 982, date = Date()) {
+    PersonalBestCard(score = 65, cardsSize = 982, date = "10.02.2024 11:22:33") {
         // no-op
     }
 }

@@ -3,11 +3,14 @@ package com.antsfamily.danskflashcards.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.antsfamily.danskflashcards.data.GoogleAuthUiClient
+import com.antsfamily.danskflashcards.data.model.UserApiModel
 import com.antsfamily.danskflashcards.data.model.WordApiModel
 import com.antsfamily.danskflashcards.domain.GetFlashCardsUseCase
 import com.antsfamily.danskflashcards.domain.GetUsersUseCase
+import com.antsfamily.danskflashcards.domain.UserUpdateFLowUseCase
 import com.antsfamily.danskflashcards.ui.auth.CurrentUserModel
 import com.antsfamily.danskflashcards.ui.home.model.UserModel
+import com.antsfamily.danskflashcards.util.orZero
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -25,6 +28,7 @@ import kotlinx.coroutines.launch
 class HomeViewModel @AssistedInject constructor(
     private val getFlashCardsUseCase: GetFlashCardsUseCase,
     private val getUsersUseCase: GetUsersUseCase,
+    private val userUpdateFLowUseCase: UserUpdateFLowUseCase,
     private val client: GoogleAuthUiClient,
     @Assisted("user") private val user: CurrentUserModel
 ) : ViewModel() {
@@ -35,36 +39,25 @@ class HomeViewModel @AssistedInject constructor(
     }
 
     private var words = emptyList<WordApiModel?>()
+    private var currentUser: UserModel? = null
     private var percent: Float = 0.0f
 
     private val _state = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
     val state: StateFlow<HomeUiState>
         get() = _state.asStateFlow()
 
-    private val _navigationToGameFlow = MutableSharedFlow<Unit>()
-    val navigationToGameFlow: SharedFlow<Unit> = _navigationToGameFlow.asSharedFlow()
+    private val _navigationToGameFlow = MutableSharedFlow<Int>()
+    val navigationToGameFlow: SharedFlow<Int> = _navigationToGameFlow.asSharedFlow()
 
     private val _navigationBackFlow = MutableSharedFlow<Unit>()
     val navigationBackFlow: SharedFlow<Unit> = _navigationBackFlow.asSharedFlow()
 
     init {
-        getUsers(user)
-    }
-
-    private fun getUsers(user: CurrentUserModel) = viewModelScope.launch(Dispatchers.IO) {
-        try {
-            getUsersUseCase(user.userId) { data ->
-                val users = data.map { it.toModel(user.userId) }
-                val currentUser = users.firstOrNull { it.isCurrentUser }
-                onGetUsersSuccessResult(users, currentUser ?: user.mapToUserModel())
-            }
-        } catch (e: Exception) {
-            onGetUsersErrorResult(e)
-        }
+        getCards()
     }
 
     fun onStartClick() = viewModelScope.launch(Dispatchers.IO) {
-        _navigationToGameFlow.emit(Unit)
+        _navigationToGameFlow.emit(currentUser?.score.orZero())
     }
 
     fun onBackButtonClick() = viewModelScope.launch(Dispatchers.IO) {
@@ -78,15 +71,49 @@ class HomeViewModel @AssistedInject constructor(
         }
     }
 
-    private fun onGetUsersSuccessResult(users: List<UserModel>, currentUser: UserModel) = viewModelScope.launch {
+    private fun getCards() = viewModelScope.launch(Dispatchers.IO) {
         try {
-            getFlashCardsUseCase(Unit) { data ->
-                words = data
-                _state.value = HomeUiState.Content(user = currentUser, cardsSize = data.size)
+            if (words.isEmpty()) {
+                getFlashCardsUseCase(Unit) { data ->
+                    words = data
+                }
             }
+            getUsers(user)
         } catch (e: Exception) {
             _state.value = HomeUiState.Error(errorMessage = e.message.orEmpty())
         }
+    }
+
+    private fun getUsers(user: CurrentUserModel) = viewModelScope.launch(Dispatchers.IO) {
+        try {
+            getUsersUseCase(user.userId) { data ->
+                onGetUsersSuccessResult(data)
+            }
+        } catch (e: Exception) {
+            onGetUsersErrorResult(e)
+        } finally {
+            subscribeToUserUpdate(user.userId)
+        }
+    }
+
+    private fun subscribeToUserUpdate(userId: String) = viewModelScope.launch(Dispatchers.IO) {
+        try {
+            userUpdateFLowUseCase(userId).collect { data ->
+                onGetUsersSuccessResult(data)
+            }
+        } catch (e: Exception) {
+            onGetUsersErrorResult(e)
+        }
+    }
+
+    private fun onGetUsersSuccessResult(data: List<UserApiModel>) {
+        val users = data.map { it.toModel(user.userId) }
+        currentUser = users.firstOrNull { it.isCurrentUser }
+        updateState(users, currentUser ?: user.mapToUserModel())
+    }
+
+    private fun updateState(users: List<UserModel>, user: UserModel) {
+        _state.value = HomeUiState.Content(user = user, cardsSize = words.size)
     }
 
     private fun onGetUsersErrorResult(e: Exception) = viewModelScope.launch {

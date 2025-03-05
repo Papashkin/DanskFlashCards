@@ -8,5 +8,11 @@ const val COUNTDOWN_STEP = 1000L
 const val COUNTDOWN_TIME_SEC = 120L
 const val HOME_SCREEN_PAIRS_AMOUNT = 6
 
-const val PREFERENCES_KEY_GAME_RESULT = "game_result"
-const val PREFERENCES_KEY_GAME_DATE = "game_date"
+object FirebaseConstants {
+    const val COLLECTION_USERS = "users"
+
+    const val FIELD_ID = "id"
+    const val FIELD_NAME = "name"
+    const val FIELD_SCORE = "score"
+    const val FIELD_TIMESTAMP = "timestamp"
+}
