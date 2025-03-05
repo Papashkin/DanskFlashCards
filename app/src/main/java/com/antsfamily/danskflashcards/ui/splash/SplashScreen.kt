@@ -12,19 +12,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.antsfamily.danskflashcards.R
-import com.antsfamily.danskflashcards.navigation.popUpToTop
 
 @Composable
 fun SplashScreen(
-    navController: NavController,
-    viewModel: SplashViewModel = hiltViewModel()
+    viewModel: SplashViewModel = hiltViewModel(),
+    navigateToAuth: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
-        viewModel.navigationFlow.collect {
-            navController.navigate(it) { popUpToTop(navController) }
+        viewModel.navigationToAuthFlow.collect {
+            navigateToAuth()
         }
     }
     SplashViewWithIcon()

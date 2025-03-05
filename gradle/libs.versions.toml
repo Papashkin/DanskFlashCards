@@ -25,6 +25,8 @@ firebaseAnalytics = "22.0.0"
 firebaseDatabase = "21.0.0"
 firebaseFirestore = "25.0.0"
 googleServices = "4.4.1"
+serialization = "1.8.0"
+kotlinSerialization = "2.1.10"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
@@ -53,6 +55,7 @@ firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 google-play-service-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "googlePlayService" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -61,3 +64,4 @@ compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+kotlin-serialization = {id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinSerialization" }

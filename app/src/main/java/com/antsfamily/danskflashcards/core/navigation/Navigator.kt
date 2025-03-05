@@ -1,4 +1,4 @@
-package com.antsfamily.danskflashcards.navigation
+package com.antsfamily.danskflashcards.core.navigation
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.material3.Scaffold
@@ -8,13 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavController
 import androidx.navigation.NavOptionsBuilder
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import com.antsfamily.danskflashcards.ui.game.GameScreen
+import androidx.navigation.toRoute
 import com.antsfamily.danskflashcards.ui.auth.AuthScreen
+import com.antsfamily.danskflashcards.ui.game.GameScreen
 import com.antsfamily.danskflashcards.ui.home.HomeScreen
 import com.antsfamily.danskflashcards.ui.splash.SplashScreen
 
@@ -24,40 +23,48 @@ fun Navigator() {
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
-        topBar = {
-
-        },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         content = {
             print(it.toString())
             NavHost(
                 navController = navController,
-                startDestination = Screen.Splash.route
+                startDestination = Splash
             ) {
-                composable(Screen.Splash.route) {
-                    SplashScreen(navController)
+                composable<Splash> {
+                    SplashScreen {
+                        navController.navigate(Auth) { popUpToTop(navController) }
+                    }
                 }
-                composable(Screen.Auth.route) {
-                    AuthScreen(navController)
+                composable<Auth> {
+                    AuthScreen { user ->
+                        navController.navigate(
+                            Home(
+                                id = user.userId,
+                                name = user.username,
+                                email = user.email
+                            )
+                        )
+                    }
                 }
-                composable(
-                    Screen.Home.route,
-                    arguments = listOf(
-                        navArgument("username") { type = NavType.StringType },
-                        navArgument("userId") { type = NavType.StringType },
-                    )
-                ) { entry ->
+                composable<Home> { entry ->
                     BackHandler(true) {
                         //no-op
                     }
+                    val data = entry.toRoute<Home>()
                     HomeScreen(
-                        navController = navController,
-                        username = entry.arguments?.getString("username").orEmpty(),
-                        userId = entry.arguments?.getString("userId").orEmpty(),
+                        user = data.toUsedData(),
+                        navigateBack = {
+                            navController.popBackStack()
+                        },
+                        navigateToGame = {
+                            navController.navigate(Game)
+                        }
                     )
                 }
-                composable(Screen.Game.route) {
-                    GameScreen(navController)
+                composable<Game> {
+                    GameScreen {
+                        navController.popBackStack()
+                    }
                 }
             }
         }

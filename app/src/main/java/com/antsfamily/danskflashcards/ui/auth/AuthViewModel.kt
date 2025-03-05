@@ -7,8 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.antsfamily.danskflashcards.data.GoogleAuthUiClient
 import com.antsfamily.danskflashcards.data.UserData
-import com.antsfamily.danskflashcards.navigation.Screen
-import com.antsfamily.danskflashcards.navigation.toNavigationRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,8 +25,8 @@ class AuthViewModel @Inject constructor(
     private val _signInFlow = MutableSharedFlow<IntentSender>()
     val signInFlow: SharedFlow<IntentSender> = _signInFlow.asSharedFlow()
 
-    private val _navigationFlow = MutableSharedFlow<String>()
-    val navigationFlow: SharedFlow<String> = _navigationFlow.asSharedFlow()
+    private val _navigationFlow = MutableSharedFlow<UserData>()
+    val navigationFlow: SharedFlow<UserData> = _navigationFlow.asSharedFlow()
 
     private val _state = MutableStateFlow<AuthUiState>(AuthUiState.Default)
     val state: StateFlow<AuthUiState>
@@ -60,9 +58,8 @@ class AuthViewModel @Inject constructor(
     }
 
     private fun proceedWithUserData(userData: UserData) = viewModelScope.launch {
-        val navigationRoute =Screen.Home.toNavigationRoute(userData.username, userData.userId)
-        _navigationFlow.emit(navigationRoute)
         setDefaultUiState()
+        _navigationFlow.emit(userData)
     }
 
     private fun setDefaultUiState() {
