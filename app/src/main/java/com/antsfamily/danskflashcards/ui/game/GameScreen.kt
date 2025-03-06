@@ -12,13 +12,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.antsfamily.danskflashcards.ui.game.model.GameStatus
+import com.antsfamily.danskflashcards.ui.game.model.TimerModel
 import com.antsfamily.danskflashcards.ui.game.model.WORD_CARDS_DANISH
 import com.antsfamily.danskflashcards.ui.game.model.WORD_CARDS_ENGLISH
 import com.antsfamily.danskflashcards.ui.game.model.WordModel
 import com.antsfamily.danskflashcards.ui.game.view.GameOverDialog
 import com.antsfamily.danskflashcards.ui.game.view.GameScreenContent
+import com.antsfamily.danskflashcards.ui.game.view.GameTimer
 import com.antsfamily.danskflashcards.ui.game.view.StartAnimationPreloader
-import com.antsfamily.danskflashcards.ui.game.view.StartedTimer
 import com.antsfamily.danskflashcards.ui.theme.Padding
 
 @Composable
@@ -42,7 +43,7 @@ fun GameScreen(
                 StartAnimationPreloader { viewModel.onAnimationFinished() }
             }
 
-        is GameUiState.Content -> Content(
+        is GameUiState.Content -> GameContent(
             stateValue,
             onDanishWordClick = { viewModel.onDanishWordCardClick(it) },
             onEnglishWordClick = { viewModel.onEnglishWordCardClick(it) }
@@ -62,20 +63,21 @@ fun GameScreen(
 }
 
 @Composable
-fun Content(
+fun GameContent(
     content: GameUiState.Content,
     onDanishWordClick: (WordModel) -> Unit,
     onEnglishWordClick: (WordModel) -> Unit,
 ) {
     Column(
         modifier = Modifier
-            .padding(horizontal = Padding.large, vertical = Padding.medium)
+            .padding(Padding.large)
             .fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceAround // .SpaceBetween
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceAround
     ) {
         with(content) {
             if (status == GameStatus.STARTED) {
-                StartedTimer(remainingCountdownTime, timerProgress)
+                GameTimer(content.timerModel)
                 GameScreenContent(content, onDanishWordClick, onEnglishWordClick)
             }
         }
@@ -85,7 +87,8 @@ fun Content(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun GameScreenLoadingPreview() {
-    Box(modifier = Modifier.fillMaxSize(),
+    Box(
+        modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         StartAnimationPreloader { }
@@ -95,12 +98,11 @@ fun GameScreenLoadingPreview() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun GameScreenContentPreview() {
-    Content(
+    GameContent(
         GameUiState.Content(
             danish = WORD_CARDS_DANISH,
             english = WORD_CARDS_ENGLISH,
-            1000,
-            500,
+            timerModel = TimerModel(),
             status = GameStatus.STARTED,
         ),
         {},
