@@ -20,7 +20,6 @@ import com.antsfamily.danskflashcards.util.HOME_SCREEN_PAIRS_AMOUNT
 import com.antsfamily.danskflashcards.util.WRONG_GUESS_ERROR_DURATION
 import com.antsfamily.danskflashcards.util.ZERO
 import com.antsfamily.danskflashcards.util.orZero
-import com.antsfamily.danskflashcards.util.toTimeFormat
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -28,8 +27,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.launch
@@ -67,6 +68,9 @@ class GameViewModel @AssistedInject constructor(
     private val _dialogData = MutableStateFlow<DialogData?>(null)
     val dialogData: StateFlow<DialogData?>
         get() = _dialogData.asStateFlow()
+
+    private val _startAnimationFlow = MutableSharedFlow<Unit>()
+    val startAnimationFlow = _startAnimationFlow.asSharedFlow()
 
     init {
         getData()
@@ -192,7 +196,7 @@ class GameViewModel @AssistedInject constructor(
                         timerModel = content.timerModel.copy(
                             remainTime = remainTime,
                             progress = remainTime.toFloat().div(COUNTDOWN_TIME_SEC)
-                        ) ,
+                        ),
                     )
                 }
                 checkRemainingTime()
@@ -308,6 +312,7 @@ class GameViewModel @AssistedInject constructor(
         guessingItems = guessingItems.map { item ->
             if (item.id in currentPackIds) item.copy(isGuessed = true) else item
         }
+        triggerTimeUpAnimation()
         showPackOfWords(GUESSED_ADDITIONAL_TIME)
     }
 
@@ -317,7 +322,12 @@ class GameViewModel @AssistedInject constructor(
 
     private fun invalidateAllWords() {
         guessingItems = guessingItems.map { it.copy(isGuessed = false) }
+        triggerTimeUpAnimation()
         showPackOfWords(GUESSED_ADDITIONAL_TIME)
+    }
+
+    private fun triggerTimeUpAnimation() = viewModelScope.launch {
+        _startAnimationFlow.emit(Unit)
     }
 
     private fun invalidateGuessingItems() {

@@ -5,12 +5,24 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
+import com.antsfamily.danskflashcards.R
 import com.antsfamily.danskflashcards.ui.game.model.GameStatus
 import com.antsfamily.danskflashcards.ui.game.model.TimerModel
 import com.antsfamily.danskflashcards.ui.game.model.WORD_CARDS_DANISH
@@ -32,8 +44,39 @@ fun GameScreen(
     },
     navigateBack: () -> Unit,
 ) {
+    var isTimeUpAnimationVisible by remember { mutableStateOf(false) }
+
     val state = viewModel.state.collectAsState()
     val dialogData = viewModel.dialogData.collectAsState()
+    val composition by rememberLottieComposition(
+        LottieCompositionSpec.RawRes(R.raw.timer_up_new)
+    )
+    val animationProgress by animateLottieCompositionAsState(
+        composition = composition,
+        iterations = 1,
+        isPlaying = isTimeUpAnimationVisible
+    )
+
+    LaunchedEffect(Unit) {
+        viewModel.startAnimationFlow.collect {
+            isTimeUpAnimationVisible = true
+        }
+    }
+
+    LaunchedEffect(animationProgress) {
+        if (animationProgress == 1.0f) {
+            isTimeUpAnimationVisible = false
+        }
+    }
+
+    if (isTimeUpAnimationVisible) {
+        LottieAnimation(
+            composition = composition,
+            progress = animationProgress,
+            modifier = Modifier.size(210.dp)
+        )
+    }
+
     when (val stateValue = state.value) {
         GameUiState.Loading ->
             Box(

@@ -13,8 +13,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.antsfamily.danskflashcards.ui.game.model.TimerModel
+import com.antsfamily.danskflashcards.ui.theme.FontSize
+import com.antsfamily.danskflashcards.ui.theme.alert
 import com.antsfamily.danskflashcards.ui.theme.wistful_700
-import com.antsfamily.danskflashcards.util.toTimeFormat
 
 @Composable
 fun GameTimer(model: TimerModel) {
@@ -30,7 +31,8 @@ fun GameTimer(model: TimerModel) {
 
         Text(
             text = model.remainTimeString,
-            color = wistful_700,
+            color = if (model.isLastResort) alert else wistful_700,
+            fontSize = if (model.isLastResort) FontSize.H3 else FontSize.H4,
             style = MaterialTheme.typography.displaySmall,
             fontWeight = FontWeight.Bold
         )
@@ -39,6 +41,12 @@ fun GameTimer(model: TimerModel) {
 
 @Preview
 @Composable
-fun GameTimerPreview() {
+fun GameTimerPreview1() {
     GameTimer(TimerModel(remainTime = 75, progress = 0.4f))
+}
+
+@Preview
+@Composable
+fun GameTimerPreview2() {
+    GameTimer(TimerModel(remainTime = 4, progress = 0.4f))
 }
