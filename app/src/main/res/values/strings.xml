@@ -2,12 +2,14 @@
     <string name="app_name">DanskFlashCards</string>
     <string name="start">start</string>
     <string name="game_over">Game over</string>
-    <string name="new_record">THAT\'S YOUR NEW RECORD!!</string>
+    <string name="new_record">THAT\'S YOUR NEW PERSONAL BEST!!</string>
     <string name="your_best_result">Your best result is still %1$s</string>
     <string name="game_over_dialog_description">You guessed %1$s pairs.\n%2$s</string>
     <string name="button_ok">OK</string>
     <string name="sign_up_google">Sign up with Google</string>
     <string name="date_of_the_pb">Date of the PB</string>
-    <string name="of_all_words">% of all words</string>
     <string name="personal_best">Your best result:</string>
+    <string name="leaderboard_title">Leaderboard</string>
+    <string name="home_title_welcome">Welcome,\n%1$s!</string>
+    <string name="home_title_welcome_back">Welcome back,\n%1$s!</string>
 </resources>

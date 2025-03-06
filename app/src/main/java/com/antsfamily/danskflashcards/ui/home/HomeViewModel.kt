@@ -9,6 +9,8 @@ import com.antsfamily.danskflashcards.domain.GetFlashCardsUseCase
 import com.antsfamily.danskflashcards.domain.GetUsersUseCase
 import com.antsfamily.danskflashcards.domain.UserUpdateFLowUseCase
 import com.antsfamily.danskflashcards.ui.auth.CurrentUserModel
+import com.antsfamily.danskflashcards.ui.home.model.LeaderboardItem
+import com.antsfamily.danskflashcards.ui.home.model.LeaderboardModel
 import com.antsfamily.danskflashcards.ui.home.model.UserModel
 import com.antsfamily.danskflashcards.util.orZero
 import dagger.assisted.Assisted
@@ -113,7 +115,25 @@ class HomeViewModel @AssistedInject constructor(
     }
 
     private fun updateState(users: List<UserModel>, user: UserModel) {
-        _state.value = HomeUiState.Content(user = user, cardsSize = words.size)
+        val model = getLeaderboard(users, user)
+        _state.value = HomeUiState.Content(user = user, cardsSize = words.size, leaderboard = model)
+    }
+
+    private fun getLeaderboard(users: List<UserModel>, user: UserModel): LeaderboardModel {
+        val sortedUsers = users.sortedByDescending { it.score }
+        val leaderboardItems = sortedUsers
+            .take(3)
+            .mapIndexed { index, sortedUser ->
+                LeaderboardItem(name = sortedUser.username, index = index, score = sortedUser.score)
+            }
+        return LeaderboardModel(
+            leaders = leaderboardItems,
+            user = LeaderboardItem(
+                name = user.username,
+                index = sortedUsers.indexOfFirst { it.isCurrentUser },
+                score = user.score
+            )
+        )
     }
 
     private fun onGetUsersErrorResult(e: Exception) = viewModelScope.launch {

@@ -6,4 +6,7 @@ data class UserModel(
     val isCurrentUser: Boolean,
     val score: Int,
     val date: String?,
-)
+) {
+
+    fun isFirstTime(): Boolean = date.isNullOrBlank()
+}

@@ -1,34 +1,27 @@
 package com.antsfamily.danskflashcards.ui.home
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.antsfamily.danskflashcards.ui.auth.CurrentUserModel
 import com.antsfamily.danskflashcards.ui.game.view.FullScreenLoading
+import com.antsfamily.danskflashcards.ui.home.model.LeaderboardItem
+import com.antsfamily.danskflashcards.ui.home.model.LeaderboardModel
 import com.antsfamily.danskflashcards.ui.home.model.UserModel
+import com.antsfamily.danskflashcards.ui.home.view.HomeTitle
+import com.antsfamily.danskflashcards.ui.home.view.HomeTopBar
+import com.antsfamily.danskflashcards.ui.home.view.LeaderboardView
 import com.antsfamily.danskflashcards.ui.home.view.PersonalBestCard
 import com.antsfamily.danskflashcards.ui.theme.Padding
-import java.util.Date
 
 @Composable
 fun HomeScreen(
@@ -74,34 +67,16 @@ fun HomeScreenContent(
 ) {
     Column(
         modifier = Modifier
-            .padding(Padding.medium)
+            .padding(horizontal = Padding.medium, vertical = Padding.small)
             .fillMaxSize(),
     ) {
-        Row(
-            Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
-        ) {
-            IconButton(
-                onClick = { /*TODO*/ }) {
-                Icon(
-                    imageVector = Icons.Filled.Settings,
-                    contentDescription = null
-                )
-            }
-            IconButton(onClick = onBackButtonClick) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ExitToApp,
-                    contentDescription = null
-                )
-            }
-        }
-        Spacer(modifier = Modifier.height(Padding.large))
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = "Welcome, ${content.user.username}!",
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Start
+        HomeTopBar(
+            onSettingsClick = {},
+            onLogoutClick = onBackButtonClick
+        )
+        HomeTitle(
+            username = content.user.username,
+            isFirstTime = content.user.isFirstTime()
         )
         PersonalBestCard(
             score = content.user.score,
@@ -110,20 +85,57 @@ fun HomeScreenContent(
         ) {
             onStartClick()
         }
+        if (content.leaderboard != null) {
+            Spacer(modifier = Modifier.height(40.dp))
+            LeaderboardView(model = content.leaderboard)
+        }
     }
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun HomeScreenContentPreview() {
+fun HomeScreenContentPreview1() {
     HomeScreenContent(
         HomeUiState.Content(
             user = UserModel(
                 id = "johndoe123",
-                username = "John Doe",
+                username = "Johnny Doesome",
                 isCurrentUser = true,
                 score = 43,
                 date = "10.02.2024 11:22:33"
+            ),
+            leaderboard = LeaderboardModel(
+                leaders = listOf(
+                    LeaderboardItem(name = "Pablo Escobar", score = 44, index = 0),
+                    LeaderboardItem(name = "Carlos Esteves", score = 32, index = 1),
+                    LeaderboardItem(name = "Andrea Corti", score = 29, index = 2),
+                ),
+                user = LeaderboardItem(name = "Johnny Doesome", score = 12, index = 10),
+            ),
+            cardsSize = 879,
+        ), {}
+    ) {}
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun HomeScreenContentPreview2() {
+    HomeScreenContent(
+        HomeUiState.Content(
+            user = UserModel(
+                id = "johndoe123",
+                username = "Johnny Doesome",
+                isCurrentUser = true,
+                score = 0,
+                date = null
+            ),
+            leaderboard = LeaderboardModel(
+                leaders = listOf(
+                    LeaderboardItem(name = "John Doe", score = 44, index = 0),
+                    LeaderboardItem(name = "Pablo Escobar", score = 32, index = 1),
+                    LeaderboardItem(name = "Andrea Corti", score = 29, index = 2),
+                ),
+                user = LeaderboardItem(name = "Pablo Escobar", score = 12, index = 10),
             ),
             cardsSize = 879,
         ), {}
