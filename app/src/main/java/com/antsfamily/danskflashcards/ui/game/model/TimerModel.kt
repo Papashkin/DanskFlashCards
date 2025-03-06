@@ -10,4 +10,7 @@ data class TimerModel(
 
     val remainTimeString: String
         get() = this.remainTime.toTimeFormat()
+
+    val isLastResort: Boolean
+        get() = remainTime <= 5
 }
