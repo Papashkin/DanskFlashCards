@@ -10,6 +10,7 @@ import com.antsfamily.danskflashcards.domain.SetPersonalBestUseCase
 import com.antsfamily.danskflashcards.ui.game.model.DialogData
 import com.antsfamily.danskflashcards.ui.game.model.GameStatus
 import com.antsfamily.danskflashcards.ui.game.model.GuessingItem
+import com.antsfamily.danskflashcards.ui.game.model.TimerModel
 import com.antsfamily.danskflashcards.ui.game.model.UserWithPersonalBestModel
 import com.antsfamily.danskflashcards.ui.game.model.WordModel
 import com.antsfamily.danskflashcards.util.COUNTDOWN_STEP
@@ -19,6 +20,7 @@ import com.antsfamily.danskflashcards.util.HOME_SCREEN_PAIRS_AMOUNT
 import com.antsfamily.danskflashcards.util.WRONG_GUESS_ERROR_DURATION
 import com.antsfamily.danskflashcards.util.ZERO
 import com.antsfamily.danskflashcards.util.orZero
+import com.antsfamily.danskflashcards.util.toTimeFormat
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -147,14 +149,17 @@ class GameViewModel @AssistedInject constructor(
     private fun showPackOfWords(additionalTime: Long = ZERO) {
         val content = getContentOrNull()
         val packIds = getPackIds()
-        val totalTime = content?.totalCountdownTime ?: COUNTDOWN_TIME_SEC
-        val remainTime = (content?.remainingCountdownTime ?: COUNTDOWN_TIME_SEC) + additionalTime
+        val totalTime = COUNTDOWN_TIME_SEC
+        val remainTime = (content?.timerModel?.remainTime ?: COUNTDOWN_TIME_SEC) + additionalTime
+        val timerModel = TimerModel(
+            remainTime = remainTime,
+            progress = remainTime.toFloat().div(totalTime)
+        )
+
         _state.value = GameUiState.Content(
             danish = getPackOfDanishWords(packIds),
             english = getPackOfEnglishWords(packIds),
-            totalCountdownTime = totalTime,
-            remainingCountdownTime = remainTime,
-            timerProgress = remainTime.toFloat().div(totalTime),
+            timerModel = timerModel,
             status = content?.status ?: GameStatus.STARTED
         )
     }
@@ -182,10 +187,12 @@ class GameViewModel @AssistedInject constructor(
             .cancellable()
             .collect {
                 getContentOrNull()?.let { content ->
-                    val remainTime = content.remainingCountdownTime - 1
+                    val remainTime = content.timerModel.remainTime - 1
                     _state.value = content.copy(
-                        remainingCountdownTime = remainTime,
-                        timerProgress = remainTime.toFloat().div(content.totalCountdownTime)
+                        timerModel = content.timerModel.copy(
+                            remainTime = remainTime,
+                            progress = remainTime.toFloat().div(COUNTDOWN_TIME_SEC)
+                        ) ,
                     )
                 }
                 checkRemainingTime()
@@ -193,7 +200,7 @@ class GameViewModel @AssistedInject constructor(
     }
 
     private fun checkRemainingTime() = viewModelScope.launch {
-        if (getContentOrNull()?.remainingCountdownTime.orZero() < ZERO) {
+        if (getContentOrNull()?.timerModel?.remainTime.orZero() <= ZERO) {
             stopTimer()
             resetScreenContent()
             invalidateGuessingItems()
@@ -320,8 +327,7 @@ class GameViewModel @AssistedInject constructor(
     private fun resetScreenContent() {
         getContentOrNull()?.let { content ->
             _state.value = content.copy(
-                remainingCountdownTime = COUNTDOWN_TIME_SEC,
-                totalCountdownTime = COUNTDOWN_TIME_SEC,
+                timerModel = TimerModel(),
                 status = GameStatus.FINISHED,
                 danish = content.danish.map {
                     it.copy(isSelected = false, isGuessed = false, isWrong = false)

@@ -42,7 +42,6 @@ class HomeViewModel @AssistedInject constructor(
 
     private var words = emptyList<WordApiModel?>()
     private var currentUser: UserModel? = null
-    private var percent: Float = 0.0f
 
     private val _state = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
     val state: StateFlow<HomeUiState>
