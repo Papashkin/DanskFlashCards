@@ -55,7 +55,7 @@ fun ButtonWithLeadingIcon(
                 ),
                 border = BorderStroke(0.5.dp, wistful_1000),
                 onClick = { onClick() },
-                shape = RoundedCornerShape(Padding.large),
+                shape = RoundedCornerShape(Padding.xLarge),
             ) {
                 if (isLoading) {
                     CircularProgressIndicator(

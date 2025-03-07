@@ -7,7 +7,7 @@ import com.antsfamily.danskflashcards.data.model.mapToModel
 import com.antsfamily.danskflashcards.domain.CountdownTimerFlow
 import com.antsfamily.danskflashcards.domain.GetFlashCardsUseCase
 import com.antsfamily.danskflashcards.domain.SetPersonalBestUseCase
-import com.antsfamily.danskflashcards.ui.game.model.DialogData
+import com.antsfamily.danskflashcards.ui.game.model.GameOverModel
 import com.antsfamily.danskflashcards.ui.game.model.GameStatus
 import com.antsfamily.danskflashcards.ui.game.model.GuessingItem
 import com.antsfamily.danskflashcards.ui.game.model.TimerModel
@@ -65,12 +65,11 @@ class GameViewModel @AssistedInject constructor(
     val state: StateFlow<GameUiState>
         get() = _state.asStateFlow()
 
-    private val _dialogData = MutableStateFlow<DialogData?>(null)
-    val dialogData: StateFlow<DialogData?>
-        get() = _dialogData.asStateFlow()
-
     private val _startAnimationFlow = MutableSharedFlow<Unit>()
     val startAnimationFlow = _startAnimationFlow.asSharedFlow()
+
+    private val _gameOverFlow = MutableSharedFlow<GameOverModel>()
+    val gameOverFlow = _gameOverFlow.asSharedFlow()
 
     init {
         getData()
@@ -115,9 +114,8 @@ class GameViewModel @AssistedInject constructor(
         }
     }
 
-    fun hideDialog() {
+    fun onGameOverDialogClose() {
         pairsCounter = 0
-        _dialogData.value = null
     }
 
     private fun markDanishWordSelected(id: Int) {
@@ -215,12 +213,12 @@ class GameViewModel @AssistedInject constructor(
         }
     }
 
-    private fun showFinalDialog(oldRecord: Int, newRecord: Int) {
-        _dialogData.value = DialogData(
+    private fun showFinalDialog(oldRecord: Int, newRecord: Int) = viewModelScope.launch {
+        val gameOver = GameOverModel(
             bestResult = if (oldRecord > newRecord) oldRecord else newRecord,
-            pairsAmount = newRecord,
-            isNewRecord = newRecord > oldRecord
+            newResult = newRecord,
         )
+        _gameOverFlow.emit(gameOver)
     }
 
     private fun stopTimer() {

@@ -5,7 +5,7 @@
     <string name="new_record">THAT\'S YOUR NEW PERSONAL BEST!!</string>
     <string name="your_best_result">Your best result is still %1$s</string>
     <string name="game_over_dialog_description">You guessed %1$s pairs.\n%2$s</string>
-    <string name="button_ok">OK</string>
+    <string name="button_exit">exit</string>
     <string name="sign_up_google">Sign up with Google</string>
     <string name="date_of_the_pb">Date of the PB</string>
     <string name="personal_best">Your best result:</string>
