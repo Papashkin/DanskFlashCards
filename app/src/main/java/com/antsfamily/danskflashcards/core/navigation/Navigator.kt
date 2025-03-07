@@ -16,7 +16,7 @@ import com.antsfamily.danskflashcards.ui.auth.AuthScreen
 import com.antsfamily.danskflashcards.ui.game.GameScreen
 import com.antsfamily.danskflashcards.ui.home.HomeScreen
 import com.antsfamily.danskflashcards.ui.splash.SplashScreen
-import com.antsfamily.danskflashcards.util.toModel
+import com.antsfamily.danskflashcards.core.util.toModel
 
 @Composable
 fun Navigator() {

@@ -51,7 +51,7 @@ class AuthViewModel @Inject constructor(
 
     private fun signIn(intent: Intent?) = viewModelScope.launch {
         val result = client.signInWithIntent(intent = intent ?: return@launch)
-        val userModel = result.data?.toModel()
+        val userModel = result.data?.mapToModel()
         if (userModel?.isValid() == true) {
             proceedWithUserData(userModel)
         }

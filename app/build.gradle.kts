@@ -6,7 +6,6 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.google.services)
     alias(libs.plugins.kotlin.serialization)
-    id("kotlin-parcelize")
 }
 
 android {
@@ -49,6 +48,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":domain"))
+    implementation(project(":data"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.activity.compose)
