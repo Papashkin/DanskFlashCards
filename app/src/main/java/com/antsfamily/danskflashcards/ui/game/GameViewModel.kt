@@ -3,7 +3,6 @@ package com.antsfamily.danskflashcards.ui.game
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.antsfamily.danskflashcards.data.model.mapToModel
 import com.antsfamily.danskflashcards.domain.CountdownTimerFlow
 import com.antsfamily.danskflashcards.domain.GetFlashCardsUseCase
 import com.antsfamily.danskflashcards.domain.SetPersonalBestUseCase
@@ -13,13 +12,15 @@ import com.antsfamily.danskflashcards.ui.game.model.GuessingItem
 import com.antsfamily.danskflashcards.ui.game.model.TimerModel
 import com.antsfamily.danskflashcards.ui.game.model.UserWithPersonalBestModel
 import com.antsfamily.danskflashcards.ui.game.model.WordModel
-import com.antsfamily.danskflashcards.util.COUNTDOWN_STEP
-import com.antsfamily.danskflashcards.util.COUNTDOWN_TIME_SEC
-import com.antsfamily.danskflashcards.util.GUESSED_ADDITIONAL_TIME
-import com.antsfamily.danskflashcards.util.HOME_SCREEN_PAIRS_AMOUNT
-import com.antsfamily.danskflashcards.util.WRONG_GUESS_ERROR_DURATION
-import com.antsfamily.danskflashcards.util.ZERO
-import com.antsfamily.danskflashcards.util.orZero
+import com.antsfamily.danskflashcards.ui.game.model.mapToModel
+import com.antsfamily.danskflashcards.ui.game.model.toApiModel
+import com.antsfamily.danskflashcards.core.util.COUNTDOWN_STEP
+import com.antsfamily.danskflashcards.core.util.COUNTDOWN_TIME_SEC
+import com.antsfamily.danskflashcards.core.util.GUESSED_ADDITIONAL_TIME
+import com.antsfamily.danskflashcards.core.util.HOME_SCREEN_PAIRS_AMOUNT
+import com.antsfamily.danskflashcards.core.util.WRONG_GUESS_ERROR_DURATION
+import com.antsfamily.danskflashcards.core.util.ZERO
+import com.antsfamily.danskflashcards.core.util.orZero
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -138,11 +139,10 @@ class GameViewModel @AssistedInject constructor(
 
     private fun getData() = viewModelScope.launch {
         try {
-            fetchDataUseCase(Unit) { data ->
-                guessingItems = data.map { GuessingItem(it.id, false) }
-                danishWords = data.mapNotNull { it.mapToModel(true) }
-                englishWords = data.mapNotNull { it.mapToModel(false) }
-            }
+            val data = fetchDataUseCase.run()
+            guessingItems = data.map { GuessingItem(it.id, false) }
+            danishWords = data.mapNotNull { it.mapToModel(true) }
+            englishWords = data.mapNotNull { it.mapToModel(false) }
         } catch (e: Exception) {
             _state.value = GameUiState.Error(errorMessage = e.message.orEmpty())
         }
@@ -185,7 +185,7 @@ class GameViewModel @AssistedInject constructor(
     }
 
     private fun launchTimerFlow(): Job = viewModelScope.launch {
-        timerFlow(COUNTDOWN_STEP)
+        timerFlow.run(COUNTDOWN_STEP)
             .cancellable()
             .collect {
                 getContentOrNull()?.let { content ->
@@ -350,7 +350,7 @@ class GameViewModel @AssistedInject constructor(
     private fun saveBestResult(result: Int) = viewModelScope.launch(Dispatchers.IO) {
         try {
             val user = UserWithPersonalBestModel(id = userId, name = username, score = result)
-            setPersonalBestUseCase.invoke(user)
+            setPersonalBestUseCase.run(user.toApiModel())
         } catch (e: Exception) {
             Log.e(this@GameViewModel::class.simpleName, e.message ?: e.toString())
         }

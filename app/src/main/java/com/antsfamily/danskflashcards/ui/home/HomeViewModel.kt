@@ -12,7 +12,8 @@ import com.antsfamily.danskflashcards.ui.auth.CurrentUserModel
 import com.antsfamily.danskflashcards.ui.home.model.LeaderboardItem
 import com.antsfamily.danskflashcards.ui.home.model.LeaderboardModel
 import com.antsfamily.danskflashcards.ui.home.model.UserModel
-import com.antsfamily.danskflashcards.util.orZero
+import com.antsfamily.danskflashcards.ui.home.model.toModel
+import com.antsfamily.danskflashcards.core.util.orZero
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -75,9 +76,7 @@ class HomeViewModel @AssistedInject constructor(
     private fun getCards() = viewModelScope.launch(Dispatchers.IO) {
         try {
             if (words.isEmpty()) {
-                getFlashCardsUseCase(Unit) { data ->
-                    words = data
-                }
+                words = getFlashCardsUseCase.run()
             }
             getUsers(user)
         } catch (e: Exception) {
@@ -87,9 +86,8 @@ class HomeViewModel @AssistedInject constructor(
 
     private fun getUsers(user: CurrentUserModel) = viewModelScope.launch(Dispatchers.IO) {
         try {
-            getUsersUseCase(user.userId) { data ->
-                onGetUsersSuccessResult(data)
-            }
+            val data = getUsersUseCase.run(user.userId)
+            onGetUsersSuccessResult(data)
         } catch (e: Exception) {
             onGetUsersErrorResult(e)
         } finally {
@@ -99,7 +97,7 @@ class HomeViewModel @AssistedInject constructor(
 
     private fun subscribeToUserUpdate(userId: String) = viewModelScope.launch(Dispatchers.IO) {
         try {
-            userUpdateFLowUseCase(userId).collect { data ->
+            userUpdateFLowUseCase.run(userId).collect { data ->
                 onGetUsersSuccessResult(data)
             }
         } catch (e: Exception) {

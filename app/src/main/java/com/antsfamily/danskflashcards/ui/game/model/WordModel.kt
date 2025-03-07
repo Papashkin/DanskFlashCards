@@ -1,6 +1,7 @@
 package com.antsfamily.danskflashcards.ui.game.model
 
 import androidx.compose.ui.graphics.Color
+import com.antsfamily.danskflashcards.data.model.WordApiModel
 import com.antsfamily.danskflashcards.ui.theme.alert
 import com.antsfamily.danskflashcards.ui.theme.wistful_0
 import com.antsfamily.danskflashcards.ui.theme.wistful_100
@@ -29,6 +30,18 @@ data class WordModel(
         isWrong -> wistful_0
         else -> wistful_1000
     }
+}
+
+fun WordApiModel?.mapToModel(isDanish: Boolean): WordModel? {
+    if (this == null) return null
+
+    return WordModel(
+        id = this.id,
+        value = if (isDanish) this.danish else this.english,
+        isSelected = false,
+        isGuessed = false,
+        isWrong = false,
+    )
 }
 
 
