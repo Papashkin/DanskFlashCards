@@ -12,7 +12,15 @@ data class CurrentUserModel(
     fun isValid(): Boolean = username.isNotBlank() && this.email.isNotBlank()
 
     fun mapToUserModel(): UserModel {
-        return UserModel(id = userId, username = username, true, 0, null)
+        val username = username.split(" ")
+        return UserModel(
+            id = userId,
+            name = username.first(),
+            surname = username.last(),
+            isCurrentUser = true,
+            score = 0,
+            date = null
+        )
     }
 }
 

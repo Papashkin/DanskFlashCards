@@ -5,7 +5,8 @@ import com.antsfamily.danskflashcards.core.util.toIsoString
 
 data class UserModel(
     val id: String,
-    val username: String,
+    val name: String,
+    val surname: String,
     val isCurrentUser: Boolean,
     val score: Int,
     val date: String?,
@@ -15,9 +16,11 @@ data class UserModel(
 }
 
 fun UserApiModel.toModel(currentUserId: String): UserModel {
+    val username = this.username.split(" ")
     return UserModel(
         id = id,
-        username = username,
+        name = username.first(),
+        surname = username.last(),
         score = score,
         date = date?.toIsoString(),
         isCurrentUser = id == currentUserId

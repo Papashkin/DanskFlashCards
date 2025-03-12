@@ -12,11 +12,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.antsfamily.danskflashcards.core.util.toModel
+import com.antsfamily.danskflashcards.ui.about.AboutScreen
 import com.antsfamily.danskflashcards.ui.auth.AuthScreen
 import com.antsfamily.danskflashcards.ui.game.GameScreen
 import com.antsfamily.danskflashcards.ui.home.HomeScreen
 import com.antsfamily.danskflashcards.ui.splash.SplashScreen
-import com.antsfamily.danskflashcards.core.util.toModel
 
 @Composable
 fun Navigator() {
@@ -43,6 +44,9 @@ fun Navigator() {
                         )
                     }
                 }
+                composable<About> {
+                    AboutScreen { navController.popBackStack() }
+                }
                 composable<Home> { entry ->
                     BackHandler(true) {
                         //no-op
@@ -53,6 +57,7 @@ fun Navigator() {
                         navigateBack = {
                             navController.popBackStack()
                         },
+                        navigateToAbout = { navController.navigate(About) },
                         navigateToGame = { score ->
                             navController.navigate(
                                 Game(id = data.id, name = data.name, score = score)
