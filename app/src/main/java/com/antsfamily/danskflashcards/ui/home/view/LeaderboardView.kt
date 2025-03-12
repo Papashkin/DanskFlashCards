@@ -60,11 +60,11 @@ fun LeaderboardViewPreview1(modifier: Modifier = Modifier) {
     LeaderboardView(
         model = LeaderboardModel(
             leaders = listOf(
-                LeaderboardItem(name = "John Doe", score = 44, index = 0),
-                LeaderboardItem(name = "Pablo Escobar", score = 32, index = 1),
-                LeaderboardItem(name = "Andrea Corti", score = 29, index = 2),
+                LeaderboardItem(name = "John", surname = "Doe", score = 44, index = 0),
+                LeaderboardItem(name = "Pablo", surname = "Escobar", score = 32, index = 1),
+                LeaderboardItem(name = "Andrea", surname = "Corti", score = 29, index = 2),
             ),
-            user = LeaderboardItem(name = "Pablo Escobar", score = 32, index = 1),
+            user = LeaderboardItem(name = "Pablo", surname = "Escobar", score = 32, index = 1),
         )
     )
 }
@@ -75,11 +75,11 @@ fun LeaderboardViewPreview2(modifier: Modifier = Modifier) {
     LeaderboardView(
         model = LeaderboardModel(
             leaders = listOf(
-                LeaderboardItem(name = "John Doe", score = 44, index = 0),
-                LeaderboardItem(name = "Michael Pupsik", score = 32, index = 1),
-                LeaderboardItem(name = "Andrea Corti", score = 29, index = 2),
+                LeaderboardItem(name = "John", surname = "Doe", score = 44, index = 0),
+                LeaderboardItem(name = "Michael", surname = "Pupsik", score = 32, index = 1),
+                LeaderboardItem(name = "Andrea", surname = "Corti", score = 29, index = 2),
             ),
-            user = LeaderboardItem(name = "Pablo Escobar", score = 12, index = 10),
+            user = LeaderboardItem(name = "Pablo", surname = "Escobar", score = 12, index = 10),
         )
     )
 }
@@ -90,11 +90,11 @@ fun LeaderboardViewPreview3(modifier: Modifier = Modifier) {
     LeaderboardView(
         model = LeaderboardModel(
             leaders = listOf(
-                LeaderboardItem(name = "John Doe", score = 44, index = 0),
-                LeaderboardItem(name = "Michael Pupsik", score = 32, index = 1),
-                LeaderboardItem(name = "Andrea Corti", score = 29, index = 2),
+                LeaderboardItem(name = "John", surname = "Doe", score = 44, index = 0),
+                LeaderboardItem(name = "Michael", surname = "Pupsik", score = 32, index = 1),
+                LeaderboardItem(name = "Andrea", surname = "Corti", score = 29, index = 2),
             ),
-            user = LeaderboardItem(name = "Pablo Escobar", score = 27, index = 3),
+            user = LeaderboardItem(name = "Pablo", surname = "Escobar", score = 27, index = 3),
         )
     )
 }

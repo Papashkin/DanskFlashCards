@@ -122,12 +122,18 @@ class HomeViewModel @AssistedInject constructor(
         val leaderboardItems = sortedUsers
             .take(3)
             .mapIndexed { index, sortedUser ->
-                LeaderboardItem(name = sortedUser.username, index = index, score = sortedUser.score)
+                LeaderboardItem(
+                    name = sortedUser.name,
+                    surname = sortedUser.surname,
+                    index = index,
+                    score = sortedUser.score
+                )
             }
         return LeaderboardModel(
             leaders = leaderboardItems,
             user = LeaderboardItem(
-                name = user.username,
+                name = user.name,
+                surname = user.surname,
                 index = sortedUsers.indexOfFirst { it.isCurrentUser },
                 score = user.score
             )

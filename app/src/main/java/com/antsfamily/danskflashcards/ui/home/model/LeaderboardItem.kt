@@ -10,14 +10,19 @@ import com.antsfamily.danskflashcards.ui.theme.light_accent
 import com.antsfamily.danskflashcards.ui.theme.wistful_1000
 import com.antsfamily.danskflashcards.ui.theme.wistful_500
 
+const val DOT = "."
+const val SEPARATOR_SPACE = " "
+
 data class LeaderboardItem(
     val name: String,
+    val surname: String,
     val index: Int,
     val score: Int,
 ) {
     val modifiedName: String
         get() {
-            return name.take(3).plus("*****").plus(name.last())
+            val username = listOf(name, surname.first().plus(DOT))
+            return username.joinToString(separator = SEPARATOR_SPACE)
         }
 
     val place: Int

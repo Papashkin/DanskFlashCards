@@ -53,12 +53,17 @@ fun LeaderboardIcon(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun LeaderboardIconPreview(modifier: Modifier = Modifier) {
+    val item = LeaderboardItem(
+        name = "John",
+        surname = "Doe",
+        score = 25,
+        index = 0
+    )
     Column(modifier.padding(top = 48.dp)) {
-        LeaderboardIcon(item = LeaderboardItem(name = "John Doe", score = 25, index = 0))
-        LeaderboardIcon(item = LeaderboardItem(name = "John Doe", score = 25, index = 1))
-        LeaderboardIcon(item = LeaderboardItem(name = "John Doe", score = 25, index = 2))
-        LeaderboardIcon(item = LeaderboardItem(name = "John Doe", score = 25, index = 8))
-        LeaderboardIcon(item = LeaderboardItem(name = "John Doe", score = 25, index = 17))
+        LeaderboardIcon(item = item.copy(index = 1))
+        LeaderboardIcon(item = item.copy(index = 2))
+        LeaderboardIcon(item = item.copy(index = 8))
+        LeaderboardIcon(item = item.copy(index = 25))
     }
 
 }

@@ -11,6 +11,9 @@ object Splash: Screen()
 object Auth: Screen()
 
 @Serializable
+object About: Screen()
+
+@Serializable
 data class Home(val id: String, val name: String, val email: String): Screen()
 
 @Serializable
