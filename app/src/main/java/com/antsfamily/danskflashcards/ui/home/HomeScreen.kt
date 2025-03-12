@@ -70,15 +70,14 @@ fun HomeScreenContent(
             .padding(horizontal = Padding.medium, vertical = Padding.small)
             .fillMaxSize(),
     ) {
-        HomeTopBar(
-            onSettingsClick = {},
-            onLogoutClick = onBackButtonClick
-        )
+        //TODO implement onSettingsClick later
+        HomeTopBar(onLogoutClick = onBackButtonClick)
         HomeTitle(
             username = content.user.username,
             isFirstTime = content.user.isFirstTime()
         )
         PersonalBestCard(
+            modifier = Modifier.padding(top = Padding.large),
             score = content.user.score,
             cardsSize = content.cardsSize,
             date = content.user.date
@@ -92,7 +91,7 @@ fun HomeScreenContent(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 fun HomeScreenContentPreview1() {
     HomeScreenContent(
@@ -117,7 +116,7 @@ fun HomeScreenContentPreview1() {
     ) {}
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 fun HomeScreenContentPreview2() {
     HomeScreenContent(

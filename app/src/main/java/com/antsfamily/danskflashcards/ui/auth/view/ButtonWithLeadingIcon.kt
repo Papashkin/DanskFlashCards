@@ -70,6 +70,7 @@ fun ButtonWithLeadingIcon(
             Text(
                 text = errorText.orEmpty(),
                 color = alert,
+                minLines = 2,
                 style = MaterialTheme.typography.bodySmall,
             )
         }
@@ -124,7 +125,15 @@ fun ButtonWithLeadingIconPreview() {
             R.string.sign_up_google,
             R.drawable.ic_google,
             false,
-            "Something went wrong. Please try it later"
+            "Something went wrong.\nPlease try it later."
+        ) {}
+        Spacer(modifier = Modifier.height(20.dp))
+        ButtonWithLeadingIcon(
+            Modifier,
+            R.string.sign_up_google,
+            R.drawable.ic_google,
+            false,
+            "Something went wrong. Please try it later. Or test the really long error text explanation"
         ) {}
     }
 }

@@ -35,8 +35,8 @@ fun LeaderboardItem(
         modifier = modifier
             .padding(top = Padding.medium)
             .fillMaxWidth()
-            .background(wistful_50, shape = RoundedCornerShape(16.dp))
-            .border(1.dp, color = wistful_200, shape = RoundedCornerShape(16.dp))
+            .background(wistful_50, shape = RoundedCornerShape(12.dp))
+            .border(1.dp, color = wistful_200, shape = RoundedCornerShape(12.dp))
     ) {
         Row(
             modifier = modifier.fillMaxWidth(),

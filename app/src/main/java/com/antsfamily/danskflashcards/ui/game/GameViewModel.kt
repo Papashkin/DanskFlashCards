@@ -3,6 +3,7 @@ package com.antsfamily.danskflashcards.ui.game
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.antsfamily.danskflashcards.core.model.mapToErrorType
 import com.antsfamily.danskflashcards.domain.CountdownTimerFlow
 import com.antsfamily.danskflashcards.domain.GetFlashCardsUseCase
 import com.antsfamily.danskflashcards.domain.SetPersonalBestUseCase
@@ -144,7 +145,7 @@ class GameViewModel @AssistedInject constructor(
             danishWords = data.mapNotNull { it.mapToModel(true) }
             englishWords = data.mapNotNull { it.mapToModel(false) }
         } catch (e: Exception) {
-            _state.value = GameUiState.Error(errorMessage = e.message.orEmpty())
+            _state.value = GameUiState.Error(e.mapToErrorType())
         }
     }
 

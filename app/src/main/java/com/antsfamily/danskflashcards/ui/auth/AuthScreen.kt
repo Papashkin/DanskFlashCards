@@ -21,10 +21,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.antsfamily.danskflashcards.R
+import com.antsfamily.danskflashcards.core.model.ErrorType
+import com.antsfamily.danskflashcards.core.model.toErrorMessage
 import com.antsfamily.danskflashcards.ui.auth.view.ButtonWithLeadingIcon
 import com.antsfamily.danskflashcards.ui.theme.Padding
 
@@ -75,12 +78,12 @@ fun AuthScreenContent(state: AuthUiState, onGoogleClick: () -> Unit) {
             ),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Image(painterResource(R.drawable.ic_home_image_bg), "null")
+        Image(painterResource(R.drawable.ic_home_image_bg), null)
         Box(
             modifier = Modifier
                 .background(
                     brush = Brush.verticalGradient(
-                        endY = 120f,
+                        endY = 200f,
                         colors = listOf(
                             Color(0xff7CBBff),
                             MaterialTheme.colorScheme.background
@@ -98,12 +101,12 @@ fun AuthScreenContent(state: AuthUiState, onGoogleClick: () -> Unit) {
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "Welcome!",
+                        text = stringResource(R.string.auth_title),
                         style = MaterialTheme.typography.headlineLarge,
                         textAlign = TextAlign.Center,
                     )
                     Text(
-                        text = "Please login to access to the cards",
+                        text = stringResource(R.string.auth_subtitle),
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.padding(top = Padding.xSmall)
                     )
@@ -116,7 +119,11 @@ fun AuthScreenContent(state: AuthUiState, onGoogleClick: () -> Unit) {
                         iconId = R.drawable.ic_google,
                         stringId = R.string.sign_up_google,
                         isLoading = state is AuthUiState.Loading,
-                        errorText = (state as? AuthUiState.Error)?.errorMessage
+                        errorText = if ((state is AuthUiState.Error)) {
+                            stringResource(state.type.toErrorMessage())
+                        } else {
+                            null
+                        },
                     ) {
                         onGoogleClick()
                     }
@@ -141,5 +148,5 @@ fun AuthScreenLoadingStatePreview() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun AuthScreenErrorStatePreview() {
-    AuthScreenContent(AuthUiState.Error("Test test test")) {}
+    AuthScreenContent(AuthUiState.Error(ErrorType.NetworkConnection)) {}
 }
