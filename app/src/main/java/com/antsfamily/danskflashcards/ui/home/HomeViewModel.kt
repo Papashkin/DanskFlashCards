@@ -2,6 +2,7 @@ package com.antsfamily.danskflashcards.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.antsfamily.danskflashcards.core.model.mapToErrorType
 import com.antsfamily.danskflashcards.data.GoogleAuthUiClient
 import com.antsfamily.danskflashcards.data.model.UserApiModel
 import com.antsfamily.danskflashcards.data.model.WordApiModel
@@ -80,7 +81,7 @@ class HomeViewModel @AssistedInject constructor(
             }
             getUsers(user)
         } catch (e: Exception) {
-            _state.value = HomeUiState.Error(errorMessage = e.message.orEmpty())
+            _state.value = HomeUiState.Error(e.mapToErrorType())
         }
     }
 
@@ -134,6 +135,6 @@ class HomeViewModel @AssistedInject constructor(
     }
 
     private fun onGetUsersErrorResult(e: Exception) = viewModelScope.launch {
-        _state.value = HomeUiState.Error(errorMessage = e.message.orEmpty())
+        _state.value = HomeUiState.Error(e.mapToErrorType())
     }
 }

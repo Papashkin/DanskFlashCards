@@ -38,16 +38,17 @@ import com.antsfamily.danskflashcards.ui.theme.wistful_800
 
 @Composable
 fun PersonalBestCard(
+    modifier: Modifier = Modifier,
     score: Int,
     date: String?,
     cardsSize: Int,
-    onClick: () -> Unit) {
+    onClick: () -> Unit
+) {
     Box(
-        modifier = Modifier
-            .padding(top = Padding.large)
+        modifier = modifier
             .fillMaxWidth()
             .height(200.dp)
-            .background(wistful_800, shape = RoundedCornerShape(16.dp))
+            .background(wistful_800, shape = RoundedCornerShape(20.dp))
     ) {
         Column(modifier = Modifier.padding(horizontal = Padding.medium)) {
             Row(modifier = Modifier.padding(vertical = Padding.large)) {
@@ -82,9 +83,10 @@ fun PersonalBestCard(
                         )
                     }
                 }
-                Column(modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = Padding.small)
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = Padding.small)
                 ) {
                     Text(
                         text = stringResource(R.string.date_of_the_pb),
@@ -135,7 +137,7 @@ fun PersonalBestCard(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 fun PersonalBestCardPreview() {
     PersonalBestCard(score = 65, cardsSize = 982, date = "10.02.2024 11:22:33") {
