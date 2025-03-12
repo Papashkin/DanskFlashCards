@@ -20,7 +20,7 @@ jobs:
 
       - name: Decode and save keystore
         run: |
-          echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 --decode > ${{ github.workspace }}/keystore.jks
+          echo "${{ secrets.RELEASE_KEYSTORE }}" | base64 --decode > ${{ github.workspace }}/keystore.jks
 
       - name: Setup Gradle cache
         uses: gradle/gradle-build-action@v3
