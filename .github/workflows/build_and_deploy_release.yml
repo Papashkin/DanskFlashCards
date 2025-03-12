@@ -23,7 +23,7 @@ jobs:
           echo "${{ secrets.RELEASE_KEYSTORE }}" | base64 --decode > ${{ github.workspace }}/keystore.jks
 
       - name: Setup Gradle cache
-        uses: gradle/gradle-build-action@v3
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Grant execute permission for Gradle
         run: chmod +x gradlew
@@ -39,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: apk
-          path: app/build/outputs/apk/release/
+          path: app/build/outputs/apk/release/app-release.apk
 
       - name: Build signed AAB
         run: ./gradlew bundleRelease
