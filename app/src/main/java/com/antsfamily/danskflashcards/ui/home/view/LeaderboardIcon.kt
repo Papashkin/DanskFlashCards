@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.antsfamily.danskflashcards.ui.home.model.LeaderboardItem
 import com.antsfamily.danskflashcards.ui.home.model.mapToColor
 import com.antsfamily.danskflashcards.ui.home.model.mapToIcon
+import com.antsfamily.danskflashcards.ui.theme.Padding
 
 @Composable
 fun LeaderboardIcon(
@@ -28,7 +29,7 @@ fun LeaderboardIcon(
     Box(
         modifier = Modifier
             .size(52.dp)
-            .padding(8.dp),
+            .padding(Padding.small),
         contentAlignment = Alignment.Center
     ) {
         item.mapToIcon()?.let {
@@ -43,7 +44,7 @@ fun LeaderboardIcon(
         Text(
             text = item.place.toString(),
             color = item.mapToColor(),
-            modifier = modifier.padding(top = if (item.place <= 3) 12.dp else 0.dp),
+            modifier = modifier.padding(top = if (item.place <= 3) Padding.medium else Padding.none),
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold
         )
@@ -59,7 +60,7 @@ fun LeaderboardIconPreview(modifier: Modifier = Modifier) {
         score = 25,
         index = 0
     )
-    Column(modifier.padding(top = 48.dp)) {
+    Column(modifier.padding(top = Padding.huge)) {
         LeaderboardIcon(item = item.copy(index = 1))
         LeaderboardIcon(item = item.copy(index = 2))
         LeaderboardIcon(item = item.copy(index = 8))

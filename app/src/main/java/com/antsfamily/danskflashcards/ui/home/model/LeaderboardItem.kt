@@ -15,14 +15,18 @@ const val SEPARATOR_SPACE = " "
 
 data class LeaderboardItem(
     val name: String,
-    val surname: String,
+    val surname: String?,
     val index: Int,
     val score: Int,
 ) {
     val modifiedName: String
         get() {
-            val username = listOf(name, surname.first().plus(DOT))
-            return username.joinToString(separator = SEPARATOR_SPACE)
+            return if (surname.isNullOrBlank()) {
+                name
+            } else {
+                val username = listOf(name, surname.first().plus(DOT))
+                username.joinToString(separator = SEPARATOR_SPACE)
+            }
         }
 
     val place: Int

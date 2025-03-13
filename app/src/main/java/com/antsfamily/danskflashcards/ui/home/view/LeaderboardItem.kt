@@ -72,8 +72,8 @@ fun LeaderboardItemPreview(modifier: Modifier = Modifier) {
     Column {
         HorizontalDivider(thickness = 20.dp)
         LeaderboardItem(item = LeaderboardItem(name = "John", surname = "Doe", score = 25, index = 0), isUser = false)
-        LeaderboardItem(item = LeaderboardItem(name = "John", surname = "Doe", score = 25, index = 1), isUser = false)
-        LeaderboardItem(item = LeaderboardItem(name = "John", surname = "Doe", score = 25, index = 2), isUser = false)
-        LeaderboardItem(item = LeaderboardItem(name = "John", surname = "Doe", score = 25, index = 7), isUser = true)
+        LeaderboardItem(item = LeaderboardItem(name = "John", surname = "   ", score = 25, index = 1), isUser = false)
+        LeaderboardItem(item = LeaderboardItem(name = "John", surname = "", score = 25, index = 2), isUser = false)
+        LeaderboardItem(item = LeaderboardItem(name = "John", surname = null, score = 25, index = 7), isUser = true)
     }
 }

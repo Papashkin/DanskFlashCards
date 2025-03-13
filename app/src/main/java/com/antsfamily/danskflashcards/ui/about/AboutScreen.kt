@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.antsfamily.danskflashcards.R
@@ -41,9 +42,7 @@ fun AboutScreen(
     ) {
         TopBar(onNavigationBack = navigateBack)
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 56.dp),
+            modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.weight(1f))
@@ -60,12 +59,12 @@ fun AboutScreen(
             }
 
             Text(
-                text = "developed by Papashkin",
+                text = stringResource(R.string.about_development_description),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(top = Padding.large),
             )
             Text(
-                text = "2025",
+                text = stringResource(R.string.about_year_2025),
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(top = Padding.xSmall),
             )
@@ -73,16 +72,16 @@ fun AboutScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
-                text = "App Version: $appVersion",
+                text = stringResource(R.string.about_app_version, appVersion),
                 fontSize = FontSize.Caption,
                 color = Color.Gray,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = Padding.large)
             )
         }
     }
 }
 
-fun getAppVersion(context: Context): String? {
+fun getAppVersion(context: Context): String {
     val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
     return packageInfo.versionName
 }

@@ -1,6 +1,10 @@
 package com.antsfamily.danskflashcards.core.navigation
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -44,10 +48,10 @@ fun Navigator() {
                         )
                     }
                 }
-                composable<About> {
-                    AboutScreen { navController.popBackStack() }
-                }
-                composable<Home> { entry ->
+                composable<Home>(
+                    enterTransition = { scaleIn(tween(300)) },
+                    exitTransition = { scaleOut(tween(300)) },
+                ) { entry ->
                     BackHandler(true) {
                         //no-op
                     }
@@ -65,7 +69,32 @@ fun Navigator() {
                         }
                     )
                 }
-                composable<Game> { entry ->
+                composable<About>(
+                    enterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Up, tween(300)
+                        )
+                    },
+                    exitTransition = {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Down, tween(300)
+                        )
+                    },
+                ) {
+                    AboutScreen { navController.popBackStack() }
+                }
+                composable<Game>(
+                    enterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Up, tween(300)
+                        )
+                    },
+                    exitTransition = {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Down, tween(300)
+                        )
+                    },
+                ) { entry ->
                     val data = entry.toRoute<Game>()
                     GameScreen(
                         userId = data.id,

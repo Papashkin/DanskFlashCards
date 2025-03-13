@@ -11,11 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.antsfamily.danskflashcards.R
 import com.antsfamily.danskflashcards.ui.home.model.LeaderboardItem
 import com.antsfamily.danskflashcards.ui.home.model.LeaderboardModel
 import com.antsfamily.danskflashcards.ui.theme.FontSize
+import com.antsfamily.danskflashcards.ui.theme.Padding
 
 @Composable
 fun LeaderboardView(
@@ -45,7 +45,7 @@ fun LeaderboardView(
                 ".....",
                 modifier
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp),
+                    .padding(bottom = Padding.small),
                 textAlign = TextAlign.Center,
                 fontSize = FontSize.H4,
             )

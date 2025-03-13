@@ -16,7 +16,7 @@ data class UserModel(
 }
 
 fun UserApiModel.toModel(currentUserId: String): UserModel {
-    val username = this.username.split(" ")
+    val username = this.username.trim().split(SEPARATOR_SPACE)
     return UserModel(
         id = id,
         name = username.first(),

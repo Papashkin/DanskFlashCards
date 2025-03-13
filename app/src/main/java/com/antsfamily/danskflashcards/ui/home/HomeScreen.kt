@@ -165,7 +165,7 @@ fun HomeScreenContentPreview2() {
             leaderboard = LeaderboardModel(
                 leaders = listOf(
                     LeaderboardItem(name = "John", surname = "Doe", score = 44, index = 0),
-                    LeaderboardItem(name = "Pablo", surname = "Escobar", score = 32, index = 1),
+                    LeaderboardItem(name = "Paolo", surname = "Scoba", score = 32, index = 1),
                     LeaderboardItem(name = "Andrea", surname = "Corti", score = 29, index = 2),
                 ),
                 user = LeaderboardItem(name = "Pablo", surname = "Escobar", score = 12, index = 10),
