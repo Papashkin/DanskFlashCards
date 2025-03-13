@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ExitToApp
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowLeft
@@ -22,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.antsfamily.danskflashcards.ui.theme.FontSize
+import com.antsfamily.danskflashcards.ui.theme.Padding
 
 @Composable
 fun TopBar(
@@ -36,26 +38,30 @@ fun TopBar(
             .height(48.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        IconButton(onClick = { onNavigationBack?.invoke() }) {
-            if (onNavigationBack != null) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowLeft,
-                    contentDescription = null
-                )
+        Row(
+            modifier.padding(end = Padding.small),
+            horizontalArrangement = Arrangement.Start
+        ) {
+            IconButton(onClick = { onNavigationBack?.invoke() }) {
+                if (onNavigationBack != null) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowLeft,
+                        contentDescription = null
+                    )
+                }
             }
-        }
-        if (title != null) {
-            Column(
-                modifier = Modifier.fillMaxHeight(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    title,
-                    maxLines = 1,
-                    fontSize = FontSize.H6,
-                    textAlign = TextAlign.Center
-                )
+            if (title != null) {
+                Column(
+                    modifier = Modifier.fillMaxHeight(),
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Text(
+                        title,
+                        maxLines = 1,
+                        fontSize = FontSize.H6,
+                        textAlign = TextAlign.Start
+                    )
+                }
             }
         }
         Row {
@@ -68,7 +74,7 @@ fun TopBar(
 @Composable
 private fun TopBarPreview1() {
     TopBar(
-        title = "Something else",
+        title = "Some very long long title",
         onNavigationBack = {},
     ) {
         IconButton(

@@ -4,6 +4,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 object Padding {
+    val none = 0.dp
     val tiny = 2.dp
     val xSmall = 4.dp
     val small = 8.dp

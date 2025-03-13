@@ -1,6 +1,7 @@
 package com.antsfamily.danskflashcards.ui.auth
 
 import com.antsfamily.danskflashcards.data.CurrentUserApiModel
+import com.antsfamily.danskflashcards.ui.home.model.SEPARATOR_SPACE
 import com.antsfamily.danskflashcards.ui.home.model.UserModel
 
 data class CurrentUserModel(
@@ -12,7 +13,7 @@ data class CurrentUserModel(
     fun isValid(): Boolean = username.isNotBlank() && this.email.isNotBlank()
 
     fun mapToUserModel(): UserModel {
-        val username = username.split(" ")
+        val username = username.split(SEPARATOR_SPACE)
         return UserModel(
             id = userId,
             name = username.first(),
