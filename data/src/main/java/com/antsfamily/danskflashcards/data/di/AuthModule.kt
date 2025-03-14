@@ -3,6 +3,7 @@ package com.antsfamily.danskflashcards.data.di
 import android.content.Context
 import com.antsfamily.danskflashcards.data.GoogleAuthUiClient
 import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.auth.api.identity.SignInClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,6 +17,11 @@ object AuthModule {
 
     @Singleton
     @Provides
-    fun provideGoogleAuthClient(@ApplicationContext context: Context): GoogleAuthUiClient =
-        GoogleAuthUiClient(oneTapClient = Identity.getSignInClient(context))
+    fun provideGoogleSignInClient(@ApplicationContext context: Context): SignInClient =
+        Identity.getSignInClient(context)
+
+    @Singleton
+    @Provides
+    fun provideGoogleAuthClient(client: SignInClient): GoogleAuthUiClient =
+        GoogleAuthUiClient(client)
 }

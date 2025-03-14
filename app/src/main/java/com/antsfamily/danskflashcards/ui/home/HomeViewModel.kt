@@ -2,14 +2,14 @@ package com.antsfamily.danskflashcards.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.antsfamily.danskflashcards.core.model.CurrentUserItem
 import com.antsfamily.danskflashcards.core.model.mapToErrorType
 import com.antsfamily.danskflashcards.core.util.orZero
-import com.antsfamily.danskflashcards.data.GoogleAuthUiClient
 import com.antsfamily.danskflashcards.domain.GetFlashCardsSizeUseCase
 import com.antsfamily.danskflashcards.domain.GetUsersUseCase
+import com.antsfamily.danskflashcards.domain.SignOutWithGoogleUseCase
 import com.antsfamily.danskflashcards.domain.UserUpdateFLowUseCase
 import com.antsfamily.danskflashcards.domain.model.UserDomain
-import com.antsfamily.danskflashcards.core.model.CurrentUserItem
 import com.antsfamily.danskflashcards.ui.home.model.LeaderItem
 import com.antsfamily.danskflashcards.ui.home.model.LeaderboardItem
 import com.antsfamily.danskflashcards.ui.home.model.UserItem
@@ -32,7 +32,7 @@ class HomeViewModel @AssistedInject constructor(
     private val getFlashCardsSizeUseCase: GetFlashCardsSizeUseCase,
     private val getUsersUseCase: GetUsersUseCase,
     private val userUpdateFLowUseCase: UserUpdateFLowUseCase,
-    private val client: GoogleAuthUiClient,
+    private val signOutWithGoogleUseCase: SignOutWithGoogleUseCase,
     @Assisted("user") private val user: CurrentUserItem
 ) : ViewModel() {
 
@@ -65,7 +65,7 @@ class HomeViewModel @AssistedInject constructor(
     fun onBackButtonClick() = viewModelScope.launch(Dispatchers.IO) {
         try {
             _state.value = HomeUiState.Loading
-            client.signOut()
+            signOutWithGoogleUseCase()
         } catch (e: Exception) {
             // no-op
         } finally {

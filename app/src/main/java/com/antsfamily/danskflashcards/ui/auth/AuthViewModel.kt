@@ -7,7 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.antsfamily.danskflashcards.core.model.CurrentUserItem
 import com.antsfamily.danskflashcards.core.model.mapToItem
-import com.antsfamily.danskflashcards.data.GoogleAuthUiClient
+import com.antsfamily.danskflashcards.domain.GetSignInResultUseCase
+import com.antsfamily.danskflashcards.domain.SignInWithGoogleUseCase
+import com.google.android.gms.auth.api.identity.SignInClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +22,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val client: GoogleAuthUiClient
+    private val getSignInResultUseCase: GetSignInResultUseCase,
+    private val signInWithGoogleUseCase: SignInWithGoogleUseCase,
+    private val client: SignInClient,
 ) : ViewModel() {
 
     private val _signInFlow = MutableSharedFlow<IntentSender>()
@@ -35,10 +39,14 @@ class AuthViewModel @Inject constructor(
 
     fun onGoogleClick() = viewModelScope.launch {
         _state.value = AuthUiState.Loading
-        val intentSender = client.getSignInIntentSender()
-        intentSender?.let {
-            _signInFlow.emit(it)
-        } ?: run {
+        try {
+            val intentSender = getSignInResultUseCase()?.pendingIntent?.intentSender
+            intentSender?.let {
+                _signInFlow.emit(it)
+            } ?: run {
+                setDefaultUiState()
+            }
+        } catch (e: Exception) {
             setDefaultUiState()
         }
     }
@@ -52,14 +60,16 @@ class AuthViewModel @Inject constructor(
     }
 
     private fun signIn(intent: Intent?) = viewModelScope.launch {
-        val result = client.signInWithIntent(intent = intent ?: return@launch)
+        val credential = client.getSignInCredentialFromIntent(intent)
+        val googleToken = credential.googleIdToken
+        val result = signInWithGoogleUseCase(googleToken ?: return@launch)
         val userModel = result.data?.mapToItem()
         if (userModel?.isValid() == true) {
             proceedWithUserData(userModel)
         }
     }
 
-    private fun proceedWithUserData(model: CurrentUserItem) = viewModelScope.launch {
+    private suspend fun proceedWithUserData(model: CurrentUserItem) {
         setDefaultUiState()
         _navigationFlow.emit(model)
     }

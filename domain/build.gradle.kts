@@ -38,6 +38,7 @@ dependencies {
     implementation(project(":data"))
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+    implementation(libs.google.play.service.auth)
     implementation(libs.firebase.firestore)
     implementation(libs.gson)
 

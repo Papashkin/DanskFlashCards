@@ -1,8 +1,7 @@
 package com.antsfamily.danskflashcards.data
 
-import android.content.Intent
-import android.content.IntentSender
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.android.gms.auth.api.identity.BeginSignInResult
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.Firebase
 import com.google.firebase.auth.GoogleAuthProvider
@@ -18,7 +17,7 @@ class GoogleAuthUiClient(
 ) {
     private val auth = Firebase.auth
 
-    suspend fun getSignInIntentSender(): IntentSender? {
+    suspend fun getSignInResult(): BeginSignInResult? {
         val result = try {
             oneTapClient.beginSignIn(buildSignInRequest()).await()
         } catch (e: Exception) {
@@ -26,13 +25,11 @@ class GoogleAuthUiClient(
             if (e is CancellationException) throw e
             null
         }
-        return result?.pendingIntent?.intentSender
+        return result
     }
 
-    suspend fun signInWithIntent(intent: Intent): SignInResult {
-        val credential = oneTapClient.getSignInCredentialFromIntent(intent)
-        val googleToken = credential.googleIdToken
-        val googleCredentials = GoogleAuthProvider.getCredential(googleToken, null)
+    suspend fun signInWithToken(token: String?): SignInResult {
+        val googleCredentials = GoogleAuthProvider.getCredential(token, null)
         return try {
             val user = auth.signInWithCredential(googleCredentials).await().user
 
