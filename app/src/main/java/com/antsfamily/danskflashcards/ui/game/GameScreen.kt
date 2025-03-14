@@ -28,8 +28,6 @@ import com.antsfamily.danskflashcards.R
 import com.antsfamily.danskflashcards.ui.game.model.GameOverItem
 import com.antsfamily.danskflashcards.ui.game.model.GameStatus
 import com.antsfamily.danskflashcards.ui.game.model.TimerItem
-import com.antsfamily.danskflashcards.ui.util.WORD_CARDS_DANISH
-import com.antsfamily.danskflashcards.ui.util.WORD_CARDS_ENGLISH
 import com.antsfamily.danskflashcards.ui.game.model.WordItem
 import com.antsfamily.danskflashcards.ui.game.view.GameOverDialog
 import com.antsfamily.danskflashcards.ui.game.view.GameScreenContent
