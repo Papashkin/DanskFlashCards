@@ -10,10 +10,15 @@ import com.antsfamily.danskflashcards.ui.theme.light_accent
 import com.antsfamily.danskflashcards.ui.theme.wistful_1000
 import com.antsfamily.danskflashcards.ui.theme.wistful_500
 
-const val DOT = "."
+private const val DOT = "."
 const val SEPARATOR_SPACE = " "
 
 data class LeaderboardItem(
+    val leaders: List<LeaderItem>,
+    val user: LeaderItem,
+)
+
+data class LeaderItem(
     val name: String,
     val surname: String?,
     val index: Int,
@@ -33,7 +38,7 @@ data class LeaderboardItem(
         get() = (index + 1)
 }
 
-fun LeaderboardItem.mapToTextColor(): Color {
+fun LeaderItem.mapToTextColor(): Color {
     return if (index <= 2) {
         wistful_1000
     } else {
@@ -42,7 +47,7 @@ fun LeaderboardItem.mapToTextColor(): Color {
 }
 
 @DrawableRes
-fun LeaderboardItem.mapToIcon(): Int? {
+fun LeaderItem.mapToIcon(): Int? {
     return when (index) {
         0 -> R.drawable.ic_leaderboard_medal_gold
         1 -> R.drawable.ic_leaderboard_medal_silver
@@ -51,7 +56,7 @@ fun LeaderboardItem.mapToIcon(): Int? {
     }
 }
 
-fun LeaderboardItem.mapToColor() = when (index) {
+fun LeaderItem.mapToColor() = when (index) {
     0 -> leaderboard_gold
     1 -> leaderboard_silver
     2 -> leaderboard_bronze

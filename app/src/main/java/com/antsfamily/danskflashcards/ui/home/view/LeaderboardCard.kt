@@ -18,7 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.antsfamily.danskflashcards.ui.home.model.LeaderboardItem
+import com.antsfamily.danskflashcards.ui.home.model.LeaderItem
 import com.antsfamily.danskflashcards.ui.home.model.mapToTextColor
 import com.antsfamily.danskflashcards.ui.theme.Padding
 import com.antsfamily.danskflashcards.ui.theme.light_accent
@@ -26,9 +26,9 @@ import com.antsfamily.danskflashcards.ui.theme.wistful_200
 import com.antsfamily.danskflashcards.ui.theme.wistful_50
 
 @Composable
-fun LeaderboardItem(
+fun LeaderboardCard(
     modifier: Modifier = Modifier,
-    item: LeaderboardItem,
+    item: LeaderItem,
     isUser: Boolean,
 ) {
     Box(
@@ -71,9 +71,9 @@ fun LeaderboardItem(
 fun LeaderboardItemPreview(modifier: Modifier = Modifier) {
     Column {
         HorizontalDivider(thickness = 20.dp)
-        LeaderboardItem(item = LeaderboardItem(name = "John", surname = "Doe", score = 25, index = 0), isUser = false)
-        LeaderboardItem(item = LeaderboardItem(name = "John", surname = "   ", score = 25, index = 1), isUser = false)
-        LeaderboardItem(item = LeaderboardItem(name = "John", surname = "", score = 25, index = 2), isUser = false)
-        LeaderboardItem(item = LeaderboardItem(name = "John", surname = null, score = 25, index = 7), isUser = true)
+        LeaderboardCard(item = LeaderItem(name = "John", surname = "Doe", score = 25, index = 0), isUser = false)
+        LeaderboardCard(item = LeaderItem(name = "John", surname = "   ", score = 25, index = 1), isUser = false)
+        LeaderboardCard(item = LeaderItem(name = "John", surname = "", score = 25, index = 2), isUser = false)
+        LeaderboardCard(item = LeaderItem(name = "John", surname = null, score = 25, index = 7), isUser = true)
     }
 }

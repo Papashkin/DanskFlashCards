@@ -12,15 +12,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.antsfamily.danskflashcards.R
+import com.antsfamily.danskflashcards.ui.home.model.LeaderItem
 import com.antsfamily.danskflashcards.ui.home.model.LeaderboardItem
-import com.antsfamily.danskflashcards.ui.home.model.LeaderboardModel
 import com.antsfamily.danskflashcards.ui.theme.FontSize
 import com.antsfamily.danskflashcards.ui.theme.Padding
 
 @Composable
 fun LeaderboardView(
     modifier: Modifier = Modifier,
-    model: LeaderboardModel,
+    model: LeaderboardItem,
 ) {
     Column(modifier) {
         Text(
@@ -31,14 +31,14 @@ fun LeaderboardView(
         )
         LazyColumn {
             items(model.leaders.size) {
-                LeaderboardItem(
+                LeaderboardCard(
                     item = if (model.user.index == it) model.user else model.leaders[it],
                     isUser = (model.user.index == it)
                 )
             }
         }
         if (model.user.index == 3) {
-            LeaderboardItem(item = model.user, isUser = true)
+            LeaderboardCard(item = model.user, isUser = true)
         }
         if (model.user.index > 3) {
             Text(
@@ -49,7 +49,7 @@ fun LeaderboardView(
                 textAlign = TextAlign.Center,
                 fontSize = FontSize.H4,
             )
-            LeaderboardItem(item = model.user, isUser = true)
+            LeaderboardCard(item = model.user, isUser = true)
         }
     }
 }
@@ -58,13 +58,13 @@ fun LeaderboardView(
 @Composable
 fun LeaderboardViewPreview1(modifier: Modifier = Modifier) {
     LeaderboardView(
-        model = LeaderboardModel(
+        model = LeaderboardItem(
             leaders = listOf(
-                LeaderboardItem(name = "John", surname = "Doe", score = 44, index = 0),
-                LeaderboardItem(name = "Pablo", surname = "Escobar", score = 32, index = 1),
-                LeaderboardItem(name = "Andrea", surname = "Corti", score = 29, index = 2),
+                LeaderItem(name = "John", surname = "Doe", score = 44, index = 0),
+                LeaderItem(name = "Pablo", surname = "Escobar", score = 32, index = 1),
+                LeaderItem(name = "Andrea", surname = "Corti", score = 29, index = 2),
             ),
-            user = LeaderboardItem(name = "Pablo", surname = "Escobar", score = 32, index = 1),
+            user = LeaderItem(name = "Pablo", surname = "Escobar", score = 32, index = 1),
         )
     )
 }
@@ -73,13 +73,13 @@ fun LeaderboardViewPreview1(modifier: Modifier = Modifier) {
 @Composable
 fun LeaderboardViewPreview2(modifier: Modifier = Modifier) {
     LeaderboardView(
-        model = LeaderboardModel(
+        model = LeaderboardItem(
             leaders = listOf(
-                LeaderboardItem(name = "John", surname = "Doe", score = 44, index = 0),
-                LeaderboardItem(name = "Michael", surname = "Pupsik", score = 32, index = 1),
-                LeaderboardItem(name = "Andrea", surname = "Corti", score = 29, index = 2),
+                LeaderItem(name = "John", surname = "Doe", score = 44, index = 0),
+                LeaderItem(name = "Michael", surname = "Pupsik", score = 32, index = 1),
+                LeaderItem(name = "Andrea", surname = "Corti", score = 29, index = 2),
             ),
-            user = LeaderboardItem(name = "Pablo", surname = "Escobar", score = 12, index = 10),
+            user = LeaderItem(name = "Pablo", surname = "Escobar", score = 12, index = 10),
         )
     )
 }
@@ -88,13 +88,13 @@ fun LeaderboardViewPreview2(modifier: Modifier = Modifier) {
 @Composable
 fun LeaderboardViewPreview3(modifier: Modifier = Modifier) {
     LeaderboardView(
-        model = LeaderboardModel(
+        model = LeaderboardItem(
             leaders = listOf(
-                LeaderboardItem(name = "John", surname = "Doe", score = 44, index = 0),
-                LeaderboardItem(name = "Michael", surname = "Pupsik", score = 32, index = 1),
-                LeaderboardItem(name = "Andrea", surname = "Corti", score = 29, index = 2),
+                LeaderItem(name = "John", surname = "Doe", score = 44, index = 0),
+                LeaderItem(name = "Michael", surname = "Pupsik", score = 32, index = 1),
+                LeaderItem(name = "Andrea", surname = "Corti", score = 29, index = 2),
             ),
-            user = LeaderboardItem(name = "Pablo", surname = "Escobar", score = 27, index = 3),
+            user = LeaderItem(name = "Pablo", surname = "Escobar", score = 27, index = 3),
         )
     )
 }

@@ -18,11 +18,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.antsfamily.danskflashcards.core.presentation.TopBar
-import com.antsfamily.danskflashcards.ui.auth.CurrentUserModel
+import com.antsfamily.danskflashcards.core.model.CurrentUserItem
 import com.antsfamily.danskflashcards.ui.game.view.FullScreenLoading
+import com.antsfamily.danskflashcards.ui.home.model.LeaderItem
 import com.antsfamily.danskflashcards.ui.home.model.LeaderboardItem
-import com.antsfamily.danskflashcards.ui.home.model.LeaderboardModel
-import com.antsfamily.danskflashcards.ui.home.model.UserModel
+import com.antsfamily.danskflashcards.ui.home.model.UserItem
 import com.antsfamily.danskflashcards.ui.home.view.HomeTitle
 import com.antsfamily.danskflashcards.ui.home.view.LeaderboardView
 import com.antsfamily.danskflashcards.ui.home.view.PersonalBestCard
@@ -30,7 +30,7 @@ import com.antsfamily.danskflashcards.ui.theme.Padding
 
 @Composable
 fun HomeScreen(
-    user: CurrentUserModel,
+    user: CurrentUserItem,
     viewModel: HomeViewModel = hiltViewModel<HomeViewModel, HomeViewModel.Factory> {
         it.create(user = user)
     },
@@ -123,7 +123,7 @@ fun HomeScreenContent(
 fun HomeScreenContentPreview1() {
     HomeScreenContent(
         HomeUiState.Content(
-            user = UserModel(
+            user = UserItem(
                 id = "johndoe123",
                 name = "Johnny",
                 surname = "Doesome",
@@ -131,13 +131,13 @@ fun HomeScreenContentPreview1() {
                 score = 43,
                 date = "10.02.2024 11:22:33"
             ),
-            leaderboard = LeaderboardModel(
+            leaderboard = LeaderboardItem(
                 leaders = listOf(
-                    LeaderboardItem(name = "Pablo", surname = "Escobar", score = 44, index = 0),
-                    LeaderboardItem(name = "Carlos", surname = "Esteves", score = 32, index = 1),
-                    LeaderboardItem(name = "Andrea", surname = "Corti", score = 29, index = 2),
+                    LeaderItem(name = "Pablo", surname = "Escobar", score = 44, index = 0),
+                    LeaderItem(name = "Carlos", surname = "Esteves", score = 32, index = 1),
+                    LeaderItem(name = "Andrea", surname = "Corti", score = 29, index = 2),
                 ),
-                user = LeaderboardItem(
+                user = LeaderItem(
                     name = "Johnny",
                     surname = "Doesome",
                     score = 12,
@@ -154,7 +154,7 @@ fun HomeScreenContentPreview1() {
 fun HomeScreenContentPreview2() {
     HomeScreenContent(
         HomeUiState.Content(
-            user = UserModel(
+            user = UserItem(
                 id = "johndoe123",
                 name = "Johnny",
                 surname = "Doesome",
@@ -162,13 +162,13 @@ fun HomeScreenContentPreview2() {
                 score = 0,
                 date = null
             ),
-            leaderboard = LeaderboardModel(
+            leaderboard = LeaderboardItem(
                 leaders = listOf(
-                    LeaderboardItem(name = "John", surname = "Doe", score = 44, index = 0),
-                    LeaderboardItem(name = "Paolo", surname = "Scoba", score = 32, index = 1),
-                    LeaderboardItem(name = "Andrea", surname = "Corti", score = 29, index = 2),
+                    LeaderItem(name = "John", surname = "Doe", score = 44, index = 0),
+                    LeaderItem(name = "Paolo", surname = "Scoba", score = 32, index = 1),
+                    LeaderItem(name = "Andrea", surname = "Corti", score = 29, index = 2),
                 ),
-                user = LeaderboardItem(name = "Pablo", surname = "Escobar", score = 12, index = 10),
+                user = LeaderItem(name = "Pablo", surname = "Escobar", score = 12, index = 10),
             ),
             cardsSize = 879,
         ), {}, {}
