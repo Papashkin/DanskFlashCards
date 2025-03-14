@@ -5,6 +5,8 @@ import android.content.Intent
 import android.content.IntentSender
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.antsfamily.danskflashcards.core.model.CurrentUserItem
+import com.antsfamily.danskflashcards.core.model.mapToItem
 import com.antsfamily.danskflashcards.data.GoogleAuthUiClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -24,8 +26,8 @@ class AuthViewModel @Inject constructor(
     private val _signInFlow = MutableSharedFlow<IntentSender>()
     val signInFlow: SharedFlow<IntentSender> = _signInFlow.asSharedFlow()
 
-    private val _navigationFlow = MutableSharedFlow<CurrentUserModel>()
-    val navigationFlow: SharedFlow<CurrentUserModel> = _navigationFlow.asSharedFlow()
+    private val _navigationFlow = MutableSharedFlow<CurrentUserItem>()
+    val navigationFlow: SharedFlow<CurrentUserItem> = _navigationFlow.asSharedFlow()
 
     private val _state = MutableStateFlow<AuthUiState>(AuthUiState.Default)
     val state: StateFlow<AuthUiState>
@@ -51,13 +53,13 @@ class AuthViewModel @Inject constructor(
 
     private fun signIn(intent: Intent?) = viewModelScope.launch {
         val result = client.signInWithIntent(intent = intent ?: return@launch)
-        val userModel = result.data?.mapToModel()
+        val userModel = result.data?.mapToItem()
         if (userModel?.isValid() == true) {
             proceedWithUserData(userModel)
         }
     }
 
-    private fun proceedWithUserData(model: CurrentUserModel) = viewModelScope.launch {
+    private fun proceedWithUserData(model: CurrentUserItem) = viewModelScope.launch {
         setDefaultUiState()
         _navigationFlow.emit(model)
     }

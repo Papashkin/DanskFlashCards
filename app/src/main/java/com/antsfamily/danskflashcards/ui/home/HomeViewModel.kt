@@ -9,11 +9,11 @@ import com.antsfamily.danskflashcards.domain.GetFlashCardsSizeUseCase
 import com.antsfamily.danskflashcards.domain.GetUsersUseCase
 import com.antsfamily.danskflashcards.domain.UserUpdateFLowUseCase
 import com.antsfamily.danskflashcards.domain.model.UserDomain
-import com.antsfamily.danskflashcards.ui.auth.CurrentUserModel
+import com.antsfamily.danskflashcards.core.model.CurrentUserItem
+import com.antsfamily.danskflashcards.ui.home.model.LeaderItem
 import com.antsfamily.danskflashcards.ui.home.model.LeaderboardItem
-import com.antsfamily.danskflashcards.ui.home.model.LeaderboardModel
-import com.antsfamily.danskflashcards.ui.home.model.UserModel
-import com.antsfamily.danskflashcards.ui.home.model.toModel
+import com.antsfamily.danskflashcards.ui.home.model.UserItem
+import com.antsfamily.danskflashcards.ui.home.model.toItem
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -33,16 +33,16 @@ class HomeViewModel @AssistedInject constructor(
     private val getUsersUseCase: GetUsersUseCase,
     private val userUpdateFLowUseCase: UserUpdateFLowUseCase,
     private val client: GoogleAuthUiClient,
-    @Assisted("user") private val user: CurrentUserModel
+    @Assisted("user") private val user: CurrentUserItem
 ) : ViewModel() {
 
     @AssistedFactory
     interface Factory {
-        fun create(@Assisted("user") user: CurrentUserModel): HomeViewModel
+        fun create(@Assisted("user") user: CurrentUserItem): HomeViewModel
     }
 
     private var wordsAmount: Int? = null
-    private var currentUser: UserModel? = null
+    private var currentUser: UserItem? = null
 
     private val _state = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
     val state: StateFlow<HomeUiState>
@@ -84,7 +84,7 @@ class HomeViewModel @AssistedInject constructor(
         }
     }
 
-    private fun getUsers(user: CurrentUserModel) = viewModelScope.launch(Dispatchers.IO) {
+    private fun getUsers(user: CurrentUserItem) = viewModelScope.launch(Dispatchers.IO) {
         try {
             val data = getUsersUseCase(user.userId)
             onGetUsersSuccessResult(data)
@@ -106,32 +106,32 @@ class HomeViewModel @AssistedInject constructor(
     }
 
     private fun onGetUsersSuccessResult(data: List<UserDomain>) {
-        val users = data.map { it.toModel(user.userId) }
+        val users = data.map { it.toItem(user.userId) }
         currentUser = users.firstOrNull { it.isCurrentUser }
-        updateState(users, currentUser ?: user.mapToUserModel())
+        updateState(users, currentUser ?: user.mapToUserItem())
     }
 
-    private fun updateState(users: List<UserModel>, user: UserModel) {
+    private fun updateState(users: List<UserItem>, user: UserItem) {
         val model = getLeaderboard(users, user)
         _state.value =
             HomeUiState.Content(user = user, cardsSize = wordsAmount.orZero(), leaderboard = model)
     }
 
-    private fun getLeaderboard(users: List<UserModel>, user: UserModel): LeaderboardModel {
+    private fun getLeaderboard(users: List<UserItem>, user: UserItem): LeaderboardItem {
         val sortedUsers = users.sortedByDescending { it.score }
-        val leaderboardItems = sortedUsers
+        val leaderItems = sortedUsers
             .take(3)
             .mapIndexed { index, sortedUser ->
-                LeaderboardItem(
+                LeaderItem(
                     name = sortedUser.name,
                     surname = sortedUser.surname,
                     index = index,
                     score = sortedUser.score
                 )
             }
-        return LeaderboardModel(
-            leaders = leaderboardItems,
-            user = LeaderboardItem(
+        return LeaderboardItem(
+            leaders = leaderItems,
+            user = LeaderItem(
                 name = user.name,
                 surname = user.surname,
                 index = sortedUsers.indexOfFirst { it.isCurrentUser },

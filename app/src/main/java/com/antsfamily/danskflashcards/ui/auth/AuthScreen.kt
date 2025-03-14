@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.antsfamily.danskflashcards.R
+import com.antsfamily.danskflashcards.core.model.CurrentUserItem
 import com.antsfamily.danskflashcards.core.model.ErrorType
 import com.antsfamily.danskflashcards.core.model.toErrorMessage
 import com.antsfamily.danskflashcards.ui.auth.view.ButtonWithLeadingIcon
@@ -34,7 +35,7 @@ import com.antsfamily.danskflashcards.ui.theme.Padding
 @Composable
 fun AuthScreen(
     viewModel: AuthViewModel = hiltViewModel(),
-    onNavigateToHome: (CurrentUserModel) -> Unit,
+    onNavigateToHome: (CurrentUserItem) -> Unit,
 ) {
     val state = viewModel.state.collectAsState()
 

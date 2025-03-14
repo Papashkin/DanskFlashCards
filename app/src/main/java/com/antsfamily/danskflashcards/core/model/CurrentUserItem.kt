@@ -1,10 +1,10 @@
-package com.antsfamily.danskflashcards.ui.auth
+package com.antsfamily.danskflashcards.core.model
 
 import com.antsfamily.danskflashcards.data.CurrentUserApiModel
 import com.antsfamily.danskflashcards.ui.home.model.SEPARATOR_SPACE
-import com.antsfamily.danskflashcards.ui.home.model.UserModel
+import com.antsfamily.danskflashcards.ui.home.model.UserItem
 
-data class CurrentUserModel(
+data class CurrentUserItem(
     val userId: String,
     val username: String,
     val email: String,
@@ -12,9 +12,9 @@ data class CurrentUserModel(
 
     fun isValid(): Boolean = username.isNotBlank() && this.email.isNotBlank()
 
-    fun mapToUserModel(): UserModel {
+    fun mapToUserItem(): UserItem {
         val username = username.split(SEPARATOR_SPACE)
-        return UserModel(
+        return UserItem(
             id = userId,
             name = username.first(),
             surname = username.last(),
@@ -25,6 +25,6 @@ data class CurrentUserModel(
     }
 }
 
-fun CurrentUserApiModel.mapToModel(): CurrentUserModel {
-    return CurrentUserModel(userId = userId, username = username, email = email)
+fun CurrentUserApiModel.mapToItem(): CurrentUserItem {
+    return CurrentUserItem(userId = userId, username = username, email = email)
 }

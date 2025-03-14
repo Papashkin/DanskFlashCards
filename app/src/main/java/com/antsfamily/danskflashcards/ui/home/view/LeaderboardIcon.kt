@@ -16,7 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.antsfamily.danskflashcards.ui.home.model.LeaderboardItem
+import com.antsfamily.danskflashcards.ui.home.model.LeaderItem
 import com.antsfamily.danskflashcards.ui.home.model.mapToColor
 import com.antsfamily.danskflashcards.ui.home.model.mapToIcon
 import com.antsfamily.danskflashcards.ui.theme.Padding
@@ -24,7 +24,7 @@ import com.antsfamily.danskflashcards.ui.theme.Padding
 @Composable
 fun LeaderboardIcon(
     modifier: Modifier = Modifier,
-    item: LeaderboardItem
+    item: LeaderItem
 ) {
     Box(
         modifier = Modifier
@@ -54,7 +54,7 @@ fun LeaderboardIcon(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun LeaderboardIconPreview(modifier: Modifier = Modifier) {
-    val item = LeaderboardItem(
+    val item = LeaderItem(
         name = "John",
         surname = "Doe",
         score = 25,
