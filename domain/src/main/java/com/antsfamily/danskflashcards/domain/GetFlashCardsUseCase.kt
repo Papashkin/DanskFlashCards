@@ -1,38 +1,27 @@
 package com.antsfamily.danskflashcards.domain
 
-import android.content.Context
-import com.antsfamily.danskflashcards.data.model.WordApiModel
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import dagger.hilt.android.qualifiers.ApplicationContext
+import com.antsfamily.danskflashcards.data.repository.DataRepository
+import com.antsfamily.danskflashcards.domain.model.LanguageType
+import com.antsfamily.danskflashcards.domain.model.WordDomain
+import com.antsfamily.danskflashcards.domain.model.mapToDomain
 import kotlinx.coroutines.suspendCancellableCoroutine
-import java.io.InputStreamReader
 import javax.inject.Inject
 import kotlin.coroutines.resume
 
 class GetFlashCardsUseCase @Inject constructor(
-    @ApplicationContext private val context: Context,
-    private val gson: Gson
+    private val repository: DataRepository,
 ) {
-    companion object {
-        private const val FLASHCARDS_ASSET_NAME = "dansk_flashcards.json"
-    }
+    suspend operator fun invoke(type: LanguageType): List<WordDomain> =
+        getFlashCardsRemote(type)
 
-    private var cards: List<WordApiModel>? = null
-
-    suspend fun run(): List<WordApiModel> = cards ?: run { getFlashCardsRemote() }
-
-    private suspend fun getFlashCardsRemote(): List<WordApiModel> = suspendCancellableCoroutine {
-        val cards = try {
-            val inputStream = context.assets.open(FLASHCARDS_ASSET_NAME)
-            val reader = InputStreamReader(inputStream)
-            val listType = object : TypeToken<List<WordApiModel>>() {}.type
-            val flashCards = gson.fromJson<List<WordApiModel?>>(reader, listType)
-            cards = flashCards.mapNotNull { item -> item }
-            flashCards
-        } catch (e: Exception) {
-            emptyList<WordApiModel>()
+    private suspend fun getFlashCardsRemote(type: LanguageType): List<WordDomain> =
+        suspendCancellableCoroutine {
+            val cards = try {
+                repository.getCards()
+                    .mapNotNull { item -> item.mapToDomain(type) }
+            } catch (e: Exception) {
+                null
+            }
+            it.resume(cards.orEmpty())
         }
-        it.resume(cards.mapNotNull { item -> item })
-    }
 }

@@ -3,18 +3,17 @@ package com.antsfamily.danskflashcards.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.antsfamily.danskflashcards.core.model.mapToErrorType
+import com.antsfamily.danskflashcards.core.util.orZero
 import com.antsfamily.danskflashcards.data.GoogleAuthUiClient
-import com.antsfamily.danskflashcards.data.model.UserApiModel
-import com.antsfamily.danskflashcards.data.model.WordApiModel
-import com.antsfamily.danskflashcards.domain.GetFlashCardsUseCase
+import com.antsfamily.danskflashcards.domain.GetFlashCardsSizeUseCase
 import com.antsfamily.danskflashcards.domain.GetUsersUseCase
 import com.antsfamily.danskflashcards.domain.UserUpdateFLowUseCase
+import com.antsfamily.danskflashcards.domain.model.UserDomain
 import com.antsfamily.danskflashcards.ui.auth.CurrentUserModel
 import com.antsfamily.danskflashcards.ui.home.model.LeaderboardItem
 import com.antsfamily.danskflashcards.ui.home.model.LeaderboardModel
 import com.antsfamily.danskflashcards.ui.home.model.UserModel
 import com.antsfamily.danskflashcards.ui.home.model.toModel
-import com.antsfamily.danskflashcards.core.util.orZero
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -30,7 +29,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = HomeViewModel.Factory::class)
 class HomeViewModel @AssistedInject constructor(
-    private val getFlashCardsUseCase: GetFlashCardsUseCase,
+    private val getFlashCardsSizeUseCase: GetFlashCardsSizeUseCase,
     private val getUsersUseCase: GetUsersUseCase,
     private val userUpdateFLowUseCase: UserUpdateFLowUseCase,
     private val client: GoogleAuthUiClient,
@@ -42,7 +41,7 @@ class HomeViewModel @AssistedInject constructor(
         fun create(@Assisted("user") user: CurrentUserModel): HomeViewModel
     }
 
-    private var words = emptyList<WordApiModel?>()
+    private var wordsAmount: Int? = null
     private var currentUser: UserModel? = null
 
     private val _state = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
@@ -76,8 +75,8 @@ class HomeViewModel @AssistedInject constructor(
 
     private fun getCards() = viewModelScope.launch(Dispatchers.IO) {
         try {
-            if (words.isEmpty()) {
-                words = getFlashCardsUseCase.run()
+            if (wordsAmount == null) {
+                wordsAmount = getFlashCardsSizeUseCase()
             }
             getUsers(user)
         } catch (e: Exception) {
@@ -87,7 +86,7 @@ class HomeViewModel @AssistedInject constructor(
 
     private fun getUsers(user: CurrentUserModel) = viewModelScope.launch(Dispatchers.IO) {
         try {
-            val data = getUsersUseCase.run(user.userId)
+            val data = getUsersUseCase(user.userId)
             onGetUsersSuccessResult(data)
         } catch (e: Exception) {
             onGetUsersErrorResult(e)
@@ -98,7 +97,7 @@ class HomeViewModel @AssistedInject constructor(
 
     private fun subscribeToUserUpdate(userId: String) = viewModelScope.launch(Dispatchers.IO) {
         try {
-            userUpdateFLowUseCase.run(userId).collect { data ->
+            userUpdateFLowUseCase(userId).collect { data ->
                 onGetUsersSuccessResult(data)
             }
         } catch (e: Exception) {
@@ -106,7 +105,7 @@ class HomeViewModel @AssistedInject constructor(
         }
     }
 
-    private fun onGetUsersSuccessResult(data: List<UserApiModel>) {
+    private fun onGetUsersSuccessResult(data: List<UserDomain>) {
         val users = data.map { it.toModel(user.userId) }
         currentUser = users.firstOrNull { it.isCurrentUser }
         updateState(users, currentUser ?: user.mapToUserModel())
@@ -114,7 +113,8 @@ class HomeViewModel @AssistedInject constructor(
 
     private fun updateState(users: List<UserModel>, user: UserModel) {
         val model = getLeaderboard(users, user)
-        _state.value = HomeUiState.Content(user = user, cardsSize = words.size, leaderboard = model)
+        _state.value =
+            HomeUiState.Content(user = user, cardsSize = wordsAmount.orZero(), leaderboard = model)
     }
 
     private fun getLeaderboard(users: List<UserModel>, user: UserModel): LeaderboardModel {

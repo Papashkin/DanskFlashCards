@@ -3,8 +3,6 @@ package com.antsfamily.danskflashcards.ui.game.view
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,21 +20,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import com.antsfamily.danskflashcards.ui.game.model.GameStatus
-import com.antsfamily.danskflashcards.ui.game.model.WordModel
+import com.antsfamily.danskflashcards.ui.game.model.WordItem
+import com.antsfamily.danskflashcards.ui.game.model.mapToContainerColor
+import com.antsfamily.danskflashcards.ui.game.model.mapToTextColor
 import com.antsfamily.danskflashcards.ui.theme.FontSize
 import com.antsfamily.danskflashcards.ui.theme.Padding
-import com.antsfamily.danskflashcards.ui.theme.alert
-import com.antsfamily.danskflashcards.ui.theme.wistful_0
 import com.antsfamily.danskflashcards.ui.theme.wistful_100
 import com.antsfamily.danskflashcards.ui.theme.wistful_1000
 import com.antsfamily.danskflashcards.ui.theme.wistful_200
-import com.antsfamily.danskflashcards.ui.theme.wistful_300
-import com.antsfamily.danskflashcards.ui.theme.wistful_600
 
 @Composable
-fun WordCard(status: GameStatus, word: WordModel, onClick: (WordModel) -> Unit) {
+fun WordCard(status: GameStatus, word: WordItem, onClick: (WordItem) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -88,25 +83,25 @@ fun StartedWordCardPreview1() {
     Column(Modifier.padding(Padding.small)) {
         WordCard(
             status = GameStatus.STARTED,
-            word = WordModel(1, "to take care of", false, false, false),
+            word = WordItem(1, "to take care of", false, false, false),
             onClick = {}
         )
         Spacer(Modifier.height(10.dp))
         WordCard(
             status = GameStatus.FINISHED,
-            word = WordModel(1, "to take care of", true, false, false),
+            word = WordItem(1, "to take care of", true, false, false),
             onClick = {}
         )
         Spacer(Modifier.height(10.dp))
         WordCard(
             status = GameStatus.STARTED,
-            word = WordModel(1, "to take care of", false, false, true),
+            word = WordItem(1, "to take care of", false, false, true),
             onClick = {}
         )
         Spacer(Modifier.height(10.dp))
         WordCard(
             status = GameStatus.STARTED,
-            word = WordModel(1, "to take care of", false, true, false),
+            word = WordItem(1, "to take care of", false, true, false),
             onClick = {}
         )
     }
