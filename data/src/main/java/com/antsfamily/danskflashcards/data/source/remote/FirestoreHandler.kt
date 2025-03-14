@@ -1,14 +1,6 @@
-package com.antsfamily.danskflashcards.data.remote
+package com.antsfamily.danskflashcards.data.source.remote
 
-import com.antsfamily.danskflashcards.data.model.UserApiModel
-import com.antsfamily.danskflashcards.data.model.UserWithPersonalBestApiModel
 import com.antsfamily.danskflashcards.data.util.FirebaseConstants.COLLECTION_USERS
-import com.antsfamily.danskflashcards.data.util.FirebaseConstants.FIELD_NAME
-import com.antsfamily.danskflashcards.data.util.FirebaseConstants.FIELD_SCORE
-import com.antsfamily.danskflashcards.data.util.FirebaseConstants.FIELD_TIMESTAMP
-import com.antsfamily.danskflashcards.data.util.mapToUserApiModels
-import com.google.firebase.Timestamp
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.channels.awaitClose

@@ -1,15 +1,15 @@
 package com.antsfamily.danskflashcards.domain
 
-import com.antsfamily.danskflashcards.data.model.UserApiModel
-import com.antsfamily.danskflashcards.data.repository.FirestoreDataRepository
-import com.antsfamily.danskflashcards.data.util.mapToUserApiModels
+import com.antsfamily.danskflashcards.data.repository.DataRepository
+import com.antsfamily.danskflashcards.domain.model.UserDomain
+import com.antsfamily.danskflashcards.domain.model.mapToDomain
 import javax.inject.Inject
 
 class GetUsersUseCase @Inject constructor(
-    private val repository: FirestoreDataRepository,
+    private val repository: DataRepository,
 ) {
-    suspend fun run(params: String): List<UserApiModel> {
+    suspend operator fun invoke(params: String): List<UserDomain> {
         val data = repository.getUsers()
-        return data.mapToUserApiModels(params)
+        return data.mapToDomain(params)
     }
 }

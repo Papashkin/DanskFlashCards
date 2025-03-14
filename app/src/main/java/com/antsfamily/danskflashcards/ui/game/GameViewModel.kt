@@ -4,17 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.antsfamily.danskflashcards.core.model.mapToErrorType
-import com.antsfamily.danskflashcards.domain.CountdownTimerFlow
-import com.antsfamily.danskflashcards.domain.GetFlashCardsUseCase
-import com.antsfamily.danskflashcards.domain.SetPersonalBestUseCase
-import com.antsfamily.danskflashcards.ui.game.model.GameOverModel
-import com.antsfamily.danskflashcards.ui.game.model.GameStatus
-import com.antsfamily.danskflashcards.ui.game.model.GuessingItem
-import com.antsfamily.danskflashcards.ui.game.model.TimerModel
-import com.antsfamily.danskflashcards.ui.game.model.UserWithPersonalBestModel
-import com.antsfamily.danskflashcards.ui.game.model.WordModel
-import com.antsfamily.danskflashcards.ui.game.model.mapToModel
-import com.antsfamily.danskflashcards.ui.game.model.toApiModel
 import com.antsfamily.danskflashcards.core.util.COUNTDOWN_STEP
 import com.antsfamily.danskflashcards.core.util.COUNTDOWN_TIME_SEC
 import com.antsfamily.danskflashcards.core.util.GUESSED_ADDITIONAL_TIME
@@ -22,6 +11,16 @@ import com.antsfamily.danskflashcards.core.util.HOME_SCREEN_PAIRS_AMOUNT
 import com.antsfamily.danskflashcards.core.util.WRONG_GUESS_ERROR_DURATION
 import com.antsfamily.danskflashcards.core.util.ZERO
 import com.antsfamily.danskflashcards.core.util.orZero
+import com.antsfamily.danskflashcards.domain.CountdownTimerFlow
+import com.antsfamily.danskflashcards.domain.GetFlashCardsUseCase
+import com.antsfamily.danskflashcards.domain.SetPersonalBestUseCase
+import com.antsfamily.danskflashcards.domain.model.LanguageType
+import com.antsfamily.danskflashcards.ui.game.model.GameOverItem
+import com.antsfamily.danskflashcards.ui.game.model.GameStatus
+import com.antsfamily.danskflashcards.ui.game.model.GuessingItem
+import com.antsfamily.danskflashcards.ui.game.model.TimerItem
+import com.antsfamily.danskflashcards.ui.game.model.WordItem
+import com.antsfamily.danskflashcards.ui.game.model.mapToItem
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -39,7 +38,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = GameViewModel.Factory::class)
 class GameViewModel @AssistedInject constructor(
-    private val fetchDataUseCase: GetFlashCardsUseCase,
+    private val getFlashDataUseCase: GetFlashCardsUseCase,
     private val setPersonalBestUseCase: SetPersonalBestUseCase,
     private val timerFlow: CountdownTimerFlow,
     @Assisted("userId") private val userId: String,
@@ -57,8 +56,8 @@ class GameViewModel @AssistedInject constructor(
     }
 
     private var guessingItems = emptyList<GuessingItem>()
-    private var danishWords = emptyList<WordModel>()
-    private var englishWords = emptyList<WordModel>()
+    private var danishWords = emptyList<WordItem>()
+    private var englishWords = emptyList<WordItem>()
     private var isTimerStarted: Boolean = false
     private var countdownJob: Job? = null
     private var pairsCounter: Int = 0
@@ -70,7 +69,7 @@ class GameViewModel @AssistedInject constructor(
     private val _startAnimationFlow = MutableSharedFlow<Unit>()
     val startAnimationFlow = _startAnimationFlow.asSharedFlow()
 
-    private val _gameOverFlow = MutableSharedFlow<GameOverModel>()
+    private val _gameOverFlow = MutableSharedFlow<GameOverItem>()
     val gameOverFlow = _gameOverFlow.asSharedFlow()
 
     init {
@@ -82,7 +81,7 @@ class GameViewModel @AssistedInject constructor(
         startTimer()
     }
 
-    fun onDanishWordCardClick(word: WordModel) = viewModelScope.launch {
+    fun onDanishWordCardClick(word: WordItem) = viewModelScope.launch {
         if (word.isGuessed) return@launch
 
         if (!word.isSelected) {
@@ -99,7 +98,7 @@ class GameViewModel @AssistedInject constructor(
         }
     }
 
-    fun onEnglishWordCardClick(word: WordModel) = viewModelScope.launch {
+    fun onEnglishWordCardClick(word: WordItem) = viewModelScope.launch {
         if (word.isGuessed) return@launch
 
         if (!word.isSelected) {
@@ -123,7 +122,9 @@ class GameViewModel @AssistedInject constructor(
     private fun markDanishWordSelected(id: Int) {
         getContentOrNull()?.let { content ->
             _state.value = content.copy(
-                danish = content.danish.map { if (it.id == id) it.copy(isSelected = true) else it }
+                danish = content.danish.map {
+                    if (it.id == id) it.copy(isSelected = true) else it
+                }
             )
         }
     }
@@ -140,10 +141,10 @@ class GameViewModel @AssistedInject constructor(
 
     private fun getData() = viewModelScope.launch {
         try {
-            val data = fetchDataUseCase.run()
-            guessingItems = data.map { GuessingItem(it.id, false) }
-            danishWords = data.mapNotNull { it.mapToModel(true) }
-            englishWords = data.mapNotNull { it.mapToModel(false) }
+            danishWords = getFlashDataUseCase.invoke(LanguageType.DK).map { it.mapToItem() }
+            englishWords = getFlashDataUseCase.invoke(LanguageType.EN).map { it.mapToItem() }
+            guessingItems = danishWords.map { GuessingItem(it.id, false) }
+
         } catch (e: Exception) {
             _state.value = GameUiState.Error(e.mapToErrorType())
         }
@@ -153,8 +154,8 @@ class GameViewModel @AssistedInject constructor(
         val content = getContentOrNull()
         val packIds = getPackIds()
         val totalTime = COUNTDOWN_TIME_SEC
-        val remainTime = (content?.timerModel?.remainTime ?: COUNTDOWN_TIME_SEC) + additionalTime
-        val timerModel = TimerModel(
+        val remainTime = (content?.timerItem?.remainTime ?: COUNTDOWN_TIME_SEC) + additionalTime
+        val timerItem = TimerItem(
             remainTime = remainTime,
             progress = remainTime.toFloat().div(totalTime)
         )
@@ -162,7 +163,7 @@ class GameViewModel @AssistedInject constructor(
         _state.value = GameUiState.Content(
             danish = getPackOfDanishWords(packIds),
             english = getPackOfEnglishWords(packIds),
-            timerModel = timerModel,
+            timerItem = timerItem,
             status = content?.status ?: GameStatus.STARTED
         )
     }
@@ -172,11 +173,11 @@ class GameViewModel @AssistedInject constructor(
         return pack.map { it.id }
     }
 
-    private fun getPackOfDanishWords(ids: List<Int>): List<WordModel> {
+    private fun getPackOfDanishWords(ids: List<Int>): List<WordItem> {
         return danishWords.filter { it.id in ids }.shuffled()
     }
 
-    private fun getPackOfEnglishWords(ids: List<Int>): List<WordModel> {
+    private fun getPackOfEnglishWords(ids: List<Int>): List<WordItem> {
         return englishWords.filter { it.id in ids }.shuffled()
     }
 
@@ -190,9 +191,9 @@ class GameViewModel @AssistedInject constructor(
             .cancellable()
             .collect {
                 getContentOrNull()?.let { content ->
-                    val remainTime = content.timerModel.remainTime - 1
+                    val remainTime = content.timerItem.remainTime - 1
                     _state.value = content.copy(
-                        timerModel = content.timerModel.copy(
+                        timerItem = content.timerItem.copy(
                             remainTime = remainTime,
                             progress = remainTime.toFloat().div(COUNTDOWN_TIME_SEC)
                         ),
@@ -203,7 +204,7 @@ class GameViewModel @AssistedInject constructor(
     }
 
     private fun checkRemainingTime() = viewModelScope.launch {
-        if (getContentOrNull()?.timerModel?.remainTime.orZero() <= ZERO) {
+        if (getContentOrNull()?.timerItem?.remainTime.orZero() <= ZERO) {
             stopTimer()
             resetScreenContent()
             invalidateGuessingItems()
@@ -215,7 +216,7 @@ class GameViewModel @AssistedInject constructor(
     }
 
     private fun showFinalDialog(oldRecord: Int, newRecord: Int) = viewModelScope.launch {
-        val gameOver = GameOverModel(
+        val gameOver = GameOverItem(
             bestResult = if (oldRecord > newRecord) oldRecord else newRecord,
             newResult = newRecord,
         )
@@ -229,10 +230,10 @@ class GameViewModel @AssistedInject constructor(
 
     private fun getContentOrNull() = (_state.value as? GameUiState.Content)
 
-    private fun getEnglishSelectedWord(): WordModel? =
+    private fun getEnglishSelectedWord(): WordItem? =
         getContentOrNull()?.english?.firstOrNull { it.isSelected }
 
-    private fun getDanishSelectedWord(): WordModel? =
+    private fun getDanishSelectedWord(): WordItem? =
         getContentOrNull()?.danish?.firstOrNull { it.isSelected }
 
     private fun invalidateDanishWordSelection(id: Int) {
@@ -336,7 +337,7 @@ class GameViewModel @AssistedInject constructor(
     private fun resetScreenContent() {
         getContentOrNull()?.let { content ->
             _state.value = content.copy(
-                timerModel = TimerModel(),
+                timerItem = TimerItem(),
                 status = GameStatus.FINISHED,
                 danish = content.danish.map {
                     it.copy(isSelected = false, isGuessed = false, isWrong = false)
@@ -350,8 +351,7 @@ class GameViewModel @AssistedInject constructor(
 
     private fun saveBestResult(result: Int) = viewModelScope.launch(Dispatchers.IO) {
         try {
-            val user = UserWithPersonalBestModel(id = userId, name = username, score = result)
-            setPersonalBestUseCase.run(user.toApiModel())
+            setPersonalBestUseCase(id = userId, name = username, score = result)
         } catch (e: Exception) {
             Log.e(this@GameViewModel::class.simpleName, e.message ?: e.toString())
         }

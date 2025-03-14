@@ -25,12 +25,12 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.antsfamily.danskflashcards.R
-import com.antsfamily.danskflashcards.ui.game.model.GameOverModel
+import com.antsfamily.danskflashcards.ui.game.model.GameOverItem
 import com.antsfamily.danskflashcards.ui.game.model.GameStatus
-import com.antsfamily.danskflashcards.ui.game.model.TimerModel
-import com.antsfamily.danskflashcards.ui.game.model.WORD_CARDS_DANISH
-import com.antsfamily.danskflashcards.ui.game.model.WORD_CARDS_ENGLISH
-import com.antsfamily.danskflashcards.ui.game.model.WordModel
+import com.antsfamily.danskflashcards.ui.game.model.TimerItem
+import com.antsfamily.danskflashcards.ui.util.WORD_CARDS_DANISH
+import com.antsfamily.danskflashcards.ui.util.WORD_CARDS_ENGLISH
+import com.antsfamily.danskflashcards.ui.game.model.WordItem
 import com.antsfamily.danskflashcards.ui.game.view.GameOverDialog
 import com.antsfamily.danskflashcards.ui.game.view.GameScreenContent
 import com.antsfamily.danskflashcards.ui.game.view.GameTimer
@@ -49,7 +49,7 @@ fun GameScreen(
     navigateBack: () -> Unit,
 ) {
     var isTimeUpAnimationVisible by remember { mutableStateOf(false) }
-    var bottomSheetData by remember { mutableStateOf<GameOverModel?>(null) }
+    var bottomSheetData by remember { mutableStateOf<GameOverItem?>(null) }
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     val composition by rememberLottieComposition(
@@ -123,8 +123,8 @@ fun GameScreen(
 @Composable
 fun GameContent(
     content: GameUiState.Content,
-    onDanishWordClick: (WordModel) -> Unit,
-    onEnglishWordClick: (WordModel) -> Unit,
+    onDanishWordClick: (WordItem) -> Unit,
+    onEnglishWordClick: (WordItem) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -135,7 +135,7 @@ fun GameContent(
     ) {
         with(content) {
             if (status == GameStatus.STARTED) {
-                GameTimer(content.timerModel)
+                GameTimer(content.timerItem)
                 GameScreenContent(content, onDanishWordClick, onEnglishWordClick)
             }
         }
@@ -156,11 +156,29 @@ fun GameScreenLoadingPreview() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun GameScreenContentPreview() {
+    val WORD_CARDS_DANISH = listOf(
+        WordItem(value = "kolonne", id = 986, isGuessed = false, isSelected = false, isWrong = false),
+        WordItem(value = "molekyle", id = 987, isGuessed = false, isSelected = true, isWrong = false),
+        WordItem(value = "vælg", id = 988, isGuessed = true, isSelected = true, isWrong = false),
+        WordItem(value = "forkert", id = 989, isGuessed = false, isSelected = false, isWrong = false),
+        WordItem(value = "grå", id = 990, isGuessed = false, isSelected = false, isWrong = true),
+        WordItem(value = "grå", id = 990, isGuessed = false, isSelected = false, isWrong = true)
+    )
+
+    val WORD_CARDS_ENGLISH = listOf(
+        WordItem(value = "column", id = 991, isGuessed = false, isSelected = true, isWrong = false),
+        WordItem(value = "molecule", id = 992, isGuessed = true, isSelected = false, isWrong = false),
+        WordItem(value = "select", id = 993, isGuessed = false, isSelected = false, isWrong = false),
+        WordItem(value = "wrong", id = 994, isGuessed = false, isSelected = true, isWrong = false),
+        WordItem(value = "gray", id = 996, isGuessed = false, isSelected = false, isWrong = false),
+        WordItem(value = "gray", id = 996, isGuessed = false, isSelected = false, isWrong = false),
+    )
+
     GameContent(
         GameUiState.Content(
             danish = WORD_CARDS_DANISH,
             english = WORD_CARDS_ENGLISH,
-            timerModel = TimerModel(),
+            timerItem = TimerItem(),
             status = GameStatus.STARTED,
         ),
         {},

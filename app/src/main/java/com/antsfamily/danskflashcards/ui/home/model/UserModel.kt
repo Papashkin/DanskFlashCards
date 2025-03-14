@@ -1,6 +1,6 @@
 package com.antsfamily.danskflashcards.ui.home.model
 
-import com.antsfamily.danskflashcards.data.model.UserApiModel
+import com.antsfamily.danskflashcards.domain.model.UserDomain
 import com.antsfamily.danskflashcards.core.util.toIsoString
 
 data class UserModel(
@@ -15,7 +15,7 @@ data class UserModel(
     fun isFirstTime(): Boolean = date.isNullOrBlank()
 }
 
-fun UserApiModel.toModel(currentUserId: String): UserModel {
+fun UserDomain.toModel(currentUserId: String): UserModel {
     val username = this.username.trim().split(SEPARATOR_SPACE)
     return UserModel(
         id = id,

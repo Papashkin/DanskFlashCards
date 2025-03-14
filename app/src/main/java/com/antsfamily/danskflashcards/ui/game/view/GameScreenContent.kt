@@ -13,17 +13,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.antsfamily.danskflashcards.ui.game.GameUiState
 import com.antsfamily.danskflashcards.ui.game.model.GameStatus
-import com.antsfamily.danskflashcards.ui.game.model.TimerModel
-import com.antsfamily.danskflashcards.ui.game.model.WORD_CARDS_DANISH
-import com.antsfamily.danskflashcards.ui.game.model.WORD_CARDS_ENGLISH
-import com.antsfamily.danskflashcards.ui.game.model.WordModel
+import com.antsfamily.danskflashcards.ui.game.model.TimerItem
+import com.antsfamily.danskflashcards.ui.game.model.WordItem
 import com.antsfamily.danskflashcards.ui.theme.Padding
 
 @Composable
 fun GameScreenContent(
     content: GameUiState.Content,
-    onDanishWordClick: (WordModel) -> Unit,
-    onEnglishWordClick: (WordModel) -> Unit,
+    onDanishWordClick: (WordItem) -> Unit,
+    onEnglishWordClick: (WordItem) -> Unit,
 ) {
     Box(modifier = Modifier.padding(vertical = Padding.large)) {
         Row(
@@ -63,11 +61,29 @@ fun GameScreenContent(
 @Preview
 @Composable
 fun GameScreenContentPreview(modifier: Modifier = Modifier) {
+    val WORD_CARDS_DANISH = listOf(
+        WordItem(value = "kolonne", id = 986, isGuessed = false, isSelected = false, isWrong = false),
+        WordItem(value = "molekyle", id = 987, isGuessed = false, isSelected = true, isWrong = false),
+        WordItem(value = "vælg", id = 988, isGuessed = true, isSelected = true, isWrong = false),
+        WordItem(value = "forkert", id = 989, isGuessed = false, isSelected = false, isWrong = false),
+        WordItem(value = "grå", id = 990, isGuessed = false, isSelected = false, isWrong = true),
+        WordItem(value = "grå", id = 990, isGuessed = false, isSelected = false, isWrong = true)
+    )
+
+    val WORD_CARDS_ENGLISH = listOf(
+        WordItem(value = "column", id = 991, isGuessed = false, isSelected = true, isWrong = false),
+        WordItem(value = "molecule", id = 992, isGuessed = true, isSelected = false, isWrong = false),
+        WordItem(value = "select", id = 993, isGuessed = false, isSelected = false, isWrong = false),
+        WordItem(value = "wrong", id = 994, isGuessed = false, isSelected = true, isWrong = false),
+        WordItem(value = "gray", id = 996, isGuessed = false, isSelected = false, isWrong = false),
+        WordItem(value = "gray", id = 996, isGuessed = false, isSelected = false, isWrong = false),
+    )
+
     GameScreenContent(
         content = GameUiState.Content(
             danish = WORD_CARDS_DANISH,
             english = WORD_CARDS_ENGLISH,
-            TimerModel(),
+            TimerItem(),
             status = GameStatus.STARTED,
         ),
         onDanishWordClick = {},

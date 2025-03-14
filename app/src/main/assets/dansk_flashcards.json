@@ -7,14 +7,14 @@
   },
   {
     "word_da": "min",
-    "word_en": "my (-en)",
-    "word_ru": "мой (-en)",
+    "word_en": "my(-en)",
+    "word_ru": "мой(-en)",
     "id": 2
   },
   {
     "word_da": "mit",
-    "word_en": "my (-et)",
-    "word_ru": "мой (-et)",
+    "word_en": "my(-et)",
+    "word_ru": "мой(-et)",
     "id": 3
   },
   {
@@ -25,7 +25,7 @@
   },
   {
     "word_da": "du",
-    "word_en": "you (single)",
+    "word_en": "you(single)",
     "word_ru": "ты",
     "id": 5
   },
@@ -37,8 +37,8 @@
   },
   {
     "word_da": "dit",
-    "word_en": "your (-et)",
-    "word_ru": "твой (-et)",
+    "word_en": "your(-et)",
+    "word_ru": "твой(-et)",
     "id": 7
   },
   {
@@ -121,7 +121,7 @@
   },
   {
     "word_da": "sin",
-    "word_en": "your (self)",
+    "word_en": "your(self)",
     "word_ru": "свой",
     "id": 24
   },

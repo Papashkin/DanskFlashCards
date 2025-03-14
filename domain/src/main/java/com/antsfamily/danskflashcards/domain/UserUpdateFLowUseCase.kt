@@ -1,19 +1,19 @@
 package com.antsfamily.danskflashcards.domain
 
-import com.antsfamily.danskflashcards.data.model.UserApiModel
-import com.antsfamily.danskflashcards.data.repository.FirestoreDataRepository
-import com.antsfamily.danskflashcards.data.util.mapToUserApiModels
+import com.antsfamily.danskflashcards.data.repository.DataRepository
+import com.antsfamily.danskflashcards.domain.model.UserDomain
+import com.antsfamily.danskflashcards.domain.model.mapToDomain
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class UserUpdateFLowUseCase @Inject constructor(
-    private val repository: FirestoreDataRepository
+    private val repository: DataRepository
 ) {
 
-    suspend fun run(params: String): Flow<List<UserApiModel>> {
+    suspend operator fun invoke(params: String): Flow<List<UserDomain>> {
         return repository.getUsersFLow().map {
-            it.mapToUserApiModels(userId = params)
+            it.mapToDomain(userId = params)
         }
     }
 }
