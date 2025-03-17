@@ -17,18 +17,36 @@ android {
         minSdk = 26
         targetSdk = 34
         versionCode = 1
-        versionName = "1.3"
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = file(System.getenv("RELEASE_KEYSTORE") ?: "debug.keystore")
+            storePassword = System.getenv("KEYSTORE_PASSWORD")
+            keyAlias = System.getenv("KEY_ALIAS")
+            keyPassword = System.getenv("KEY_PASSWORD")
+        }
+        create("dev") {
+            storeFile = file("../debug.keystore")
+            storePassword = "AndroidDebugKey"
+            keyAlias = "AndroidDebugKey"
+            keyPassword = "AndroidDebugKey"
+        }
     }
 
     buildTypes {
         debug {
             applicationIdSuffix = ".debug"
+            isMinifyEnabled = false
+            isDebuggable = true
         }
         release {
-            applicationIdSuffix = ""
+            isDebuggable = false
             isMinifyEnabled = true
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

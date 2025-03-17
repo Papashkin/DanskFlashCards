@@ -20,6 +20,10 @@ class DataRepositoryImpl @Inject constructor(
         return localSource.getCardsAmount()
     }
 
+    override suspend fun getWebClientId(): String? {
+        return localSource.getWebClientId()
+    }
+
     override suspend fun getUsers(): QuerySnapshot {
         return remoteSource.getUsers()
     }

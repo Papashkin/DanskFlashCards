@@ -9,6 +9,7 @@ androidxComposeBom = "2025.02.00"
 androidxHiltNavigationCompose = "1.2.0"
 androidxLifecycle = "2.8.7"
 androidxNavigation = "2.8.7"
+androidxCrypto = "1.1.0-alpha03"
 junit = "4.13.2"
 hilt = "2.52"
 coil = "2.7.0"
@@ -19,7 +20,7 @@ lottie = "4.0.0"
 googlePlayService = "21.2.0"
 googleId = "1.0.0"
 credentials = "1.3.0"
-gson = "2.10.1"
+gson = "2.11.0"
 firebaseBom = "33.10.0"
 firebaseAuth = "23.0.0"
 firebaseAnalytics = "22.0.0"
@@ -34,6 +35,7 @@ appcompat = "1.7.0"
 material = "1.12.0"
 
 [libraries]
+# DEVELOPMENT
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "androidxCoreSplashscreen" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -46,12 +48,9 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxNavigation" }
 androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidxLifecycle" }
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose" }
-androidx-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "coreTesting" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
-kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
-mockito = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockito" }
 lottie = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuth" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx", version.ref = "firebaseAnalytics" }
@@ -63,6 +62,12 @@ googleId = { group = "com.google.android.libraries.identity.googleid", name = "g
 credentials = { group = "androidx.credentials", name = "credentials", version.ref = "credentials" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
+crypto = { group = "androidx.security", name = "security-crypto", version.ref = "androidxCrypto" }
+
+# TESTING
+androidx-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "coreTesting" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
+mockito = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockito" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
