@@ -7,7 +7,8 @@ import javax.inject.Inject
 
 class LocalSourceImpl @Inject constructor(
     private val gson: Gson,
-    private val jsonDataSource: JsonDataSource
+    private val jsonDataSource: JsonDataSource,
+    private val sharedPrefs: SharedPrefs
 ) : LocalSource {
 
     companion object {
@@ -23,6 +24,10 @@ class LocalSourceImpl @Inject constructor(
     override fun getCardsAmount(): Int {
         val users = getDataFromJson()
         return users.size
+    }
+
+    override suspend fun getWebClientId(): String? {
+        return sharedPrefs.getWebClientId()
     }
 
     private fun getDataFromJson(): List<WordApiModel> {

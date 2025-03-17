@@ -2,6 +2,7 @@ package com.antsfamily.danskflashcards.data.di
 
 import android.content.Context
 import com.antsfamily.danskflashcards.data.source.local.JsonDataSource
+import com.antsfamily.danskflashcards.data.source.local.SharedPrefs
 import com.antsfamily.danskflashcards.data.source.remote.FirestoreHandler
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
@@ -17,6 +18,11 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DataModule {
+    
+    @Singleton
+    @Provides
+    fun provideSharedPrefs(@ApplicationContext context: Context) =
+        SharedPrefs(context = context)
 
     @Singleton
     @Provides

@@ -44,6 +44,7 @@ dependencies {
     implementation(libs.google.play.service.auth)
     implementation(libs.credentials)
     implementation(libs.googleId)
+    implementation(libs.crypto)
 
     // Firebase DB
     implementation(platform(libs.firebase.bom))

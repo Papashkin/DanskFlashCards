@@ -15,8 +15,6 @@ import com.google.firebase.auth.auth
 import kotlinx.coroutines.tasks.await
 import java.util.concurrent.CancellationException
 
-private const val WEB_CLIENT_ID =
-    "692133800678-v9uijmnu84efrqtpgf7ql2kua9cl2afa.apps.googleusercontent.com"
 private const val KEY_ID_TOKEN =
     "com.google.android.libraries.identity.googleid.BUNDLE_KEY_ID_TOKEN"
 
@@ -27,9 +25,9 @@ class GoogleAuthUiClient(
 ) {
     private val auth = Firebase.auth
 
-    suspend fun getSignInToken(type: SignInType): String? {
+    suspend fun getSignInToken(type: SignInType, clientId: String?): String? {
         val result = try {
-            getTokenId(type)
+            getTokenId(type, clientId ?: return null)
         } catch (e: Exception) {
             e.printStackTrace()
             if (e is CancellationException) throw e
@@ -75,10 +73,10 @@ class GoogleAuthUiClient(
         }
     }
 
-    private suspend fun getTokenId(type: SignInType): String? {
+    private suspend fun getTokenId(type: SignInType, clientId: String): String? {
         val request = when (type) {
             SignInType.GOOGLE -> GetCredentialRequest.Builder()
-                .addCredentialOption(getGoogleIdOption())
+                .addCredentialOption(getGoogleIdOption(clientId))
                 .build()
 
             SignInType.FACEBOOK -> null //TODO should be implemented later and separately
@@ -95,9 +93,9 @@ class GoogleAuthUiClient(
         }
     }
 
-    private fun getGoogleIdOption() = GetGoogleIdOption.Builder()
+    private fun getGoogleIdOption(clientId: String) = GetGoogleIdOption.Builder()
         .setFilterByAuthorizedAccounts(false)
-        .setServerClientId(WEB_CLIENT_ID)
+        .setServerClientId(clientId)
         .setAutoSelectEnabled(false)
         .build()
 }
