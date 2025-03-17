@@ -39,19 +39,6 @@ fun AuthScreen(
 ) {
     val state = viewModel.state.collectAsState()
 
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartIntentSenderForResult(),
-        onResult = {
-            viewModel.handleSignInResult(it.resultCode, it.data)
-        }
-    )
-
-    LaunchedEffect(Unit) {
-        viewModel.signInFlow.collect {
-            launcher.launch(IntentSenderRequest.Builder(it).build())
-        }
-    }
-
     LaunchedEffect(Unit) {
         viewModel.navigationFlow.collect { user ->
             onNavigateToHome(user)
