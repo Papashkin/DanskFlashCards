@@ -18,16 +18,16 @@ jobs:
 
       - name: Decode and save keystore
         env:
-          SIGNING_KEYSTORE_BASE64: ${{ secrets.SIGNING_KEYSTORE_BASE64 }}
+          RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE }}
         run: |
-            echo "$SIGNING_KEYSTORE_BASE64" | base64 --decode > keystore.jks
+          echo "RELEASE_KEYSTORE_BASE64" | base64 --decode > release-keystore.jks
 
       - name: Grant execute permission for Gradle
         run: chmod +x gradlew
 
       - name: Build APK
         env:
-          KEYSTORE_PATH: keystore.jks
+          KEYSTORE_PATH: release-keystore.jks
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
