@@ -1,15 +1,12 @@
 package com.antsfamily.danskflashcards.ui.auth
 
-import android.app.Activity
-import android.content.Intent
-import android.content.IntentSender
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.antsfamily.danskflashcards.core.model.CurrentUserItem
 import com.antsfamily.danskflashcards.core.model.mapToItem
-import com.antsfamily.danskflashcards.domain.GetSignInResultUseCase
-import com.antsfamily.danskflashcards.domain.SignInWithGoogleUseCase
-import com.google.android.gms.auth.api.identity.SignInClient
+import com.antsfamily.danskflashcards.data.SignInResult
+import com.antsfamily.danskflashcards.data.model.SignInType
+import com.antsfamily.danskflashcards.domain.SignInWithCredentialsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,13 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val getSignInResultUseCase: GetSignInResultUseCase,
-    private val signInWithGoogleUseCase: SignInWithGoogleUseCase,
-    private val client: SignInClient,
+    private val signInWithCredentialsUseCase: SignInWithCredentialsUseCase,
 ) : ViewModel() {
-
-    private val _signInFlow = MutableSharedFlow<IntentSender>()
-    val signInFlow: SharedFlow<IntentSender> = _signInFlow.asSharedFlow()
 
     private val _navigationFlow = MutableSharedFlow<CurrentUserItem>()
     val navigationFlow: SharedFlow<CurrentUserItem> = _navigationFlow.asSharedFlow()
@@ -40,9 +32,9 @@ class AuthViewModel @Inject constructor(
     fun onGoogleClick() = viewModelScope.launch {
         _state.value = AuthUiState.Loading
         try {
-            val intentSender = getSignInResultUseCase()?.pendingIntent?.intentSender
-            intentSender?.let {
-                _signInFlow.emit(it)
+            val response = signInWithCredentialsUseCase(SignInType.GOOGLE)
+            response?.let {
+                proceedWithSignedUser(it)
             } ?: run {
                 setDefaultUiState()
             }
@@ -51,18 +43,7 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun handleSignInResult(code: Int, intent: Intent?) {
-        if (code == Activity.RESULT_OK) {
-            signIn(intent)
-        } else {
-            setDefaultUiState()
-        }
-    }
-
-    private fun signIn(intent: Intent?) = viewModelScope.launch {
-        val credential = client.getSignInCredentialFromIntent(intent)
-        val googleToken = credential.googleIdToken
-        val result = signInWithGoogleUseCase(googleToken ?: return@launch)
+    private suspend fun proceedWithSignedUser(result: SignInResult) {
         val userModel = result.data?.mapToItem()
         if (userModel?.isValid() == true) {
             proceedWithUserData(userModel)
