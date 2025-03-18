@@ -151,8 +151,8 @@
   },
   {
     "word_da": "på",
-    "word_en": "on",
-    "word_ru": "на",
+    "word_en": "on/at",
+    "word_ru": "на/в",
     "id": 29
   },
   {
@@ -160,12 +160,6 @@
     "word_en": "with",
     "word_ru": "с/вместе",
     "id": 30
-  },
-  {
-    "word_da": "på",
-    "word_en": "at",
-    "word_ru": "в",
-    "id": 31
   },
   {
     "word_da": "en/et",
@@ -343,19 +337,19 @@
   },
   {
     "word_da": "en tid",
-    "word_en": "a time",
+    "word_en": "time",
     "word_ru": "время",
     "id": 61
   },
   {
-    "word_da": "tid(skole)",
-    "word_en": "lesson",
+    "word_da": "en tid(skole)",
+    "word_en": "a lesson",
     "word_ru": "занятие",
     "id": 62
   },
   {
-    "word_da": "tid(læge)",
-    "word_en": "appointment",
+    "word_da": "en tid(læge)",
+    "word_en": "an appointment",
     "word_ru": "приём",
     "id": 63
   },
@@ -390,8 +384,8 @@
     "id": 68
   },
   {
-    "word_da": "sæt",
-    "word_en": "set",
+    "word_da": "et sæt",
+    "word_en": "a set",
     "word_ru": "набор",
     "id": 69
   },
@@ -504,9 +498,9 @@
     "id": 87
   },
   {
-    "word_da": "hjem",
-    "word_en": "home",
-    "word_ru": "домой",
+    "word_da": "et hjem",
+    "word_en": "a home",
+    "word_ru": "дом(абстракт.)",
     "id": 88
   },
   {
@@ -656,7 +650,7 @@
   {
     "word_da": "et hus",
     "word_en": "a house",
-    "word_ru": "дом",
+    "word_ru": "дом(здание)",
     "id": 114
   },
   {
@@ -684,20 +678,20 @@
     "id": 118
   },
   {
-    "word_da": "punktum",
-    "word_en": "point",
+    "word_da": "et punktum",
+    "word_en": "a point",
     "word_ru": "точка",
     "id": 119
   },
   {
-    "word_da": "mor",
-    "word_en": "mother",
+    "word_da": "en mor",
+    "word_en": "a mother",
     "word_ru": "мать",
     "id": 120
   },
   {
-    "word_da": "far",
-    "word_en": "father",
+    "word_da": "en far",
+    "word_en": "a father",
     "word_ru": "отец",
     "id": 121
   },
@@ -740,13 +734,13 @@
   {
     "word_da": "et arbejde",
     "word_en": "a work",
-    "word_ru": "работа",
+    "word_ru": "работа(место)",
     "id": 128
   },
   {
     "word_da": "et job",
     "word_en": "job",
-    "word_ru": "работа",
+    "word_ru": "работа(труд)",
     "id": 129
   },
   {
