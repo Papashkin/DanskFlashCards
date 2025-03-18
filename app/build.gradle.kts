@@ -24,10 +24,15 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file(System.getenv("RELEASE_KEYSTORE") ?: "debug.keystore")
+            val keystorePath = System.getenv("KEYSTORE_PATH") ?: "debug.keystore"
+            storeFile = file(keystorePath)
             storePassword = System.getenv("KEYSTORE_PASSWORD")
             keyAlias = System.getenv("KEY_ALIAS")
             keyPassword = System.getenv("KEY_PASSWORD")
+
+            if (!file(keystorePath).exists()) {
+                throw GradleException("Keystore file not found: $keystorePath")
+            }
         }
         create("dev") {
             storeFile = file("../debug.keystore")
