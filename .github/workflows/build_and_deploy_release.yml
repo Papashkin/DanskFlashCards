@@ -19,8 +19,10 @@ jobs:
           java-version: '17'
 
       - name: Decode and save keystore
+        env:
+          SIGNING_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE }}
         run: |
-          echo "${{ secrets.RELEASE_KEYSTORE }}" | base64 --decode > ${{ github.workspace }}/keystore.jks
+          echo "$SIGNING_KEYSTORE_BASE64" | base64 --decode > ${{ github.workspace }}/keystore.jks
 
       - name: Setup Gradle cache
         uses: gradle/actions/setup-gradle@v4
@@ -29,12 +31,12 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build APK
-        run: ./gradlew assembleRelease
         env:
           KEYSTORE_PATH: ${{ github.workspace }}/keystore.jks
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: ./gradlew assembleRelease
       - name: Upload APK to GitHub
         uses: actions/upload-artifact@v4
         with:
