@@ -23,7 +23,7 @@ jobs:
         env:
           SIGNING_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE }}
         run: |
-          echo "$SIGNING_KEYSTORE_BASE64" | base64 --decode > keystore.jks
+          echo "$SIGNING_KEYSTORE_BASE64" | base64 --decode > ${{ github.workspace }}/keystore.jks
 
       - name: Debug Keystore Existence
         run: ls -lah keystore.jks
@@ -33,7 +33,7 @@ jobs:
 
       - name: Build APK
         env:
-          KEYSTORE_PATH: keystore.jks
+          KEYSTORE_PATH: ${{ github.workspace }}/keystore.jks
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
@@ -46,4 +46,4 @@ jobs:
           path: app/build/outputs/apk/release/app-release.apk
 
       - name: Clean up keystore
-        run: rm -f keystore.jks
+        run: rm -f ${{ github.workspace }}/keystore.jks
