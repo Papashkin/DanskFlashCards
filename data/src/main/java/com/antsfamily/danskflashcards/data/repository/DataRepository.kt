@@ -11,4 +11,5 @@ interface DataRepository {
     suspend fun getUsers(): QuerySnapshot
     suspend fun getUsersFLow(): Flow<QuerySnapshot>
     suspend fun updateUser(id: String, data: HashMap<String, Any>)
+    fun getAppVersion(): String?
 }

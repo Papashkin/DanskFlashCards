@@ -1,6 +1,7 @@
 package com.antsfamily.danskflashcards.data.di
 
 import android.content.Context
+import com.antsfamily.danskflashcards.data.source.local.AppVersionSource
 import com.antsfamily.danskflashcards.data.source.local.JsonDataSource
 import com.antsfamily.danskflashcards.data.source.local.SharedPrefs
 import com.antsfamily.danskflashcards.data.source.remote.FirestoreHandler
@@ -23,6 +24,11 @@ object DataModule {
     @Provides
     fun provideSharedPrefs(@ApplicationContext context: Context) =
         SharedPrefs(context = context)
+
+    @Singleton
+    @Provides
+    fun provideAppVersionSource(@ApplicationContext context: Context) =
+        AppVersionSource(context = context)
 
     @Singleton
     @Provides

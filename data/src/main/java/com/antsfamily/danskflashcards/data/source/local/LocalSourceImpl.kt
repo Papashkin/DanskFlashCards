@@ -8,7 +8,8 @@ import javax.inject.Inject
 class LocalSourceImpl @Inject constructor(
     private val gson: Gson,
     private val jsonDataSource: JsonDataSource,
-    private val sharedPrefs: SharedPrefs
+    private val sharedPrefs: SharedPrefs,
+    private val appVersionSource: AppVersionSource
 ) : LocalSource {
 
     companion object {
@@ -28,6 +29,10 @@ class LocalSourceImpl @Inject constructor(
 
     override suspend fun getWebClientId(): String? {
         return sharedPrefs.getWebClientId()
+    }
+
+    override fun getAppVersion(): String? {
+        return appVersionSource.getAppVersion()
     }
 
     private fun getDataFromJson(): List<WordApiModel> {

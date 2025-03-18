@@ -5,11 +5,13 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.NavHost
@@ -29,6 +31,7 @@ fun Navigator() {
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
+        modifier = Modifier.systemBarsPadding(),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         content = {
             print(it.toString())
