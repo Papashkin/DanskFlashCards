@@ -1,3 +1,5 @@
+import java.io.ByteArrayOutputStream
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose)
@@ -8,15 +10,24 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
+fun versionCode(): Int {
+    val outputStream = ByteArrayOutputStream()
+    exec {
+        commandLine = listOf("git", "rev-list", "--count", "HEAD")
+        standardOutput = outputStream
+    }
+    return outputStream.toString().trim().toInt()
+}
+
 android {
     namespace = "com.antsfamily.danskflashcards"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.antsfamily.danskflashcards"
         minSdk = 26
-        targetSdk = 34
-        versionCode = 1
+        targetSdk = 35
+        versionCode = versionCode()
         versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

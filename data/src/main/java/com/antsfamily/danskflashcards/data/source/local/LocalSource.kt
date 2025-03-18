@@ -6,4 +6,5 @@ interface LocalSource {
     fun getCards(): List<WordApiModel>
     fun getCardsAmount(): Int
     suspend fun getWebClientId(): String?
+    fun getAppVersion(): String?
 }

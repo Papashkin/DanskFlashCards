@@ -35,4 +35,8 @@ class DataRepositoryImpl @Inject constructor(
     override suspend fun updateUser(id: String, data: HashMap<String, Any>) {
         return remoteSource.updateUser(id, data)
     }
+
+    override fun getAppVersion(): String? {
+        return localSource.getAppVersion()
+    }
 }
