@@ -58,6 +58,10 @@ class HomeViewModel @AssistedInject constructor(
         getCards()
     }
 
+    fun onRetryClick() {
+        getCards()
+    }
+
     fun onStartClick() = viewModelScope.launch(Dispatchers.IO) {
         _navigationToGameFlow.emit(currentUser?.score.orZero())
     }

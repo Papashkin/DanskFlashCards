@@ -21,4 +21,6 @@
     <string name="about_development_description">developed by Papashkin</string>
     <string name="about_year">2025</string>
     <string name="about_app_version">version %1$s</string>
+    <string name="button_retry">retry</string>
+    <string name="leaderboard_is_empty">Leaderboard is empty</string>
 </resources>

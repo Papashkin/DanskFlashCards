@@ -5,6 +5,7 @@ import com.antsfamily.danskflashcards.data.util.orZero
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 class GetFlashCardsSizeUseCase @Inject constructor(
     private val repository: DataRepository,
@@ -14,11 +15,12 @@ class GetFlashCardsSizeUseCase @Inject constructor(
     suspend operator fun invoke(): Int = cardsAmount ?: getFlashCardsAmount()
 
     private suspend fun getFlashCardsAmount(): Int = suspendCancellableCoroutine {
-        val cardsAmount = try {
-            repository.getCardsAmount()
+        try {
+            val cardsAmount = repository.getCardsAmount()
+            it.resume(cardsAmount.orZero())
         } catch (e: Exception) {
-            null
+            e.printStackTrace()
+            it.resumeWithException(e)
         }
-        it.resume(cardsAmount.orZero())
     }
 }

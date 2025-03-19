@@ -3,6 +3,8 @@ package com.antsfamily.danskflashcards.ui.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.antsfamily.danskflashcards.core.model.CurrentUserItem
+import com.antsfamily.danskflashcards.core.model.ErrorType
+import com.antsfamily.danskflashcards.core.model.mapToErrorType
 import com.antsfamily.danskflashcards.core.model.mapToItem
 import com.antsfamily.danskflashcards.data.SignInResult
 import com.antsfamily.danskflashcards.data.model.SignInType
@@ -33,13 +35,9 @@ class AuthViewModel @Inject constructor(
         _state.value = AuthUiState.Loading
         try {
             val response = signInWithCredentialsUseCase(SignInType.GOOGLE)
-            response?.let {
-                proceedWithSignedUser(it)
-            } ?: run {
-                setDefaultUiState()
-            }
-        } catch (e: Exception) {
-            setDefaultUiState()
+            proceedWithSignedUser(response)
+        }catch (e: Exception) {
+            proceedWithError(e.mapToErrorType())
         }
     }
 
@@ -48,6 +46,10 @@ class AuthViewModel @Inject constructor(
         if (userModel?.isValid() == true) {
             proceedWithUserData(userModel)
         }
+    }
+
+    private fun proceedWithError(errorType: ErrorType) {
+        _state.value = AuthUiState.Error(errorType)
     }
 
     private suspend fun proceedWithUserData(model: CurrentUserItem) {
