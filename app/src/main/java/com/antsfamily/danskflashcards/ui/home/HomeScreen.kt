@@ -17,12 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.antsfamily.danskflashcards.core.presentation.TopBar
 import com.antsfamily.danskflashcards.core.model.CurrentUserItem
+import com.antsfamily.danskflashcards.core.presentation.TopBar
 import com.antsfamily.danskflashcards.ui.game.view.FullScreenLoading
 import com.antsfamily.danskflashcards.ui.home.model.LeaderItem
 import com.antsfamily.danskflashcards.ui.home.model.LeaderboardItem
 import com.antsfamily.danskflashcards.ui.home.model.UserItem
+import com.antsfamily.danskflashcards.ui.home.view.ErrorViewWithRetry
 import com.antsfamily.danskflashcards.ui.home.view.HomeTitle
 import com.antsfamily.danskflashcards.ui.home.view.LeaderboardView
 import com.antsfamily.danskflashcards.ui.home.view.PersonalBestCard
@@ -51,7 +52,9 @@ fun HomeScreen(
         )
 
         is HomeUiState.Error -> {
-            //TODO add error handler
+            ErrorViewWithRetry(errorType = stateValue.type) {
+                viewModel.onRetryClick()
+            }
         }
     }
 
@@ -132,17 +135,8 @@ fun HomeScreenContentPreview1() {
                 date = "10.02.2024 11:22:33"
             ),
             leaderboard = LeaderboardItem(
-                leaders = listOf(
-                    LeaderItem(name = "Pablo", surname = "Escobar", score = 44, index = 0),
-                    LeaderItem(name = "Carlos", surname = "Esteves", score = 32, index = 1),
-                    LeaderItem(name = "Andrea", surname = "Corti", score = 29, index = 2),
-                ),
-                user = LeaderItem(
-                    name = "Johnny",
-                    surname = "Doesome",
-                    score = 12,
-                    index = 10
-                ),
+                leaders = emptyList(),
+                user = LeaderItem(index = 1, name = "Johnny", surname = "Doesome", score = 43)
             ),
             cardsSize = 879,
         ), {}, {}

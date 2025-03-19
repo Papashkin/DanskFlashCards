@@ -1,7 +1,11 @@
 package com.antsfamily.danskflashcards.core.model
 
 import androidx.annotation.StringRes
+import androidx.credentials.exceptions.NoCredentialException
 import com.antsfamily.danskflashcards.R
+import com.google.firebase.FirebaseException
+import java.net.ConnectException
+import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
 enum class ErrorType {
@@ -13,7 +17,11 @@ enum class ErrorType {
 
 fun Exception.mapToErrorType(): ErrorType {
     return when (this) {
-        is UnknownHostException -> ErrorType.NetworkConnection
+        is UnknownHostException,
+        is SocketTimeoutException,
+        is NoCredentialException,
+        is ConnectException -> ErrorType.NetworkConnection
+        is FirebaseException -> ErrorType.Server
         else -> ErrorType.Unknown
     }
 }

@@ -10,14 +10,16 @@ class SignInWithCredentialsUseCase @Inject constructor(
     private val client: GoogleAuthUiClient,
     private val dataRepository: DataRepository
 ) {
-    suspend operator fun invoke(type: SignInType): SignInResult? {
-        try {
+    suspend operator fun invoke(type: SignInType): SignInResult {
+        return try {
             val token = client.getSignInToken(type, dataRepository.getWebClientId())
-            return token?.let {
+            token?.let {
                 client.signInWithToken(it)
+            } ?: run {
+                 throw Error(Exception("Token is empty"))
             }
         } catch (e: Exception) {
-            return null
+            throw e
         }
     }
 }

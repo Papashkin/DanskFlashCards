@@ -5,7 +5,6 @@ import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
-import androidx.credentials.exceptions.GetCredentialException
 import com.antsfamily.danskflashcards.data.model.SignInType
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
@@ -30,8 +29,7 @@ class GoogleAuthUiClient(
             getTokenId(type, clientId ?: return null)
         } catch (e: Exception) {
             e.printStackTrace()
-            if (e is CancellationException) throw e
-            null
+            throw e
         }
         return result
     }
@@ -56,8 +54,7 @@ class GoogleAuthUiClient(
 
         } catch (e: Exception) {
             e.printStackTrace()
-            if (e is CancellationException) throw e
-            SignInResult(null, e.message)
+            throw e
         }
     }
 
@@ -88,8 +85,9 @@ class GoogleAuthUiClient(
             val googleIdCredential = response.credential
             val idToken = googleIdCredential.data.getString(KEY_ID_TOKEN)
             return idToken
-        } catch (e: GetCredentialException) {
-            return null
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw e
         }
     }
 
