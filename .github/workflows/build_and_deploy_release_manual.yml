@@ -52,21 +52,21 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          if [[ "${{ github.event.inputs.build_type }}" == "APK" ]]; then
+          if [[ "${{ github.event.inputs.buildType }}" == "APK" ]]; then
             ./gradlew assembleRelease
           else
             ./gradlew bundleRelease
           fi
 
       - name: Upload APK to GitHub
-        if: ${{ github.event.inputs.build_type == 'APK' }}
+        if: ${{ github.event.inputs.buildType == 'APK' }}
         uses: actions/upload-artifact@v4
         with:
           name: apk
           path: app/build/outputs/apk/release/
 
       - name: Upload AAB to GitHub
-        if: ${{ github.event.inputs.build_type == 'AAB' }}
+        if: ${{ github.event.inputs.buildType == 'AAB' }}
         uses: actions/upload-artifact@v4
         with:
           name: signed-aab
