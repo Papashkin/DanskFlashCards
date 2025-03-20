@@ -9,6 +9,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Version code setup
+        run: echo "VERSION_CODE=$(git rev-list --count HEAD)" >> $GITHUB_ENV
 
       - name: set up JDK 17
         uses: actions/setup-java@v3
