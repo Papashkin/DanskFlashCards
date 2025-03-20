@@ -3,11 +3,6 @@ name: Build and deploy release manually
 on:
   workflow_dispatch:
     inputs:
-      branch:
-        description: "branch name"
-        required: true
-        default: "main"
-        type: string
       buildType:
         description: "Choose build type (APK or AAB)"
         required: true
