@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -22,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.antsfamily.danskflashcards.R
 import com.antsfamily.danskflashcards.core.presentation.TopBar
 import com.antsfamily.danskflashcards.ui.theme.FontSize
@@ -47,15 +49,21 @@ fun AboutScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             Card(
-                shape = RoundedCornerShape(16.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                shape = CircleShape,
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_home_image_bg),
+                AsyncImage(
+                    model = R.drawable.ic_about_icon,
                     contentDescription = null,
                     modifier = Modifier.size(200.dp)
                 )
             }
+
+            Text(
+                text = stringResource(R.string.app_name),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(top = Padding.medium),
+            )
 
             Text(
                 text = stringResource(R.string.about_development_description),
