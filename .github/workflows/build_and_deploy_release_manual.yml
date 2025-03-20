@@ -59,14 +59,14 @@ jobs:
           fi
 
       - name: Upload APK to GitHub
-        if: github.event.inputs.build_type == 'APK'
+        if: ${{ github.event.inputs.build_type == 'APK' }}
         uses: actions/upload-artifact@v4
         with:
           name: apk
           path: app/build/outputs/apk/release/
 
       - name: Upload AAB to GitHub
-        if: github.event.inputs.build_type == 'AAB'
+        if: ${{ github.event.inputs.build_type == 'AAB' }}
         uses: actions/upload-artifact@v4
         with:
           name: signed-aab
