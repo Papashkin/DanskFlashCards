@@ -4651,8 +4651,8 @@
     "id": 665,
     "word_dk": "at løse",
     "word_en": "to solve",
-    "word_ru": "решить",
-    "word_de": ""
+    "word_ru": "решать(задачу)",
+    "word_de": "lösen"
   },
   {
     "id": 666,
@@ -6860,11 +6860,11 @@
     "word_de": "eine Aufgabe"
   },
   {
-    "id": 981,
-    "word_dk": "at løse",
-    "word_en": "to solve",
-    "word_ru": "решать(задачу)",
-    "word_de": "lösen"
+    "id": 981, //todo remove
+    "word_dk": "en leder",
+    "word_en": "a leader",
+    "word_ru": "лидер",
+    "word_de": "ein Führer"
   },
   {
     "id": 982,
@@ -6928,12 +6928,5 @@
     "word_en": "to answer",
     "word_ru": "отвечать",
     "word_de": "antworten"
-  },
-  {
-    "id": 991,
-    "word_dk": "en leder",
-    "word_en": "a leader",
-    "word_ru": "лидер",
-    "word_de": "ein Führer"
   }
 ]
