@@ -14,14 +14,16 @@ import com.google.firebase.auth.auth
 import kotlinx.coroutines.tasks.await
 import java.util.concurrent.CancellationException
 
-private const val KEY_ID_TOKEN =
-    "com.google.android.libraries.identity.googleid.BUNDLE_KEY_ID_TOKEN"
-
 class GoogleAuthUiClient(
     private val context: Context,
     private val oneTapClient: SignInClient,
     private val credentialManager: CredentialManager,
 ) {
+    companion object {
+        private const val STRING_UNKNOWN_PERSON = "Unknown person"
+        private const val KEY_ID_TOKEN =
+            "com.google.android.libraries.identity.googleid.BUNDLE_KEY_ID_TOKEN"
+    }
     private val auth = Firebase.auth
 
     suspend fun getSignInToken(type: SignInType, clientId: String?): String? {
@@ -43,8 +45,7 @@ class GoogleAuthUiClient(
                 SignInResult(
                     data = CurrentUserApiModel(
                         userId = it.uid,
-                        username = it.displayName.orEmpty(),
-                        email = it.email.orEmpty()
+                        username = it.displayName ?: STRING_UNKNOWN_PERSON,
                     ),
                     errorMessage = null
                 )

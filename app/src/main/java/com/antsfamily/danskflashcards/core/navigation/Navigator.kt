@@ -46,9 +46,7 @@ fun Navigator() {
                 }
                 composable<Auth> {
                     AuthScreen { user ->
-                        navController.navigate(
-                            Home(id = user.userId, name = user.username, email = user.email)
-                        )
+                        navController.navigate(Home(id = user.userId, name = user.username))
                     }
                 }
                 composable<Home>(
