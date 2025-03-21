@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class WordApiModel(
     @SerializedName("id")
     val id: Int,
-    @SerializedName("word_da")
+    @SerializedName("word_dk")
     val danish: String,
     @SerializedName("word_en")
     val english: String,
