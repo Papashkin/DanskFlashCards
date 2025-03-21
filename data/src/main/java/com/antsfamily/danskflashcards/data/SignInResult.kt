@@ -12,5 +12,4 @@ data class SignInResult(
 data class CurrentUserApiModel(
     val userId: String,
     val username: String,
-    val email: String,
 ) : Parcelable

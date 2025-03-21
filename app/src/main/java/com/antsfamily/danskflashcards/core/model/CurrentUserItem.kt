@@ -7,10 +7,9 @@ import com.antsfamily.danskflashcards.ui.home.model.UserItem
 data class CurrentUserItem(
     val userId: String,
     val username: String,
-    val email: String,
 ) {
 
-    fun isValid(): Boolean = username.isNotBlank() && this.email.isNotBlank()
+    fun isValid(): Boolean = username.isNotBlank() && userId.isNotBlank()
 
     fun mapToUserItem(): UserItem {
         val username = username.split(SEPARATOR_SPACE)
@@ -26,5 +25,5 @@ data class CurrentUserItem(
 }
 
 fun CurrentUserApiModel.mapToItem(): CurrentUserItem {
-    return CurrentUserItem(userId = userId, username = username, email = email)
+    return CurrentUserItem(userId = userId, username = username)
 }
