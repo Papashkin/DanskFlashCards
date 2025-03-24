@@ -5,6 +5,7 @@ import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
+import androidx.credentials.exceptions.GetCredentialCancellationException
 import com.antsfamily.danskflashcards.data.model.SignInType
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
@@ -86,6 +87,8 @@ class GoogleAuthUiClient(
             val googleIdCredential = response.credential
             val idToken = googleIdCredential.data.getString(KEY_ID_TOKEN)
             return idToken
+        } catch (e: GetCredentialCancellationException) {
+            return null
         } catch (e: Exception) {
             e.printStackTrace()
             throw e
