@@ -35,7 +35,11 @@ class AuthViewModel @Inject constructor(
         _state.value = AuthUiState.Loading
         try {
             val response = signInWithCredentialsUseCase(SignInType.GOOGLE)
-            proceedWithSignedUser(response)
+            response?.let {
+                proceedWithSignedUser(it)
+            } ?: run {
+                setDefaultUiState()
+            }
         }catch (e: Exception) {
             proceedWithError(e.mapToErrorType())
         }
