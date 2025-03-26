@@ -23,4 +23,8 @@
     <string name="about_app_version">version %1$s</string>
     <string name="button_retry">retry</string>
     <string name="leaderboard_is_empty">Leaderboard is empty</string>
+    <string name="dialog_update_title">Update Available</string>
+    <string name="dialog_update_subtitle">A new update is available. Please update the app.</string>
+    <string name="dialog_update_button_update">Update</string>
+    <string name="dialog_update_button_cancel">Cancel</string>
 </resources>
