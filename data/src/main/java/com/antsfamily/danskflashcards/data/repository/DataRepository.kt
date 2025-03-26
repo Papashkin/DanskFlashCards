@@ -1,10 +1,14 @@
 package com.antsfamily.danskflashcards.data.repository
 
 import com.antsfamily.danskflashcards.data.model.WordApiModel
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.flow.Flow
 
 interface DataRepository {
+    fun getAppUpdateInfo(): Task<AppUpdateInfo>
+    fun startAppUpdate(updateInfo: AppUpdateInfo)
     fun getCards(): List<WordApiModel>
     fun getCardsAmount(): Int
     suspend fun getWebClientId(): String?

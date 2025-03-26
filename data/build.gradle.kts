@@ -42,6 +42,7 @@ dependencies {
     implementation(libs.coil)
     implementation(libs.lottie)
     implementation(libs.google.play.service.auth)
+    implementation(libs.inAppUpdate)
     implementation(libs.credentials)
     implementation(libs.googleId)
     implementation(libs.crypto)

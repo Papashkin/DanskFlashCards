@@ -39,6 +39,7 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.google.play.service.auth)
+    implementation(libs.inAppUpdate)
     implementation(libs.firebase.firestore)
     implementation(libs.gson)
 
