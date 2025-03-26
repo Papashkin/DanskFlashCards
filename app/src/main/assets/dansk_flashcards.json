@@ -81,14 +81,14 @@
         "word_dk": "hendes",
         "word_en": "her",
         "word_ru": "её",
-        "word_de": ""
+        "word_de": "ihre"
     },
     {
         "id": 13,
         "word_dk": "hende",
         "word_en": "her",
         "word_ru": "ей",
-        "word_de": ""
+        "word_de": "ihr"
     },
     {
         "id": 14,
@@ -522,7 +522,7 @@
         "word_dk": "at ønske",
         "word_en": "to want/wish",
         "word_ru": "хотеть/желать",
-        "word_de": ""
+        "word_de": "wünschen"
     },
     {
         "id": 76,
@@ -564,14 +564,14 @@
         "word_dk": "små",
         "word_en": "small(plural)",
         "word_ru": "маленькие",
-        "word_de": ""
+        "word_de": "kleinen"
     },
     {
         "id": 82,
         "word_dk": "ende",
         "word_en": "end",
         "word_ru": "конец",
-        "word_de": ""
+        "word_de": "Ende"
     },
     {
         "id": 83,
@@ -746,7 +746,7 @@
         "word_dk": "slags",
         "word_en": "kind",
         "word_ru": "вид/тип",
-        "word_de": ""
+        "word_de": "Art"
     },
     {
         "id": 108,
@@ -767,7 +767,7 @@
         "word_dk": "et billede",
         "word_en": "a picture",
         "word_ru": "картинка",
-        "word_de": ""
+        "word_de": "ein Bild"
     },
     {
         "id": 111,
@@ -795,7 +795,7 @@
         "word_dk": "et punktum",
         "word_en": "a point",
         "word_ru": "точка",
-        "word_de": ""
+        "word_de": "ein Punkt"
     },
     {
         "id": 115,
@@ -844,7 +844,7 @@
         "word_dk": "enhver",
         "word_en": "any",
         "word_ru": "любой",
-        "word_de": ""
+        "word_de": "beliebig"
     },
     {
         "id": 122,
@@ -879,7 +879,7 @@
         "word_dk": "del",
         "word_en": "part",
         "word_ru": "часть",
-        "word_de": ""
+        "word_de": "Teil"
     },
     {
         "id": 127,
@@ -900,7 +900,7 @@
         "word_dk": "en sted",
         "word_en": "a place",
         "word_ru": "место",
-        "word_de": ""
+        "word_de": "ein Ort"
     },
     {
         "id": 130,
@@ -914,28 +914,28 @@
         "word_dk": "tilbage",
         "word_en": "back",
         "word_ru": "назад",
-        "word_de": ""
+        "word_de": "zurück"
     },
     {
         "id": 132,
         "word_dk": "lidt",
         "word_en": "little",
         "word_ru": "немного",
-        "word_de": ""
+        "word_de": "wenig"
     },
     {
         "id": 133,
         "word_dk": "kun",
         "word_en": "only",
         "word_ru": "только",
-        "word_de": ""
+        "word_de": "nur"
     },
     {
         "id": 134,
         "word_dk": "runde",
         "word_en": "round",
         "word_ru": "круглый",
-        "word_de": ""
+        "word_de": "runden"
     },
     {
         "id": 135,
@@ -984,35 +984,35 @@
         "word_dk": "meget",
         "word_en": "much",
         "word_ru": "много(неисчисл.)",
-        "word_de": ""
+        "word_de": "sehr"
     },
     {
         "id": 142,
         "word_dk": "gennem",
         "word_en": "through",
         "word_ru": "через",
-        "word_de": ""
+        "word_de": "durch"
     },
     {
         "id": 143,
         "word_dk": "bare",
         "word_en": "just",
         "word_ru": "просто",
-        "word_de": ""
+        "word_de": "Nur"
     },
     {
         "id": 144,
         "word_dk": "en formular",
         "word_en": "a form",
         "word_ru": "форма(док.)",
-        "word_de": ""
+        "word_de": "ein Formular"
     },
     {
         "id": 145,
         "word_dk": "en sætning",
         "word_en": "a sentence",
         "word_ru": "предложение",
-        "word_de": ""
+        "word_de": "ein Satz"
     },
     {
         "id": 146,
@@ -1033,140 +1033,140 @@
         "word_dk": "lav",
         "word_en": "low",
         "word_ru": "низкий",
-        "word_de": ""
+        "word_de": "niedrig"
     },
     {
         "id": 149,
         "word_dk": "en linje",
         "word_en": "a line",
         "word_ru": "линия",
-        "word_de": ""
+        "word_de": "eine Linie"
     },
     {
         "id": 150,
         "word_dk": "at afvige",
         "word_en": "to differ",
-        "word_ru": "отличаются",
-        "word_de": ""
+        "word_ru": "отличаться",
+        "word_de": "abweichen"
     },
     {
         "id": 151,
         "word_dk": "en tur",
         "word_en": "a turn",
         "word_ru": "поворот",
-        "word_de": ""
+        "word_de": "eine Wendung"
     },
     {
         "id": 152,
         "word_dk": "en årsag",
         "word_en": "a cause",
         "word_ru": "причина",
-        "word_de": ""
+        "word_de": "eine Ursache"
     },
     {
         "id": 153,
         "word_dk": "at betyde",
         "word_en": "to mean",
         "word_ru": "означать",
-        "word_de": ""
+        "word_de": "bedeuten"
     },
     {
         "id": 154,
         "word_dk": "før",
         "word_en": "before",
         "word_ru": "до",
-        "word_de": ""
+        "word_de": "vor"
     },
     {
         "id": 155,
         "word_dk": "at trække",
         "word_en": "to pull",
         "word_ru": "тащить",
-        "word_de": ""
+        "word_de": "ziehen"
     },
     {
         "id": 156,
         "word_dk": "højre",
         "word_en": "right",
         "word_ru": "право",
-        "word_de": ""
+        "word_de": "Rechts"
     },
     {
         "id": 157,
         "word_dk": "en dreng",
         "word_en": "a boy",
         "word_ru": "мальчик",
-        "word_de": ""
+        "word_de": "ein Junge"
     },
     {
         "id": 158,
         "word_dk": "gammel",
         "word_en": "old",
         "word_ru": "старый",
-        "word_de": ""
+        "word_de": "alt"
     },
     {
         "id": 159,
         "word_dk": "samme",
         "word_en": "same",
         "word_ru": "такой же",
-        "word_de": ""
+        "word_de": "gleich"
     },
     {
         "id": 160,
         "word_dk": "alle",
         "word_en": "all",
         "word_ru": "все",
-        "word_de": ""
+        "word_de": "alle"
     },
     {
         "id": 161,
         "word_dk": "der",
         "word_en": "there",
         "word_ru": "там",
-        "word_de": ""
+        "word_de": "dort"
     },
     {
         "id": 162,
         "word_dk": "når",
         "word_en": "when(sentence)",
         "word_ru": "когда(предложение)",
-        "word_de": ""
+        "word_de": "wenn"
     },
     {
         "id": 163,
         "word_dk": "op",
         "word_en": "up",
         "word_ru": "вверх",
-        "word_de": ""
+        "word_de": "hoch"
     },
     {
         "id": 164,
         "word_dk": "et måde",
         "word_en": "a way",
         "word_ru": "способ",
-        "word_de": ""
+        "word_de": "eine Weise"
     },
     {
         "id": 165,
         "word_dk": "om",
         "word_en": "about",
         "word_ru": "о/об",
-        "word_de": ""
+        "word_de": "über"
     },
     {
         "id": 166,
         "word_dk": "mange",
         "word_en": "many",
         "word_ru": "много(исчисл.)",
-        "word_de": ""
+        "word_de": "viele"
     },
     {
         "id": 167,
         "word_dk": "derefter",
         "word_en": "then",
         "word_ru": "затем",
-        "word_de": ""
+        "word_de": "danach"
     },
     {
         "id": 168,
@@ -1180,28 +1180,28 @@
         "word_dk": "ligesom",
         "word_en": "like",
         "word_ru": "подобно",
-        "word_de": ""
+        "word_de": "wie"
     },
     {
         "id": 170,
         "word_dk": "så",
         "word_en": "so",
         "word_ru": "так",
-        "word_de": ""
+        "word_de": "so"
     },
     {
         "id": 171,
         "word_dk": "disse",
         "word_en": "these",
         "word_ru": "эти",
-        "word_de": ""
+        "word_de": "diese"
     },
     {
         "id": 172,
         "word_dk": "lang",
         "word_en": "long",
         "word_ru": "долго",
-        "word_de": ""
+        "word_de": "lange"
     },
     {
         "id": 173,
@@ -1215,21 +1215,21 @@
         "word_dk": "en ting",
         "word_en": "a thing",
         "word_ru": "вещь",
-        "word_de": ""
+        "word_de": "ein Ding"
     },
     {
         "id": 175,
         "word_dk": "at se",
         "word_en": "to see",
         "word_ru": "видеть",
-        "word_de": ""
+        "word_de": "sehen"
     },
     {
         "id": 176,
         "word_dk": "mere",
         "word_en": "more",
         "word_ru": "еще",
-        "word_de": ""
+        "word_de": "mehr"
     },
     {
         "id": 177,
@@ -1250,98 +1250,98 @@
         "word_dk": "et nummer",
         "word_en": "a number",
         "word_ru": "число",
-        "word_de": ""
+        "word_de": "eine Nummer"
     },
     {
         "id": 180,
         "word_dk": "en lyd",
         "word_en": "a sound",
         "word_ru": "звук",
-        "word_de": ""
+        "word_de": "ein Geräusch"
     },
     {
         "id": 181,
         "word_dk": "nej",
         "word_en": "no",
         "word_ru": "нет",
-        "word_de": ""
+        "word_de": "nein"
     },
     {
         "id": 182,
         "word_dk": "mest",
         "word_en": "most",
         "word_ru": "наиболее",
-        "word_de": ""
+        "word_de": "am meisten"
     },
     {
         "id": 183,
         "word_dk": "mennesker",
         "word_en": "people",
         "word_ru": "человек(общ.)",
-        "word_de": ""
+        "word_de": "Menschen"
     },
     {
         "id": 184,
         "word_dk": "løbet",
         "word_en": "over",
         "word_ru": "во",
-        "word_de": ""
+        "word_de": "im Laufe"
     },
     {
         "id": 185,
         "word_dk": "at kende",
         "word_en": "to know(ppl)",
         "word_ru": "знать(персона)",
-        "word_de": ""
+        "word_de": "kennen"
     },
     {
         "id": 186,
         "word_dk": "et vand",
         "word_en": "water",
         "word_ru": "вода",
-        "word_de": ""
+        "word_de": "Wasser"
     },
     {
         "id": 187,
         "word_dk": "end",
         "word_en": "than",
         "word_ru": "чем",
-        "word_de": ""
+        "word_de": "als"
     },
     {
         "id": 188,
         "word_dk": "et opkald",
         "word_en": "a call",
         "word_ru": "звонок",
-        "word_de": ""
+        "word_de": "ein Anruf"
     },
     {
         "id": 189,
         "word_dk": "først",
         "word_en": "first",
         "word_ru": "первый",
-        "word_de": ""
+        "word_de": "zuerst"
     },
     {
         "id": 190,
         "word_dk": "ned",
         "word_en": "down",
         "word_ru": "вниз",
-        "word_de": ""
+        "word_de": "nach unten"
     },
     {
         "id": 191,
         "word_dk": "en side",
         "word_en": "a side",
         "word_ru": "сторона",
-        "word_de": ""
+        "word_de": "eine Seite"
     },
     {
         "id": 192,
         "word_dk": "nu",
         "word_en": "now",
         "word_ru": "сейчас",
-        "word_de": ""
+        "word_de": "jetzt"
     },
     {
         "id": 193,
@@ -1355,35 +1355,35 @@
         "word_dk": "et hoved",
         "word_en": "a head",
         "word_ru": "голова",
-        "word_de": ""
+        "word_de": "ein Kopf"
     },
     {
         "id": 195,
         "word_dk": "at stå",
         "word_en": "to stand",
         "word_ru": "стоять",
-        "word_de": ""
+        "word_de": "stehen"
     },
     {
         "id": 196,
         "word_dk": "egen",
         "word_en": "own",
         "word_ru": "самостоятельно",
-        "word_de": ""
+        "word_de": "eigen"
     },
     {
         "id": 197,
         "word_dk": "en side(bog)",
         "word_en": "a page",
         "word_ru": "страница",
-        "word_de": ""
+        "word_de": "eine Seite"
     },
     {
         "id": 198,
         "word_dk": "et land",
         "word_en": "a country",
         "word_ru": "страна",
-        "word_de": ""
+        "word_de": "ein Land"
     },
     {
         "id": 199,
@@ -1404,21 +1404,21 @@
         "word_dk": "at vokse",
         "word_en": "to grow",
         "word_ru": "расти",
-        "word_de": ""
+        "word_de": "wachsen"
     },
     {
         "id": 202,
         "word_dk": "en undersøgelse",
         "word_en": "a study",
         "word_ru": "исследование",
-        "word_de": ""
+        "word_de": "eine Studie"
     },
     {
         "id": 203,
         "word_dk": "stadig",
         "word_en": "still",
         "word_ru": "еще",
-        "word_de": ""
+        "word_de": "immer noch"
     },
     {
         "id": 204,
@@ -1432,77 +1432,77 @@
         "word_dk": "en plante",
         "word_en": "plant",
         "word_ru": "растение",
-        "word_de": ""
+        "word_de": "eine Pflanze"
     },
     {
         "id": 206,
         "word_dk": "dæksel",
         "word_en": "cover",
         "word_ru": "крышка",
-        "word_de": ""
+        "word_de": "eine Abdeckung"
     },
     {
         "id": 207,
         "word_dk": "en mad",
         "word_en": "a food",
         "word_ru": "еда",
-        "word_de": ""
+        "word_de": "ein Essen"
     },
     {
         "id": 208,
         "word_dk": "en sol",
         "word_en": "a sun",
         "word_ru": "солнце",
-        "word_de": ""
+        "word_de": "eine Sonne"
     },
     {
         "id": 209,
         "word_dk": "mellem",
         "word_en": "between",
         "word_ru": "между",
-        "word_de": ""
+        "word_de": "zwischen"
     },
     {
         "id": 210,
         "word_dk": "en stat",
         "word_en": "state",
         "word_ru": "состояние",
-        "word_de": ""
+        "word_de": "ein Staat"
     },
     {
         "id": 211,
         "word_dk": "at holde",
         "word_en": "to keep",
         "word_ru": "держать",
-        "word_de": ""
+        "word_de": "halten"
     },
     {
         "id": 212,
         "word_dk": "et øje",
         "word_en": "an eye",
         "word_ru": "глаз",
-        "word_de": ""
+        "word_de": "ein Auge"
     },
     {
         "id": 213,
         "word_dk": "aldrig",
         "word_en": "never",
         "word_ru": "никогда",
-        "word_de": ""
+        "word_de": "nie"
     },
     {
         "id": 214,
         "word_dk": "sidste",
         "word_en": "last",
         "word_ru": "Последний",
-        "word_de": ""
+        "word_de": "letzte"
     },
     {
         "id": 215,
         "word_dk": "at lade",
         "word_en": "to let",
         "word_ru": "позволять",
-        "word_de": ""
+        "word_de": "lassen"
     },
     {
         "id": 216,
@@ -1516,63 +1516,63 @@
         "word_dk": "et træ",
         "word_en": "a tree",
         "word_ru": "дерево",
-        "word_de": ""
+        "word_de": "ein Baum"
     },
     {
         "id": 218,
         "word_dk": "at krydse",
         "word_en": "to cross",
         "word_ru": "пересекать",
-        "word_de": ""
+        "word_de": "überqueren"
     },
     {
         "id": 219,
         "word_dk": "en gård",
         "word_en": "a garden",
         "word_ru": "сад",
-        "word_de": ""
+        "word_de": "ein Hof"
     },
     {
         "id": 220,
         "word_dk": "hård",
         "word_en": "hard",
         "word_ru": "трудный",
-        "word_de": ""
+        "word_de": "hart"
     },
     {
         "id": 221,
         "word_dk": "en begyndelse",
         "word_en": "a start",
         "word_ru": "начало",
-        "word_de": ""
+        "word_de": "ein Anfang"
     },
     {
         "id": 222,
         "word_dk": "en historie",
         "word_en": "a story",
         "word_ru": "история",
-        "word_de": ""
+        "word_de": "eine Geschichte"
     },
     {
         "id": 223,
         "word_dk": "en sav",
         "word_en": "a saw",
         "word_ru": "пила",
-        "word_de": ""
+        "word_de": "eine Säge"
     },
     {
         "id": 224,
         "word_dk": "langt",
         "word_en": "far",
         "word_ru": "далеко",
-        "word_de": ""
+        "word_de": "weit"
     },
     {
         "id": 225,
         "word_dk": "en havn",
         "word_en": "a harbour",
         "word_ru": "гавань",
-        "word_de": ""
+        "word_de": "ein Hafen"
     },
     {
         "id": 226,
@@ -1586,91 +1586,21 @@
         "word_dk": "venstre",
         "word_en": "left",
         "word_ru": "слева",
-        "word_de": ""
+        "word_de": "links"
     },
     {
         "id": 228,
         "word_dk": "sent",
         "word_en": "late",
         "word_ru": "поздно",
-        "word_de": ""
+        "word_de": "spät"
     },
     {
         "id": 229,
         "word_dk": "for",
         "word_en": "too",
         "word_ru": "слишком",
-        "word_de": ""
-    },
-    {
-        "id": 230,
-        "word_dk": "at køre",
-        "word_en": "to drive",
-        "word_ru": "водить/ездить",
-        "word_de": "fahren"
-    },
-    {
-        "id": 231,
-        "word_dk": "ikke",
-        "word_en": "not",
-        "word_ru": "не",
-        "word_de": "nein"
-    },
-    {
-        "id": 232,
-        "word_dk": "mens",
-        "word_en": "while",
-        "word_ru": "в то время как",
-        "word_de": ""
-    },
-    {
-        "id": 233,
-        "word_dk": "at trykke",
-        "word_en": "to press",
-        "word_ru": "нажать",
-        "word_de": ""
-    },
-    {
-        "id": 234,
-        "word_dk": "tæt",
-        "word_en": "close",
-        "word_ru": "близко",
-        "word_de": ""
-    },
-    {
-        "id": 235,
-        "word_dk": "en nat",
-        "word_en": "a night",
-        "word_ru": "ночь",
-        "word_de": "eine Nacht"
-    },
-    {
-        "id": 236,
-        "word_dk": "virkelig",
-        "word_en": "really",
-        "word_ru": "реально",
-        "word_de": "Wirklich"
-    },
-    {
-        "id": 237,
-        "word_dk": "et liv",
-        "word_en": "a life",
-        "word_ru": "жизнь",
-        "word_de": "ein Leben"
-    },
-    {
-        "id": 238,
-        "word_dk": "få",
-        "word_en": "few",
-        "word_ru": "несколько",
-        "word_de": ""
-    },
-    {
-        "id": 239,
-        "word_dk": "et nord",
-        "word_en": "a north",
-        "word_ru": "север",
-        "word_de": ""
+        "word_de": "zu"
     },
     {
         "id": 240,
@@ -4330,35 +4260,35 @@
         "word_dk": "øjeblik",
         "word_en": "moment",
         "word_ru": "момент",
-        "word_de": ""
+        "word_de": "Moment"
     },
     {
         "id": 620,
         "word_dk": "skala",
         "word_en": "scale",
         "word_ru": "шкала",
-        "word_de": ""
+        "word_de": "Skala"
     },
     {
         "id": 621,
         "word_dk": "højt",
         "word_en": "loud",
         "word_ru": "громко",
-        "word_de": ""
+        "word_de": "laut"
     },
     {
         "id": 622,
         "word_dk": "forår",
         "word_en": "spring",
         "word_ru": "весна",
-        "word_de": ""
+        "word_de": "Frühling"
     },
     {
         "id": 623,
         "word_dk": "at observere",
         "word_en": "to observe",
         "word_ru": "наблюдать",
-        "word_de": ""
+        "word_de": "beobachten"
     },
     {
         "id": 624,
@@ -4372,21 +4302,21 @@
         "word_dk": "lige ud",
         "word_en": "straight",
         "word_ru": "прямо",
-        "word_de": ""
+        "word_de": "direkt"
     },
     {
         "id": 626,
         "word_dk": "konsonant",
         "word_en": "consonant",
         "word_ru": "согласный(буква)",
-        "word_de": ""
+        "word_de": "Konsonant"
     },
     {
         "id": 627,
         "word_dk": "nation",
         "word_en": "nation",
         "word_ru": "нация",
-        "word_de": ""
+        "word_de": "Nation"
     },
     {
         "id": 628,
@@ -5475,493 +5405,493 @@
     },
     {
         "id": 783,
-        "word_dk": "indtaste",
-        "word_en": "enter",
-        "word_ru": "введите",
-        "word_de": ""
+        "word_dk": "at indtaste",
+        "word_en": "to enter",
+        "word_ru": "вводить",
+        "word_de": "eintreten"
     },
     {
         "id": 784,
         "word_dk": "større",
         "word_en": "bigger",
         "word_ru": "больше",
-        "word_de": ""
+        "word_de": "größer"
     },
     {
         "id": 785,
         "word_dk": "frisk",
         "word_en": "fresh",
         "word_ru": "свежий",
-        "word_de": ""
+        "word_de": "frisch"
     },
     {
         "id": 786,
         "word_dk": "at søge",
         "word_en": "to search",
         "word_ru": "искать",
-        "word_de": ""
+        "word_de": "suchen"
     },
     {
         "id": 787,
         "word_dk": "at sende",
         "word_en": "to send",
         "word_ru": "отправить",
-        "word_de": ""
+        "word_de": "senden"
     },
     {
         "id": 788,
         "word_dk": "gul",
         "word_en": "yellow",
         "word_ru": "желтый",
-        "word_de": ""
+        "word_de": "Gelb"
     },
     {
         "id": 789,
         "word_dk": "en pistol",
         "word_en": "a gun",
         "word_ru": "пистолет",
-        "word_de": ""
+        "word_de": "eine Waffe"
     },
     {
         "id": 790,
         "word_dk": "at tillade",
         "word_en": "to allow",
         "word_ru": "позволять",
-        "word_de": ""
+        "word_de": "erlauben"
     },
     {
         "id": 791,
         "word_dk": "at udskrive",
         "word_en": "to print",
         "word_ru": "печатать",
-        "word_de": ""
+        "word_de": "Drucken"
     },
     {
         "id": 792,
         "word_dk": "plet",
         "word_en": "spot",
         "word_ru": "место",
-        "word_de": ""
+        "word_de": "Stelle"
     },
     {
         "id": 793,
         "word_dk": "en ørken",
         "word_en": "desert",
         "word_ru": "пустыня",
-        "word_de": ""
+        "word_de": "eine Wüste"
     },
     {
         "id": 794,
         "word_dk": "et jakkesæt",
         "word_en": "a suit",
         "word_ru": "костюм",
-        "word_de": ""
+        "word_de": "ein Anzug"
     },
     {
         "id": 795,
-        "word_dk": "strøm",
-        "word_en": "current",
+        "word_dk": "en strøm",
+        "word_en": "a current",
         "word_ru": "ток",
-        "word_de": ""
+        "word_de": "ein Strom"
     },
     {
         "id": 796,
         "word_dk": "en elevator",
         "word_en": "a lift",
         "word_ru": "лифт",
-        "word_de": ""
+        "word_de": "ein Aufzug"
     },
     {
         "id": 797,
         "word_dk": "en mester",
         "word_en": "a master",
         "word_ru": "мастер",
-        "word_de": ""
+        "word_de": "ein Meister"
     },
     {
         "id": 798,
-        "word_dk": "spor",
-        "word_en": "track",
-        "word_ru": "путь,трек",
-        "word_de": ""
+        "word_dk": "et spor",
+        "word_en": "a track",
+        "word_ru": "путь/трек",
+        "word_de": "eine Spur"
     },
     {
         "id": 799,
         "word_dk": "en forælder",
         "word_en": "a parent",
         "word_ru": "родитель",
-        "word_de": ""
+        "word_de": "ein Elternteil"
     },
     {
         "id": 800,
         "word_dk": "en kyst",
         "word_en": "a coast",
         "word_ru": "берег",
-        "word_de": ""
+        "word_de": "eine Küste"
     },
     {
         "id": 801,
         "word_dk": "opdeling",
         "word_en": "division",
-        "word_ru": "деление",
-        "word_de": ""
+        "word_ru": "разделение",
+        "word_de": "Division"
     },
     {
         "id": 802,
         "word_dk": "ark",
         "word_en": "sheet",
         "word_ru": "лист(бумаги)",
-        "word_de": ""
+        "word_de": "Blatt"
     },
     {
         "id": 803,
         "word_dk": "et stof",
         "word_en": "a substance",
         "word_ru": "вещество",
-        "word_de": ""
+        "word_de": "eine Substanz"
     },
     {
         "id": 804,
         "word_dk": "en begunstige",
         "word_en": "a favor",
         "word_ru": "услуга",
-        "word_de": ""
+        "word_de": "einen Gefallen"
     },
     {
         "id": 805,
         "word_dk": "at forbinde",
         "word_en": "to connect",
         "word_ru": "подключать",
-        "word_de": ""
+        "word_de": "verbinden"
     },
     {
         "id": 806,
         "word_dk": "et indlæg",
         "word_en": "a post",
         "word_ru": "пост",
-        "word_de": ""
+        "word_de": "ein Beitrag"
     },
     {
         "id": 807,
         "word_dk": "at tilbringe",
         "word_en": "to spend",
         "word_ru": "проводить",
-        "word_de": ""
+        "word_de": "ausgeben"
     },
     {
         "id": 808,
         "word_dk": "en akkord",
         "word_en": "a chord",
         "word_ru": "аккорд",
-        "word_de": ""
+        "word_de": "ein Akkord"
     },
     {
         "id": 809,
         "word_dk": "et fedt",
         "word_en": "a fat",
         "word_ru": "жир",
-        "word_de": ""
+        "word_de": "ein Fett"
     },
     {
         "id": 810,
         "word_dk": "glad",
         "word_en": "glad",
         "word_ru": "довольный",
-        "word_de": ""
+        "word_de": "froh"
     },
     {
         "id": 811,
         "word_dk": "originale",
         "word_en": "original",
         "word_ru": "оригинальный",
-        "word_de": ""
+        "word_de": "Original"
     },
     {
         "id": 812,
         "word_dk": "en aktie",
         "word_en": "a share",
         "word_ru": "доля",
-        "word_de": ""
+        "word_de": "eine Aktie"
     },
     {
         "id": 813,
         "word_dk": "en station",
         "word_en": "station",
         "word_ru": "станция",
-        "word_de": ""
+        "word_de": "eine Station"
     },
     {
         "id": 814,
         "word_dk": "en svigerfar",
-        "word_en": "father-in-law",
+        "word_en": "a father-in-law",
         "word_ru": "тесть",
-        "word_de": ""
+        "word_de": "ein Schwiegervater"
     },
     {
         "id": 815,
         "word_dk": "en svigermor",
-        "word_en": "mother-in-law",
+        "word_en": "a mother-in-law",
         "word_ru": "тёща",
-        "word_de": ""
+        "word_de": "eine Schwiegermutter"
     },
     {
         "id": 816,
         "word_dk": "et brød",
         "word_en": "a bread",
         "word_ru": "хлеб",
-        "word_de": ""
+        "word_de": "ein Brot"
     },
     {
         "id": 817,
         "word_dk": "at oplade",
         "word_en": "to charge",
-        "word_ru": "взимать",
-        "word_de": ""
+        "word_ru": "заряжать",
+        "word_de": "aufladen"
     },
     {
         "id": 818,
         "word_dk": "korrekt",
         "word_en": "proper",
         "word_ru": "собственно",
-        "word_de": ""
+        "word_de": "richtig"
     },
     {
         "id": 819,
         "word_dk": "en bar",
         "word_en": "a bar",
         "word_ru": "бар",
-        "word_de": ""
+        "word_de": "eine Bar"
     },
     {
         "id": 820,
         "word_dk": "et tilbud",
         "word_en": "an offer",
         "word_ru": "предложение",
-        "word_de": ""
+        "word_de": "ein Angebot"
     },
     {
         "id": 821,
-        "word_dk": "segmentet",
-        "word_en": "segment",
+        "word_dk": "et segment",
+        "word_en": "a segment",
         "word_ru": "сегмент",
-        "word_de": ""
+        "word_de": "ein Segment"
     },
     {
         "id": 822,
         "word_dk": "en slave",
         "word_en": "a slave",
         "word_ru": "раб",
-        "word_de": ""
+        "word_de": "ein Sklave"
     },
     {
         "id": 823,
-        "word_dk": "en ænd",
+        "word_dk": "en and",
         "word_en": "a duck",
         "word_ru": "утка",
-        "word_de": ""
+        "word_de": "eine Ente"
     },
     {
         "id": 824,
         "word_dk": "øjeblikkelig",
         "word_en": "instant",
         "word_ru": "растворимый",
-        "word_de": ""
+        "word_de": "sofort"
     },
     {
         "id": 825,
         "word_dk": "et marked",
         "word_en": "a market",
         "word_ru": "рынок",
-        "word_de": ""
+        "word_de": "ein Markt"
     },
     {
         "id": 826,
         "word_dk": "grad",
         "word_en": "degree",
         "word_ru": "степень",
-        "word_de": ""
+        "word_de": "Grad"
     },
     {
         "id": 827,
         "word_dk": "at befolke",
         "word_en": "to populate",
         "word_ru": "заселять",
-        "word_de": ""
+        "word_de": "bevölkern"
     },
     {
         "id": 828,
         "word_dk": "en chick",
         "word_en": "a chick",
         "word_ru": "чика(девушка)",
-        "word_de": ""
+        "word_de": "ein Küken"
     },
     {
         "id": 829,
         "word_dk": "kære",
         "word_en": "dear",
         "word_ru": "дорогой",
-        "word_de": ""
+        "word_de": "Liebling"
     },
     {
         "id": 830,
         "word_dk": "en fjende",
         "word_en": "an enemy",
         "word_ru": "враг",
-        "word_de": ""
+        "word_de": "ein Feind"
     },
     {
         "id": 831,
         "word_dk": "en ægtemand",
-        "word_en": "a spouse",
+        "word_en": "a husband",
         "word_ru": "супруг",
-        "word_de": ""
+        "word_de": "ein Ehemann"
     },
     {
         "id": 832,
-        "word_dk": "drikke(sb.)",
-        "word_en": "drink",
-        "word_ru": "напиток",
-        "word_de": ""
+        "word_dk": "en sommerfugl",
+        "word_en": "a butterfly",
+        "word_ru": "бабочка",
+        "word_de": "ein Schmetterling"
     },
     {
         "id": 833,
         "word_dk": "at forekomme",
         "word_en": "to occur",
         "word_ru": "происходить",
-        "word_de": ""
+        "word_de": "auftreten"
     },
     {
         "id": 834,
         "word_dk": "en støtte",
         "word_en": "a support",
         "word_ru": "поддержка",
-        "word_de": ""
+        "word_de": "eine Unterstützung"
     },
     {
         "id": 835,
         "word_dk": "en tale",
         "word_en": "a speech",
         "word_ru": "речь",
-        "word_de": ""
+        "word_de": "eine Rede"
     },
     {
         "id": 836,
         "word_dk": "en natur",
         "word_en": "a nature",
         "word_ru": "природа",
-        "word_de": ""
+        "word_de": "eine Natur"
     },
     {
         "id": 837,
         "word_dk": "en rækkevidde",
         "word_en": "a range",
         "word_ru": "диапазон",
-        "word_de": ""
+        "word_de": "eine Reihe"
     },
     {
         "id": 838,
         "word_dk": "en damp",
-        "word_en": "steam",
+        "word_en": "a steam",
         "word_ru": "пар",
-        "word_de": ""
+        "word_de": "ein Dampf"
     },
     {
         "id": 839,
         "word_dk": "en bevægelse",
-        "word_en": "a motion",
+        "word_en": "a movement",
         "word_ru": "движение",
-        "word_de": ""
+        "word_de": "eine Bewegung"
     },
     {
         "id": 840,
         "word_dk": "væske",
         "word_en": "liquid",
         "word_ru": "жидкость",
-        "word_de": ""
+        "word_de": "flüssig"
     },
     {
         "id": 841,
-        "word_dk": "log",
-        "word_en": "log",
-        "word_ru": "войти",
-        "word_de": ""
+        "word_dk": "at logge ind",
+        "word_en": "to log in",
+        "word_ru": "входить",
+        "word_de": "einloggen"
     },
     {
         "id": 842,
         "word_dk": "betød",
         "word_en": "meant",
-        "word_ru": "означало",
-        "word_de": ""
+        "word_ru": "означать(пр.вр.)",
+        "word_de": "gemeint"
     },
     {
         "id": 843,
         "word_dk": "kvotient",
         "word_en": "quotient",
         "word_ru": "фактор",
-        "word_de": ""
+        "word_de": "Quotient"
     },
     {
         "id": 844,
         "word_dk": "tænder",
         "word_en": "teeth",
         "word_ru": "зубы",
-        "word_de": ""
+        "word_de": "Zähne"
     },
     {
         "id": 845,
         "word_dk": "en skal",
         "word_en": "a shell",
         "word_ru": "оболочка",
-        "word_de": ""
+        "word_de": "eine Muschel"
     },
     {
         "id": 846,
         "word_dk": "en hals",
         "word_en": "a neck",
         "word_ru": "шея",
-        "word_de": ""
+        "word_de": "ein Hals"
     },
     {
         "id": 847,
         "word_dk": "en ilt",
         "word_en": "an oxygen",
         "word_ru": "кислород",
-        "word_de": ""
+        "word_de": "ein Sauerstoff"
     },
     {
         "id": 848,
         "word_dk": "et sukker",
         "word_en": "a sugar",
         "word_ru": "сахар",
-        "word_de": ""
+        "word_de": "ein Zucker"
     },
     {
         "id": 849,
         "word_dk": "en død",
         "word_en": "a death",
         "word_ru": "смерть",
-        "word_de": ""
+        "word_de": "ein Tod"
     },
     {
         "id": 850,
         "word_dk": "temmelig",
         "word_en": "pretty",
         "word_ru": "довольно",
-        "word_de": ""
+        "word_de": "ziemlich"
     },
     {
         "id": 851,
         "word_dk": "en færdighed",
         "word_en": "a skill",
-        "word_ru": "умение",
-        "word_de": ""
+        "word_ru": "умение/навык",
+        "word_de": "eine Fähigkeit"
     },
     {
         "id": 852,
         "word_dk": "en årstid",
         "word_en": "a season",
         "word_ru": "сезон",
-        "word_de": ""
+        "word_de": "eine Saison"
     },
     {
         "id": 853,
@@ -5975,196 +5905,196 @@
         "word_dk": "en magnet",
         "word_en": "a magnet",
         "word_ru": "магнит",
-        "word_de": ""
+        "word_de": "ein Magnet"
     },
     {
         "id": 855,
         "word_dk": "et sølv",
         "word_en": "a silver",
         "word_ru": "серебро",
-        "word_de": ""
+        "word_de": "ein Silber"
     },
     {
         "id": 856,
         "word_dk": "tak",
         "word_en": "thank",
         "word_ru": "спасибо",
-        "word_de": ""
+        "word_de": "Danke"
     },
     {
         "id": 857,
         "word_dk": "en gren",
         "word_en": "a branch",
         "word_ru": "филиал",
-        "word_de": ""
+        "word_de": "eine Niederlassung"
     },
     {
         "id": 858,
         "word_dk": "en kamp",
-        "word_en": "a match",
-        "word_ru": "матч",
-        "word_de": ""
+        "word_en": "a fight/game",
+        "word_ru": "драка/матч",
+        "word_de": "ein Kampf"
     },
     {
         "id": 859,
-        "word_dk": "en endelse",
-        "word_en": "a suffix",
-        "word_ru": "суффикс",
-        "word_de": ""
+        "word_dk": "et folk",
+        "word_en": "a folk",
+        "word_ru": "народ",
+        "word_de": "ein Volk"
     },
     {
         "id": 860,
         "word_dk": "især",
         "word_en": "especially",
         "word_ru": "особенно",
-        "word_de": ""
+        "word_de": "besonders"
     },
     {
         "id": 861,
-        "word_dk": "en fig",
+        "word_dk": "en figur",
         "word_en": "a figure",
-        "word_ru": "рисунок",
-        "word_de": ""
+        "word_ru": "фигура",
+        "word_de": "eine Figur"
     },
     {
         "id": 862,
         "word_dk": "at være bange",
         "word_en": "to be afraid",
         "word_ru": "бояться",
-        "word_de": ""
+        "word_de": "Angst haben"
     },
     {
         "id": 863,
         "word_dk": "enorm",
         "word_en": "huge",
         "word_ru": "огромный",
-        "word_de": ""
+        "word_de": "enorm"
     },
     {
         "id": 864,
         "word_dk": "en søster",
         "word_en": "a sister",
         "word_ru": "сестра",
-        "word_de": ""
+        "word_de": "eine Schwester"
     },
     {
         "id": 865,
         "word_dk": "et stål",
         "word_en": "a steel",
         "word_ru": "сталь",
-        "word_de": ""
+        "word_de": "ein Stahl"
     },
     {
         "id": 866,
         "word_dk": "fremad",
         "word_en": "forward",
         "word_ru": "вперед",
-        "word_de": ""
+        "word_de": "nach vorne"
     },
     {
         "id": 867,
         "word_dk": "lignende",
         "word_en": "similar",
         "word_ru": "похожий",
-        "word_de": ""
+        "word_de": "ähnlich"
     },
     {
         "id": 868,
         "word_dk": "at guide",
         "word_en": "to guide",
         "word_ru": "направлять",
-        "word_de": ""
+        "word_de": "führen"
     },
     {
         "id": 869,
         "word_dk": "en erfaring",
         "word_en": "an experience",
         "word_ru": "опыт",
-        "word_de": ""
+        "word_de": "ein Erlebnis"
     },
     {
         "id": 870,
         "word_dk": "kvinder",
         "word_en": "women",
         "word_ru": "женщины",
-        "word_de": ""
+        "word_de": "Frauen"
     },
     {
         "id": 871,
         "word_dk": "et æble",
         "word_en": "an apple",
         "word_ru": "яблоко",
-        "word_de": ""
+        "word_de": "ein Apfel"
     },
     {
         "id": 872,
         "word_dk": "købte",
         "word_en": "bought",
         "word_ru": "купленный",
-        "word_de": ""
+        "word_de": "gekauft"
     },
     {
         "id": 873,
-        "word_dk": "ledede",
+        "word_dk": "at lede",
         "word_en": "led",
-        "word_ru": "привело",
-        "word_de": ""
+        "word_ru": "приводить",
+        "word_de": "geführt"
     },
     {
         "id": 874,
         "word_dk": "tonehøjde",
         "word_en": "pitch",
-        "word_ru": "шаг",
-        "word_de": ""
+        "word_ru": "поле(спорт.)",
+        "word_de": "Tonhöhe"
     },
     {
         "id": 875,
         "word_dk": "en frakke",
         "word_en": "a coat",
         "word_ru": "пальто",
-        "word_de": ""
+        "word_de": "ein Mantel"
     },
     {
         "id": 876,
         "word_dk": "en masse",
         "word_en": "a mass",
         "word_ru": "масса",
-        "word_de": ""
+        "word_de": "eine Masse"
     },
     {
         "id": 877,
         "word_dk": "kort(bank)",
         "word_en": "card",
         "word_ru": "карточка",
-        "word_de": ""
+        "word_de": "eine Karte"
     },
     {
         "id": 878,
         "word_dk": "et bånd",
-        "word_en": "a band",
-        "word_ru": "полоса",
-        "word_de": ""
+        "word_en": "a tape",
+        "word_ru": "лента",
+        "word_de": "ein Band"
     },
     {
         "id": 879,
         "word_dk": "et reb",
         "word_en": "a rope",
         "word_ru": "веревка",
-        "word_de": ""
+        "word_de": "ein Seil"
     },
     {
         "id": 880,
-        "word_dk": "slip",
+        "word_dk": "glide",
         "word_en": "slip",
         "word_ru": "скольжение",
-        "word_de": ""
+        "word_de": "Beleg"
     },
     {
         "id": 881,
         "word_dk": "en sejr",
         "word_en": "a win",
         "word_ru": "победа",
-        "word_de": ""
+        "word_de": "ein Sieg"
     },
     {
         "id": 882,
@@ -6175,458 +6105,458 @@
     },
     {
         "id": 883,
-        "word_dk": "en aften",
-        "word_en": "an evening",
+        "word_dk": "aften",
+        "word_en": "evening",
         "word_ru": "вечер",
-        "word_de": ""
+        "word_de": "Abend"
     },
     {
         "id": 884,
         "word_dk": "en betingelse",
         "word_en": "a condition",
         "word_ru": "состояние",
-        "word_de": ""
+        "word_de": "eine Bedingung"
     },
     {
         "id": 885,
         "word_dk": "foder",
         "word_en": "feed",
         "word_ru": "корм",
-        "word_de": ""
+        "word_de": "füttern"
     },
     {
         "id": 886,
         "word_dk": "et værktøj",
         "word_en": "a tool",
         "word_ru": "инструмент",
-        "word_de": ""
+        "word_de": "ein Werkzeug"
     },
     {
         "id": 887,
         "word_dk": "samlede",
         "word_en": "total",
         "word_ru": "общий",
-        "word_de": ""
+        "word_de": "gesamt"
     },
     {
         "id": 888,
         "word_dk": "grundlæggende",
         "word_en": "basic",
         "word_ru": "основной",
-        "word_de": ""
+        "word_de": "Basic"
     },
     {
         "id": 889,
         "word_dk": "en lugt",
         "word_en": "a smell",
         "word_ru": "запах",
-        "word_de": ""
+        "word_de": "ein Geruch"
     },
     {
         "id": 890,
         "word_dk": "en dal",
         "word_en": "a valley",
         "word_ru": "долина",
-        "word_de": ""
+        "word_de": "ein Tal"
     },
     {
         "id": 891,
         "word_dk": "heller ikke",
         "word_en": "nor",
         "word_ru": "ни",
-        "word_de": ""
+        "word_de": "weder"
     },
     {
         "id": 892,
         "word_dk": "dobbelt",
         "word_en": "double",
         "word_ru": "двойной",
-        "word_de": ""
+        "word_de": "doppelt"
     },
     {
         "id": 893,
         "word_dk": "et sæde",
         "word_en": "a seat",
         "word_ru": "сиденье",
-        "word_de": ""
+        "word_de": "ein Sitz"
     },
     {
         "id": 894,
         "word_dk": "at fortsætte",
         "word_en": "to continue",
         "word_ru": "продолжать",
-        "word_de": ""
+        "word_de": "weitermachen"
     },
     {
         "id": 895,
-        "word_dk": "blok",
-        "word_en": "block",
+        "word_dk": "en blok",
+        "word_en": "a block",
         "word_ru": "блок",
-        "word_de": ""
+        "word_de": "ein Block"
     },
     {
         "id": 896,
         "word_dk": "et diagram",
         "word_en": "a chart",
         "word_ru": "диаграмма",
-        "word_de": ""
+        "word_de": "ein Diagramm"
     },
     {
         "id": 897,
         "word_dk": "en hat",
         "word_en": "a hat",
         "word_ru": "шляпа",
-        "word_de": ""
+        "word_de": "einen Hut"
     },
     {
         "id": 898,
         "word_dk": "at sælge",
         "word_en": "to sell",
         "word_ru": "продать",
-        "word_de": ""
+        "word_de": "zu verkaufen"
     },
     {
         "id": 899,
         "word_dk": "succes",
         "word_en": "success",
         "word_ru": "успех",
-        "word_de": ""
+        "word_de": "Erfolg"
     },
     {
         "id": 900,
         "word_dk": "et selskab",
         "word_en": "a company",
         "word_ru": "компания",
-        "word_de": ""
+        "word_de": "ein Unternehmen"
     },
     {
         "id": 901,
         "word_dk": "at fratrække",
         "word_en": "to subtract",
         "word_ru": "вычитать",
-        "word_de": ""
+        "word_de": "abziehen"
     },
     {
         "id": 902,
         "word_dk": "en begivenhed",
         "word_en": "an event",
         "word_ru": "мероприятие",
-        "word_de": ""
+        "word_de": "ein Ereignis"
     },
     {
         "id": 903,
         "word_dk": "særlig",
         "word_en": "particular",
         "word_ru": "особый",
-        "word_de": ""
+        "word_de": "besondere"
     },
     {
         "id": 904,
         "word_dk": "en aftale",
         "word_en": "a deal",
         "word_ru": "сделка",
-        "word_de": ""
+        "word_de": "ein Deal"
     },
     {
         "id": 905,
         "word_dk": "at svømme",
         "word_en": "to swim",
         "word_ru": "плавать",
-        "word_de": ""
+        "word_de": "schwimmen"
     },
     {
         "id": 906,
-        "word_dk": "sigt",
+        "word_dk": "et udtryk",
         "word_en": "term",
         "word_ru": "термин",
-        "word_de": ""
+        "word_de": "ein Ausdruck"
     },
     {
         "id": 907,
         "word_dk": "modsat",
         "word_en": "opposite",
         "word_ru": "напротив",
-        "word_de": ""
+        "word_de": "Gegenteil"
     },
     {
         "id": 908,
         "word_dk": "en kone",
         "word_en": "a wife",
         "word_ru": "жена",
-        "word_de": ""
+        "word_de": "eine Ehefrau"
     },
     {
         "id": 909,
         "word_dk": "en sko",
         "word_en": "a shoe",
-        "word_ru": "обувь",
-        "word_de": ""
+        "word_ru": "ботинок",
+        "word_de": "ein Schuh"
     },
     {
         "id": 910,
         "word_dk": "en skulder",
         "word_en": "a shoulder",
         "word_ru": "плечо",
-        "word_de": ""
+        "word_de": "eine Schulter"
     },
     {
         "id": 911,
         "word_dk": "en spredning",
         "word_en": "a spread",
         "word_ru": "распространение",
-        "word_de": ""
+        "word_de": "ein Aufstrich"
     },
     {
         "id": 912,
         "word_dk": "at arrangere",
         "word_en": "to arrange",
         "word_ru": "организовать",
-        "word_de": ""
+        "word_de": "arrangieren"
     },
     {
         "id": 913,
         "word_dk": "en lejr",
         "word_en": "a camp",
         "word_ru": "лагерь",
-        "word_de": ""
+        "word_de": "ein Lager"
     },
     {
         "id": 914,
         "word_dk": "at opfinde",
         "word_en": "to invent",
         "word_ru": "изобретать",
-        "word_de": ""
+        "word_de": "erfinden"
     },
     {
         "id": 915,
         "word_dk": "bomuld",
         "word_en": "cotton",
         "word_ru": "хлопок",
-        "word_de": ""
+        "word_de": "eine Baumwolle"
     },
     {
         "id": 916,
         "word_dk": "at føde",
-        "word_en": "to born",
-        "word_ru": "родиться",
-        "word_de": ""
+        "word_en": "to give birth",
+        "word_ru": "рожать",
+        "word_de": "gebären"
     },
     {
         "id": 917,
         "word_dk": "at bestemme",
         "word_en": "to determine",
         "word_ru": "определять",
-        "word_de": ""
+        "word_de": "zu entscheiden"
     },
     {
         "id": 918,
         "word_dk": "kvart",
-        "word_en": "quart",
-        "word_ru": "кварта",
-        "word_de": ""
+        "word_en": "quarter",
+        "word_ru": "четверть",
+        "word_de": "Quartal"
     },
     {
         "id": 919,
         "word_dk": "et telt",
         "word_en": "a tent",
         "word_ru": "палатка",
-        "word_de": ""
+        "word_de": "ein Zelt"
     },
     {
         "id": 920,
         "word_dk": "en lastbil",
         "word_en": "a truck",
         "word_ru": "грузовик",
-        "word_de": ""
+        "word_de": "ein LKW"
     },
     {
         "id": 921,
         "word_dk": "en støj",
         "word_en": "a noise",
         "word_ru": "шум",
-        "word_de": ""
+        "word_de": "ein Geräusch"
     },
     {
         "id": 922,
         "word_dk": "et niveau",
         "word_en": "a level",
         "word_ru": "уровень",
-        "word_de": ""
+        "word_de": "ein Niveau"
     },
     {
         "id": 923,
-        "word_dk": "en mulighed",
-        "word_en": "a chance",
-        "word_ru": "шанс",
-        "word_de": ""
+        "word_dk": "en bruseniche",
+        "word_en": "a shower cubicle",
+        "word_ru": "душевая кабина",
+        "word_de": "eine Duschkabine"
     },
     {
         "id": 924,
         "word_dk": "at samle",
         "word_en": "to gather",
         "word_ru": "собирать",
-        "word_de": ""
+        "word_de": "sammeln"
     },
     {
         "id": 925,
         "word_dk": "en butik",
         "word_en": "a shop",
         "word_ru": "магазин",
-        "word_de": ""
+        "word_de": "ein Geschäft"
     },
     {
         "id": 926,
         "word_dk": "strækning",
         "word_en": "stretch",
         "word_ru": "протяжение",
-        "word_de": ""
+        "word_de": "eine Strecke"
     },
     {
         "id": 927,
         "word_dk": "at smide",
         "word_en": "to throw",
         "word_ru": "бросать",
-        "word_de": ""
+        "word_de": "werfen"
     },
     {
         "id": 928,
         "word_dk": "at skinne",
         "word_en": "to shine",
         "word_ru": "блестеть/сиять",
-        "word_de": ""
+        "word_de": "glänzen"
     },
     {
         "id": 929,
         "word_dk": "en ejendom",
         "word_en": "a property",
         "word_ru": "имущество",
-        "word_de": ""
+        "word_de": "eine Immobilie"
     },
     {
         "id": 930,
         "word_dk": "en kolonne",
         "word_en": "a column",
         "word_ru": "колонка",
-        "word_de": ""
+        "word_de": "eine Spalte"
     },
     {
         "id": 931,
         "word_dk": "et molekyle",
         "word_en": "a molecule",
         "word_ru": "молекула",
-        "word_de": ""
+        "word_de": "ein Molekül"
     },
     {
         "id": 932,
         "word_dk": "forkert",
         "word_en": "wrong",
         "word_ru": "неправильно",
-        "word_de": ""
+        "word_de": "falsch"
     },
     {
         "id": 933,
         "word_dk": "grå",
         "word_en": "gray",
         "word_ru": "серый",
-        "word_de": ""
+        "word_de": "grau"
     },
     {
         "id": 934,
         "word_dk": "en gentagelse",
         "word_en": "a repeat",
         "word_ru": "повторение",
-        "word_de": ""
+        "word_de": "eine Wiederholung"
     },
     {
         "id": 935,
         "word_dk": "at kræve",
         "word_en": "to require",
         "word_ru": "требовать",
-        "word_de": ""
+        "word_de": "fordern"
     },
     {
         "id": 936,
         "word_dk": "bred",
         "word_en": "broad",
         "word_ru": "широкий",
-        "word_de": ""
+        "word_de": "breit"
     },
     {
         "id": 937,
         "word_dk": "at forberede",
         "word_en": "to prepare",
         "word_ru": "подготовить",
-        "word_de": ""
+        "word_de": "vorbereiten"
     },
     {
         "id": 938,
         "word_dk": "salt",
         "word_en": "salt",
         "word_ru": "соль",
-        "word_de": ""
+        "word_de": "Salz"
     },
     {
         "id": 939,
         "word_dk": "en næse",
         "word_en": "a nose",
         "word_ru": "нос",
-        "word_de": ""
+        "word_de": "eine Nase"
     },
     {
         "id": 940,
         "word_dk": "flertal",
         "word_en": "plural",
         "word_ru": "множественное",
-        "word_de": ""
+        "word_de": "Plural"
     },
     {
         "id": 941,
         "word_dk": "en vrede",
         "word_en": "an anger",
         "word_ru": "гнев",
-        "word_de": ""
+        "word_de": "eine Wut"
     },
     {
         "id": 942,
         "word_dk": "en fordring",
         "word_en": "a claim",
         "word_ru": "претензия",
-        "word_de": ""
+        "word_de": "eine Forderung"
     },
     {
         "id": 943,
         "word_dk": "kontinent",
         "word_en": "continent",
         "word_ru": "континент",
-        "word_de": ""
+        "word_de": "ein Kontinent"
     },
     {
         "id": 944,
         "word_dk": "død",
         "word_en": "dead",
         "word_ru": "мертвый",
-        "word_de": ""
+        "word_de": "tot"
     },
     {
         "id": 945,
         "word_dk": "at ankomme",
         "word_en": "to arrive",
         "word_ru": "приходить",
-        "word_de": ""
+        "word_de": "ankommen"
     },
     {
         "id": 946,
         "word_dk": "syn",
         "word_en": "sight",
         "word_ru": "зрение",
-        "word_de": ""
+        "word_de": "ein Anblick"
     },
     {
         "id": 947,
         "word_dk": "at diskutere",
         "word_en": "to discuss",
         "word_ru": "обсуждать",
-        "word_de": ""
+        "word_de": "zu diskutieren"
     },
     {
         "id": 948,
