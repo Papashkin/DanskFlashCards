@@ -12,9 +12,10 @@ import com.antsfamily.danskflashcards.core.util.WRONG_GUESS_ERROR_DURATION
 import com.antsfamily.danskflashcards.core.util.ZERO
 import com.antsfamily.danskflashcards.core.util.orZero
 import com.antsfamily.danskflashcards.domain.CountdownTimerFlow
-import com.antsfamily.danskflashcards.domain.GetFlashCardsUseCase
+import com.antsfamily.danskflashcards.domain.GetWordsUseCase
 import com.antsfamily.danskflashcards.domain.SetPersonalBestUseCase
 import com.antsfamily.danskflashcards.domain.model.LanguageType
+import com.antsfamily.danskflashcards.domain.model.WordDomain
 import com.antsfamily.danskflashcards.ui.game.model.GameOverItem
 import com.antsfamily.danskflashcards.ui.game.model.GameStatus
 import com.antsfamily.danskflashcards.ui.game.model.GuessingItem
@@ -38,7 +39,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = GameViewModel.Factory::class)
 class GameViewModel @AssistedInject constructor(
-    private val getFlashDataUseCase: GetFlashCardsUseCase,
+    private val getWordsUseCase: GetWordsUseCase,
     private val setPersonalBestUseCase: SetPersonalBestUseCase,
     private val timerFlow: CountdownTimerFlow,
     @Assisted("userId") private val userId: String,
@@ -73,12 +74,17 @@ class GameViewModel @AssistedInject constructor(
     val gameOverFlow = _gameOverFlow.asSharedFlow()
 
     init {
-        getData()
+        getWords()
     }
 
     fun onAnimationFinished() {
         showPackOfWords()
         startTimer()
+    }
+
+    fun onRetryClick() {
+        _state.value = GameUiState.Loading
+        getWords()
     }
 
     fun onDanishWordCardClick(word: WordItem) = viewModelScope.launch {
@@ -139,15 +145,20 @@ class GameViewModel @AssistedInject constructor(
         }
     }
 
-    private fun getData() = viewModelScope.launch {
+    private fun getWords() = viewModelScope.launch {
         try {
-            danishWords = getFlashDataUseCase.invoke(LanguageType.DK).map { it.mapToItem() }
-            englishWords = getFlashDataUseCase.invoke(LanguageType.EN).map { it.mapToItem() }
-            guessingItems = danishWords.map { GuessingItem(it.id, false) }
-
+            val words = getWordsUseCase(LanguageType.DK, LanguageType.EN)
+            handleSuccessWordsResult(words)
         } catch (e: Exception) {
             _state.value = GameUiState.Error(e.mapToErrorType())
         }
+    }
+
+    private fun handleSuccessWordsResult(words: Pair<List<WordDomain>, List<WordDomain>>) {
+        danishWords = words.first.map { it.mapToItem() }
+        englishWords = words.second.map { it.mapToItem() }
+        guessingItems = danishWords.map { GuessingItem(it.id, false) }
+        _state.value = GameUiState.Countdown
     }
 
     private fun showPackOfWords(additionalTime: Long = ZERO) {

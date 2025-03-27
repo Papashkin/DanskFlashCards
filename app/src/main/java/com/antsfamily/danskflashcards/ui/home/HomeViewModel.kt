@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.antsfamily.danskflashcards.core.model.CurrentUserItem
 import com.antsfamily.danskflashcards.core.model.mapToErrorType
 import com.antsfamily.danskflashcards.core.util.orZero
-import com.antsfamily.danskflashcards.domain.GetFlashCardsSizeUseCase
 import com.antsfamily.danskflashcards.domain.GetUsersUseCase
+import com.antsfamily.danskflashcards.domain.GetWordsAmountUseCase
 import com.antsfamily.danskflashcards.domain.SignOutWithGoogleUseCase
 import com.antsfamily.danskflashcards.domain.UserUpdateFLowUseCase
 import com.antsfamily.danskflashcards.domain.model.UserDomain
@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = HomeViewModel.Factory::class)
 class HomeViewModel @AssistedInject constructor(
-    private val getFlashCardsSizeUseCase: GetFlashCardsSizeUseCase,
+    private val getWordsAmountUseCase: GetWordsAmountUseCase,
     private val getUsersUseCase: GetUsersUseCase,
     private val userUpdateFLowUseCase: UserUpdateFLowUseCase,
     private val signOutWithGoogleUseCase: SignOutWithGoogleUseCase,
@@ -77,14 +77,20 @@ class HomeViewModel @AssistedInject constructor(
         }
     }
 
-    private fun getCards() = viewModelScope.launch(Dispatchers.IO) {
+    private fun getCards() {
+        if (wordsAmount == null) {
+            getWords()
+        } else {
+            getUsers(user)
+        }
+    }
+
+    private fun getWords() = viewModelScope.launch(Dispatchers.IO) {
         try {
-            if (wordsAmount == null) {
-                wordsAmount = getFlashCardsSizeUseCase()
-            }
+            wordsAmount = getWordsAmountUseCase()
             getUsers(user)
         } catch (e: Exception) {
-            _state.value = HomeUiState.Error(e.mapToErrorType())
+            onGetUsersErrorResult(e)
         }
     }
 
@@ -105,7 +111,7 @@ class HomeViewModel @AssistedInject constructor(
                 onGetUsersSuccessResult(data)
             }
         } catch (e: Exception) {
-            onGetUsersErrorResult(e)
+            // no-op
         }
     }
 

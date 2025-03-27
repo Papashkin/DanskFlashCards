@@ -12,8 +12,12 @@ class UserUpdateFLowUseCase @Inject constructor(
 ) {
 
     suspend operator fun invoke(params: String): Flow<List<UserDomain>> {
-        return repository.getUsersFLow().map {
-            it.mapToDomain(userId = params)
+        try {
+            return repository.getUsersFLow().map {
+                it.mapToDomain(userId = params)
+            }
+        } catch (e: Exception) {
+            throw e
         }
     }
 }

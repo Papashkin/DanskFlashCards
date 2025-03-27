@@ -1,4 +1,4 @@
-package com.antsfamily.danskflashcards.ui.home.view
+package com.antsfamily.danskflashcards.core.presentation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.antsfamily.danskflashcards.R
@@ -47,6 +48,7 @@ fun ErrorViewWithRetry(
         Text(
             text = stringResource(errorType.toErrorMessage()),
             color = MaterialTheme.colorScheme.onSurface,
+            textAlign = TextAlign.Center,
             modifier = modifier.padding(Padding.large),
         )
         Box(
@@ -72,5 +74,5 @@ fun ErrorViewWithRetry(
 @Preview(showBackground = true)
 @Composable
 private fun ErrorViewWithRetryPreview() {
-    ErrorViewWithRetry(errorType = ErrorType.Server) {}
+    ErrorViewWithRetry(errorType = ErrorType.NetworkConnection) {}
 }

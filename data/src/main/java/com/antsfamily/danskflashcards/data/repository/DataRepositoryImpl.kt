@@ -22,12 +22,8 @@ class DataRepositoryImpl @Inject constructor(
         return remoteSource.startAppUpdate(updateInfo)
     }
 
-    override fun getCards(): List<WordApiModel> {
-        return localSource.getCards()
-    }
-
-    override fun getCardsAmount(): Int {
-        return localSource.getCardsAmount()
+    override suspend fun getWords(): List<WordApiModel> {
+        return remoteSource.getWords()
     }
 
     override suspend fun getWebClientId(): String? {

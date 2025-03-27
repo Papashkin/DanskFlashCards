@@ -3,6 +3,8 @@ package com.antsfamily.danskflashcards.data.source.remote
 import com.antsfamily.danskflashcards.data.util.FirebaseConstants.COLLECTION_USERS
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -10,9 +12,9 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-class FirestoreHandler @Inject constructor(
-    private val firestore: FirebaseFirestore
-) {
+class FirestoreHandler @Inject constructor() {
+
+    private val firestore: FirebaseFirestore = Firebase.firestore
 
     suspend fun getUsers(): QuerySnapshot = suspendCancellableCoroutine {
         firestore

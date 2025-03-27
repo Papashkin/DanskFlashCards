@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.credentials.exceptions.NoCredentialException
 import com.antsfamily.danskflashcards.R
 import com.google.firebase.FirebaseException
+import com.google.firebase.FirebaseNetworkException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
@@ -20,6 +21,7 @@ fun Exception.mapToErrorType(): ErrorType {
         is UnknownHostException,
         is SocketTimeoutException,
         is NoCredentialException,
+        is FirebaseNetworkException,
         is ConnectException -> ErrorType.NetworkConnection
         is FirebaseException -> ErrorType.Server
         else -> ErrorType.Unknown
