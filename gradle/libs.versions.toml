@@ -33,6 +33,7 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
 material = "1.12.0"
+googleAppUpdate = "2.1.0"
 
 [libraries]
 # DEVELOPMENT
@@ -63,6 +64,7 @@ credentials = { group = "androidx.credentials", name = "credentials", version.re
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 crypto = { group = "androidx.security", name = "security-crypto", version.ref = "androidxCrypto" }
+inAppUpdate = { group = "com.google.android.play", name = "app-update", version.ref = "googleAppUpdate" }
 
 # TESTING
 androidx-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "coreTesting" }
