@@ -50,14 +50,6 @@ fun GameScreen(
     var bottomSheetData by remember { mutableStateOf<GameOverItem?>(null) }
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
-    val composition by rememberLottieComposition(
-        LottieCompositionSpec.RawRes(R.raw.timer_up_new)
-    )
-    val animationProgress by animateLottieCompositionAsState(
-        composition = composition,
-        iterations = 1,
-        isPlaying = isTimeUpAnimationVisible
-    )
     val state = viewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
@@ -75,20 +67,6 @@ fun GameScreen(
         }
     }
 
-    LaunchedEffect(animationProgress) {
-        if (animationProgress == 1.0f) {
-            isTimeUpAnimationVisible = false
-        }
-    }
-
-    if (isTimeUpAnimationVisible) {
-        LottieAnimation(
-            composition = composition,
-            progress = animationProgress,
-            modifier = Modifier.size(210.dp)
-        )
-    }
-
     when (val stateValue = state.value) {
         GameUiState.Loading ->
             Box(
@@ -100,6 +78,8 @@ fun GameScreen(
 
         is GameUiState.Content -> GameContent(
             stateValue,
+            isTimeUpAnimationVisible,
+            onAnimationEnd = { isTimeUpAnimationVisible = false },
             onDanishWordClick = { viewModel.onDanishWordCardClick(it) },
             onEnglishWordClick = { viewModel.onEnglishWordCardClick(it) }
         )
@@ -121,19 +101,23 @@ fun GameScreen(
 @Composable
 fun GameContent(
     content: GameUiState.Content,
+    isTimeUpAnimationVisible: Boolean,
+    onAnimationEnd: () -> Unit,
     onDanishWordClick: (WordItem) -> Unit,
     onEnglishWordClick: (WordItem) -> Unit,
 ) {
     Column(
         modifier = Modifier
-            .padding(Padding.large)
+            .padding(Padding.small)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceAround
     ) {
         with(content) {
             if (status == GameStatus.STARTED) {
-                GameTimer(content.timerItem)
+                GameTimer(content.timerItem, isAnimationVisible = isTimeUpAnimationVisible) {
+                    onAnimationEnd()
+                }
                 GameScreenContent(content, onDanishWordClick, onEnglishWordClick)
             }
         }
@@ -179,6 +163,8 @@ fun GameScreenContentPreview() {
             timerItem = TimerItem(),
             status = GameStatus.STARTED,
         ),
+        false,
+        {},
         {},
         {}
     )

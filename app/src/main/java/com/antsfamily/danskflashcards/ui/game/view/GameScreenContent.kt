@@ -23,7 +23,7 @@ fun GameScreenContent(
     onDanishWordClick: (WordItem) -> Unit,
     onEnglishWordClick: (WordItem) -> Unit,
 ) {
-    Box(modifier = Modifier.padding(vertical = Padding.large)) {
+    Box(modifier = Modifier.padding(vertical = Padding.medium)) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(Padding.small),
             modifier = Modifier.align(Alignment.Center)
