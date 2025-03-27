@@ -7,16 +7,16 @@ import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
 import androidx.credentials.exceptions.GetCredentialCancellationException
 import com.antsfamily.danskflashcards.data.model.SignInType
+import com.antsfamily.danskflashcards.data.source.remote.FirebaseHandler
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
-import com.google.firebase.Firebase
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.auth
 import kotlinx.coroutines.tasks.await
 import java.util.concurrent.CancellationException
 
 class GoogleAuthUiClient(
     private val context: Context,
+    private val firebaseHandler: FirebaseHandler,
     private val oneTapClient: SignInClient,
     private val credentialManager: CredentialManager,
 ) {
@@ -25,7 +25,6 @@ class GoogleAuthUiClient(
         private const val KEY_ID_TOKEN =
             "com.google.android.libraries.identity.googleid.BUNDLE_KEY_ID_TOKEN"
     }
-    private val auth = Firebase.auth
 
     suspend fun getSignInToken(type: SignInType, clientId: String?): String? {
         val result = try {
@@ -40,7 +39,7 @@ class GoogleAuthUiClient(
     suspend fun signInWithToken(token: String?): SignInResult {
         return try {
             val googleCredentials = GoogleAuthProvider.getCredential(token, null)
-            val user = auth.signInWithCredential(googleCredentials).await().user
+            val user = firebaseHandler.getUserWithCredentials(googleCredentials)
 
             user?.let {
                 SignInResult(
@@ -65,7 +64,7 @@ class GoogleAuthUiClient(
         try {
             oneTapClient.signOut().await()
             credentialManager.clearCredentialState(ClearCredentialStateRequest())
-            auth.signOut()
+            firebaseHandler.signOut()
         } catch (e: Exception) {
             e.printStackTrace()
             if (e is CancellationException) throw e

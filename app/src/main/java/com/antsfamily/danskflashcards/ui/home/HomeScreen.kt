@@ -19,11 +19,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.antsfamily.danskflashcards.core.model.CurrentUserItem
 import com.antsfamily.danskflashcards.core.presentation.TopBar
-import com.antsfamily.danskflashcards.ui.game.view.FullScreenLoading
+import com.antsfamily.danskflashcards.core.presentation.FullScreenLoading
 import com.antsfamily.danskflashcards.ui.home.model.LeaderItem
 import com.antsfamily.danskflashcards.ui.home.model.LeaderboardItem
 import com.antsfamily.danskflashcards.ui.home.model.UserItem
-import com.antsfamily.danskflashcards.ui.home.view.ErrorViewWithRetry
+import com.antsfamily.danskflashcards.core.presentation.ErrorViewWithRetry
 import com.antsfamily.danskflashcards.ui.home.view.HomeTitle
 import com.antsfamily.danskflashcards.ui.home.view.LeaderboardView
 import com.antsfamily.danskflashcards.ui.home.view.PersonalBestCard

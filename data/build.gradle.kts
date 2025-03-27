@@ -56,6 +56,10 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.serialization)
 
+    // REST API
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

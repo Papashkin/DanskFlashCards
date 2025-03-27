@@ -15,8 +15,8 @@
     <string name="auth_title">Welcome!</string>
     <string name="auth_subtitle">Please login to access to the cards</string>
 
-    <string name="error_text_network">No internet connection. Please check your connection</string>
-    <string name="error_text_server">Seems it\'s a problem on our side. Please try later</string>
+    <string name="error_text_network">No internet connection.\nPlease check your connection</string>
+    <string name="error_text_server">Seems it\'s a problem on our side.\nPlease try later</string>
     <string name="error_text_unknown">Something went wrong :(</string>
     <string name="about_development_description">developed by Papashkin</string>
     <string name="about_year">2025</string>

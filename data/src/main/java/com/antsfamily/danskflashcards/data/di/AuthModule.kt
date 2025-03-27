@@ -3,6 +3,7 @@ package com.antsfamily.danskflashcards.data.di
 import android.content.Context
 import androidx.credentials.CredentialManager
 import com.antsfamily.danskflashcards.data.GoogleAuthUiClient
+import com.antsfamily.danskflashcards.data.source.remote.FirebaseHandler
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
 import dagger.Module
@@ -18,6 +19,10 @@ object AuthModule {
 
     @Singleton
     @Provides
+    fun provideFirebaseHandler(): FirebaseHandler = FirebaseHandler()
+
+    @Singleton
+    @Provides
     fun provideCredentialManager(@ApplicationContext context: Context) =
         CredentialManager.create(context)
 
@@ -30,7 +35,8 @@ object AuthModule {
     @Provides
     fun provideGoogleAuthClient(
         @ApplicationContext context: Context,
+        firebaseHandler: FirebaseHandler,
         client: SignInClient,
         credentialManager: CredentialManager
-    ): GoogleAuthUiClient = GoogleAuthUiClient(context, client, credentialManager)
+    ): GoogleAuthUiClient = GoogleAuthUiClient(context, firebaseHandler, client, credentialManager)
 }

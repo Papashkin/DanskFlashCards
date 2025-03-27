@@ -12,11 +12,15 @@ class SetPersonalBestUseCase @Inject constructor(
 ) {
 
     suspend operator fun invoke(id: String, name: String, score: Int) {
-        val userData = hashMapOf(
-            FIELD_NAME to name,
-            FIELD_SCORE to score,
-            FIELD_TIMESTAMP to FieldValue.serverTimestamp()
-        )
-        return repository.updateUser(id, userData)
+        try {
+            val userData = hashMapOf(
+                FIELD_NAME to name,
+                FIELD_SCORE to score,
+                FIELD_TIMESTAMP to FieldValue.serverTimestamp()
+            )
+            return repository.updateUser(id, userData)
+        } catch (e: Exception) {
+            throw e
+        }
     }
 }

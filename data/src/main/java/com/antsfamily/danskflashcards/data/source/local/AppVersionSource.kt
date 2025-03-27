@@ -6,6 +6,7 @@ import javax.inject.Inject
 
 class AppVersionSource @Inject constructor(private val context: Context) {
 
+    @Suppress("DEPRECATION")
     fun getAppVersion(): String? {
         val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
         return packageInfo.versionName?.let {

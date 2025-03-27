@@ -9,8 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface DataRepository {
     fun getAppUpdateInfo(): Task<AppUpdateInfo>
     fun startAppUpdate(updateInfo: AppUpdateInfo)
-    fun getCards(): List<WordApiModel>
-    fun getCardsAmount(): Int
+    suspend fun getWords(): List<WordApiModel>
     suspend fun getWebClientId(): String?
     suspend fun getUsers(): QuerySnapshot
     suspend fun getUsersFLow(): Flow<QuerySnapshot>

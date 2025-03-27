@@ -9,7 +9,11 @@ class GetUsersUseCase @Inject constructor(
     private val repository: DataRepository,
 ) {
     suspend operator fun invoke(params: String): List<UserDomain> {
-        val data = repository.getUsers()
-        return data.mapToDomain(params)
+        try {
+            val data = repository.getUsers()
+            return data.mapToDomain(params)
+        } catch (e: Exception) {
+            throw e
+        }
     }
 }

@@ -7,6 +7,7 @@ import com.antsfamily.danskflashcards.ui.game.model.WordItem
 
 sealed class GameUiState {
     data object Loading: GameUiState()
+    data object Countdown: GameUiState()
     data class Content(
         val danish: List<WordItem> = emptyList(),
         val english: List<WordItem> = emptyList(),

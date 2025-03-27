@@ -29,10 +29,12 @@ import com.antsfamily.danskflashcards.ui.game.model.GameOverItem
 import com.antsfamily.danskflashcards.ui.game.model.GameStatus
 import com.antsfamily.danskflashcards.ui.game.model.TimerItem
 import com.antsfamily.danskflashcards.ui.game.model.WordItem
+import com.antsfamily.danskflashcards.core.presentation.FullScreenLoading
 import com.antsfamily.danskflashcards.ui.game.view.GameOverDialog
 import com.antsfamily.danskflashcards.ui.game.view.GameScreenContent
 import com.antsfamily.danskflashcards.ui.game.view.GameTimer
 import com.antsfamily.danskflashcards.ui.game.view.StartAnimationPreloader
+import com.antsfamily.danskflashcards.core.presentation.ErrorViewWithRetry
 import com.antsfamily.danskflashcards.ui.theme.Padding
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,7 +70,7 @@ fun GameScreen(
     }
 
     when (val stateValue = state.value) {
-        GameUiState.Loading ->
+        is GameUiState.Countdown ->
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -76,6 +78,7 @@ fun GameScreen(
                 StartAnimationPreloader { viewModel.onAnimationFinished() }
             }
 
+        is GameUiState.Loading -> FullScreenLoading()
         is GameUiState.Content -> GameContent(
             stateValue,
             isTimeUpAnimationVisible,
@@ -84,8 +87,8 @@ fun GameScreen(
             onEnglishWordClick = { viewModel.onEnglishWordCardClick(it) }
         )
 
-        is GameUiState.Error -> {
-            //TODO add error handler
+        is GameUiState.Error -> ErrorViewWithRetry(errorType = stateValue.type) {
+            viewModel.onRetryClick()
         }
     }
 
