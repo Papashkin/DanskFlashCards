@@ -7,6 +7,8 @@ data class WordApiModel(
     val id: Int,
     @SerializedName("word_dk")
     val danish: String,
+    @SerializedName("word_de")
+    val german: String,
     @SerializedName("word_en")
     val english: String,
     @SerializedName("word_ru")

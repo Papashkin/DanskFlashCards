@@ -39,8 +39,7 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 
-    implementation(libs.coil)
-    implementation(libs.lottie)
+    implementation(libs.androidx.datastore)
     implementation(libs.google.play.service.auth)
     implementation(libs.inAppUpdate)
     implementation(libs.credentials)
@@ -60,9 +59,6 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

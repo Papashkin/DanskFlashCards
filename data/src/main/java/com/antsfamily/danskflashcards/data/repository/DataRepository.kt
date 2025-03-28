@@ -15,4 +15,8 @@ interface DataRepository {
     suspend fun getUsersFLow(): Flow<QuerySnapshot>
     suspend fun updateUser(id: String, data: HashMap<String, Any>)
     fun getAppVersion(): String?
+    suspend fun isOnboardingPassed(): Boolean
+    suspend fun getSelectedLanguage(): String?
+    suspend fun setSelectedLanguage(language: String)
+    suspend fun setOnboardingPassed()
 }

@@ -24,7 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.antsfamily.danskflashcards.R
 import com.antsfamily.danskflashcards.core.model.ErrorType
-import com.antsfamily.danskflashcards.core.model.toErrorMessage
+import com.antsfamily.danskflashcards.core.util.toErrorMessage
 import com.antsfamily.danskflashcards.ui.theme.Padding
 import com.antsfamily.danskflashcards.ui.theme.light_accent
 

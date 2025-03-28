@@ -6,7 +6,7 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import javax.inject.Inject
 
-class SharedPrefs @Inject constructor(context: Context) {
+class SecuredSharedPrefs @Inject constructor(context: Context) {
 
     companion object {
         private const val KEY_WEB_CLIENT_ID = "WEB_CLIENT_ID"

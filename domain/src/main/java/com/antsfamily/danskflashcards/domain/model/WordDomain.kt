@@ -16,15 +16,9 @@ fun WordApiModel?.mapToDomain(type: LanguageType): WordDomain? {
         type = type,
         value = when (type) {
             LanguageType.DK -> this.danish
+            LanguageType.DE -> this.german
             LanguageType.EN -> this.english
             LanguageType.RU -> this.russian
         },
     )
-}
-
-enum class LanguageType {
-    DK,
-    EN,
-    RU,
-    ;
 }

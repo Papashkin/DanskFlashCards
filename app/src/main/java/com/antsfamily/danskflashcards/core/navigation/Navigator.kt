@@ -58,16 +58,19 @@ fun Navigator() {
                 composable<Onboarding>(
                     enterTransition = {
                         slideIntoContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Right, tween(400)
+                            AnimatedContentTransitionScope.SlideDirection.Left, tween(500)
                         )
                     },
                     exitTransition = {
                         slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Left, tween(400)
+                            AnimatedContentTransitionScope.SlideDirection.Left, tween(500)
                         )
                     },
                 ) { entry ->
-                    val data = entry.toRoute<Home>()
+                    BackHandler(true) {
+                        //no-op
+                    }
+                    val data = entry.toRoute<Onboarding>()
                     OnboardingScreen(user = data.toModel()) {
                         navController.navigate(Home(id = it.userId, name = it.username))
                     }
@@ -96,12 +99,12 @@ fun Navigator() {
                 composable<About>(
                     enterTransition = {
                         slideIntoContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Up, tween(300)
+                            AnimatedContentTransitionScope.SlideDirection.Up, tween(500)
                         )
                     },
                     exitTransition = {
                         slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Down, tween(300)
+                            AnimatedContentTransitionScope.SlideDirection.Down, tween(500)
                         )
                     },
                 ) {
@@ -110,12 +113,12 @@ fun Navigator() {
                 composable<Game>(
                     enterTransition = {
                         slideIntoContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Up, tween(300)
+                            AnimatedContentTransitionScope.SlideDirection.Up, tween(500)
                         )
                     },
                     exitTransition = {
                         slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Down, tween(300)
+                            AnimatedContentTransitionScope.SlideDirection.Down, tween(500)
                         )
                     },
                 ) { entry ->
