@@ -24,8 +24,12 @@ class AuthViewModel @Inject constructor(
     private val signInWithCredentialsUseCase: SignInWithCredentialsUseCase,
 ) : ViewModel() {
 
-    private val _navigationFlow = MutableSharedFlow<CurrentUserItem>()
-    val navigationFlow: SharedFlow<CurrentUserItem> = _navigationFlow.asSharedFlow()
+    private val _navigationToHomeFlow = MutableSharedFlow<CurrentUserItem>()
+    val navigationToHomeFlow: SharedFlow<CurrentUserItem> = _navigationToHomeFlow.asSharedFlow()
+
+    private val _navigationToOnboardingFlow = MutableSharedFlow<CurrentUserItem>()
+    val navigationToOnboardingFlow: SharedFlow<CurrentUserItem> =
+        _navigationToOnboardingFlow.asSharedFlow()
 
     private val _state = MutableStateFlow<AuthUiState>(AuthUiState.Default)
     val state: StateFlow<AuthUiState>
@@ -40,7 +44,7 @@ class AuthViewModel @Inject constructor(
             } ?: run {
                 setDefaultUiState()
             }
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             proceedWithError(e.mapToErrorType())
         }
     }
@@ -58,7 +62,7 @@ class AuthViewModel @Inject constructor(
 
     private suspend fun proceedWithUserData(model: CurrentUserItem) {
         setDefaultUiState()
-        _navigationFlow.emit(model)
+        _navigationToHomeFlow.emit(model)
     }
 
     private fun setDefaultUiState() {

@@ -23,6 +23,7 @@ import com.antsfamily.danskflashcards.ui.about.AboutScreen
 import com.antsfamily.danskflashcards.ui.auth.AuthScreen
 import com.antsfamily.danskflashcards.ui.game.GameScreen
 import com.antsfamily.danskflashcards.ui.home.HomeScreen
+import com.antsfamily.danskflashcards.ui.onboarding.OnboardingScreen
 import com.antsfamily.danskflashcards.ui.splash.SplashScreen
 
 @Composable
@@ -45,8 +46,30 @@ fun Navigator() {
                     }
                 }
                 composable<Auth> {
-                    AuthScreen { user ->
-                        navController.navigate(Home(id = user.userId, name = user.username))
+                    AuthScreen(
+                        onNavigateToHome = {
+                            navController.navigate(Home(id = it.userId, name = it.username))
+                        },
+                        onNavigateToOnboarding = {
+                            navController.navigate(Onboarding(id = it.userId, name = it.username))
+                        }
+                    )
+                }
+                composable<Onboarding>(
+                    enterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Right, tween(400)
+                        )
+                    },
+                    exitTransition = {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left, tween(400)
+                        )
+                    },
+                ) { entry ->
+                    val data = entry.toRoute<Home>()
+                    OnboardingScreen(user = data.toModel()) {
+                        navController.navigate(Home(id = it.userId, name = it.username))
                     }
                 }
                 composable<Home>(
