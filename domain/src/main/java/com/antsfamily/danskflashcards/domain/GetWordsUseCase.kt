@@ -10,15 +10,12 @@ class GetWordsUseCase @Inject constructor(
     private val repository: DataRepository
 ) {
 
-    suspend operator fun invoke(
-        firstLanguage: LanguageType,
-        secondLanguage: LanguageType
-    ): Pair<List<WordDomain>, List<WordDomain>> {
+    suspend operator fun invoke(firstLanguage: LanguageType): Pair<List<WordDomain>, List<WordDomain>> {
         try {
             val words = repository.getWords()
 
             val wordsFirstLang = words.mapNotNull { it.mapToDomain(firstLanguage) }
-            val wordsSecondLang = words.mapNotNull { it.mapToDomain(secondLanguage) }
+            val wordsSecondLang = words.mapNotNull { it.mapToDomain(LanguageType.EN) }
 
             return wordsFirstLang to wordsSecondLang
         } catch (e: Exception) {

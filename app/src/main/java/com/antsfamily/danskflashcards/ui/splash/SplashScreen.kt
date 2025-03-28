@@ -54,7 +54,7 @@ fun SplashViewWithIcon() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AsyncImage(
-                model = R.drawable.ic_about_icon,
+                model = R.drawable.ic_launcher,
                 contentDescription = null,
                 modifier = Modifier.size(180.dp)
             )

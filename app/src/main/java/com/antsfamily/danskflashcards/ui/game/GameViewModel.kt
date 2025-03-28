@@ -147,7 +147,7 @@ class GameViewModel @AssistedInject constructor(
 
     private fun getWords() = viewModelScope.launch {
         try {
-            val words = getWordsUseCase(LanguageType.DK, LanguageType.EN)
+            val words = getWordsUseCase(LanguageType.DK)
             handleSuccessWordsResult(words)
         } catch (e: Exception) {
             _state.value = GameUiState.Error(e.mapToErrorType())
