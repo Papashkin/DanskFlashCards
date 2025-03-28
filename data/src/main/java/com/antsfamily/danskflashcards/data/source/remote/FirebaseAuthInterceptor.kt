@@ -23,7 +23,7 @@ class FirebaseAuthInterceptor @Inject constructor(
     }
 
     private fun Request.withAuthToken(token: String): Request {
-        val newUrl = this.url.newBuilder()
+        val newUrl = this.url().newBuilder()
             .addQueryParameter("auth", token)
             .build()
 

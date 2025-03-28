@@ -8,6 +8,7 @@ import com.antsfamily.danskflashcards.core.model.mapToErrorType
 import com.antsfamily.danskflashcards.core.model.mapToItem
 import com.antsfamily.danskflashcards.data.SignInResult
 import com.antsfamily.danskflashcards.data.model.SignInType
+import com.antsfamily.danskflashcards.domain.IsOnboardingPassedUseCase
 import com.antsfamily.danskflashcards.domain.SignInWithCredentialsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -22,6 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val signInWithCredentialsUseCase: SignInWithCredentialsUseCase,
+    private val isOnboardingPassedUseCase: IsOnboardingPassedUseCase,
 ) : ViewModel() {
 
     private val _navigationToHomeFlow = MutableSharedFlow<CurrentUserItem>()
@@ -61,8 +63,13 @@ class AuthViewModel @Inject constructor(
     }
 
     private suspend fun proceedWithUserData(model: CurrentUserItem) {
+        val isOnboardingPassed = isOnboardingPassedUseCase()
+        if (isOnboardingPassed) {
+            _navigationToHomeFlow.emit(model)
+        } else {
+            _navigationToOnboardingFlow.emit(model)
+        }
         setDefaultUiState()
-        _navigationToHomeFlow.emit(model)
     }
 
     private fun setDefaultUiState() {

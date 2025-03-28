@@ -92,11 +92,9 @@ private fun ButtonContent(modifier: Modifier, stringId: Int, iconId: Int) {
             )
         }
         Text(
-            modifier = Modifier.align(Alignment.Center),
             text = stringResource(id = stringId),
             color = wistful_1000,
-            textAlign = TextAlign.Center,
-            fontSize = 16.sp,
+            style = MaterialTheme.typography.bodyLarge,
         )
     }
 }

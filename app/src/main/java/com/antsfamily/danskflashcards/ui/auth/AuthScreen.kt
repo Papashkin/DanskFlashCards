@@ -25,7 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.antsfamily.danskflashcards.R
 import com.antsfamily.danskflashcards.core.model.CurrentUserItem
 import com.antsfamily.danskflashcards.core.model.ErrorType
-import com.antsfamily.danskflashcards.core.model.toErrorMessage
+import com.antsfamily.danskflashcards.core.util.toErrorMessage
 import com.antsfamily.danskflashcards.ui.auth.view.ButtonWithLeadingIcon
 import com.antsfamily.danskflashcards.ui.theme.Padding
 

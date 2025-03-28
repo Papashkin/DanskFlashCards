@@ -45,4 +45,20 @@ class DataRepositoryImpl @Inject constructor(
     override fun getAppVersion(): String? {
         return localSource.getAppVersion()
     }
+
+    override suspend fun isOnboardingPassed(): Boolean {
+        return localSource.isOnboardingPassed()
+    }
+
+    override suspend fun getSelectedLanguage(): String? {
+        return localSource.getSelectedLanguage()
+    }
+
+    override suspend fun setSelectedLanguage(language: String) {
+        return localSource.setSelectedLanguage(language)
+    }
+
+    override suspend fun setOnboardingPassed() {
+        return localSource.setOnboardingPassed()
+    }
 }
