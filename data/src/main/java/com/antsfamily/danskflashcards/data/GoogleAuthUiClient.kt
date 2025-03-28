@@ -21,7 +21,7 @@ class GoogleAuthUiClient(
     private val credentialManager: CredentialManager,
 ) {
     companion object {
-        private const val STRING_UNKNOWN_PERSON = "Unknown person"
+        const val STRING_UNKNOWN_PERSON = "Unknown person"
         private const val KEY_ID_TOKEN =
             "com.google.android.libraries.identity.googleid.BUNDLE_KEY_ID_TOKEN"
     }

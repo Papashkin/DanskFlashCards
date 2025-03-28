@@ -41,9 +41,21 @@ fun Navigator() {
                 startDestination = Splash
             ) {
                 composable<Splash> {
-                    SplashScreen {
-                        navController.navigate(Auth) { popUpToTop(navController) }
-                    }
+                    SplashScreen(
+                        navigateToAuth = {
+                            navController.navigate(Auth) { popUpToTop(navController) }
+                        },
+                        navigateToHome = { user ->
+                            navController.navigate(
+                                Home(id = user.userId, name = user.username)
+                            )
+                        },
+                        navigateToOnboarding = { user ->
+                            navController.navigate(
+                                Onboarding(id = user.userId, name = user.username)
+                            )
+                        }
+                    )
                 }
                 composable<Auth> {
                     AuthScreen(
@@ -86,7 +98,7 @@ fun Navigator() {
                     HomeScreen(
                         user = data.toModel(),
                         navigateBack = {
-                            navController.popBackStack()
+                            navController.navigate(Auth) { popUpToRoute(Splash) }
                         },
                         navigateToAbout = { navController.navigate(About) },
                         navigateToGame = { score ->
@@ -140,4 +152,8 @@ fun NavOptionsBuilder.popUpToTop(navController: NavController) {
     popUpTo(navController.currentBackStackEntry?.destination?.route ?: return) {
         inclusive = true
     }
+}
+
+fun <T : Any> NavOptionsBuilder.popUpToRoute(route: T) {
+    popUpTo(route) { inclusive = true }
 }
