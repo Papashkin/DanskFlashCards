@@ -18,6 +18,8 @@ class FirebaseHandler @Inject constructor() {
 
     fun signOut() = firebaseAuth.signOut()
 
+    fun getUser(): FirebaseUser? = firebaseAuth.currentUser
+
     suspend fun getUserToken(): String? = try {
         firebaseAuth.currentUser?.getIdToken(true)?.await()?.token
     } catch (e: Exception) {

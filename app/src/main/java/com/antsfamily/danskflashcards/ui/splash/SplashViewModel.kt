@@ -2,24 +2,33 @@ package com.antsfamily.danskflashcards.ui.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.antsfamily.danskflashcards.core.model.CurrentUserItem
+import com.antsfamily.danskflashcards.core.model.mapToItem
 import com.antsfamily.danskflashcards.domain.GetAppUpdateInfoUseCase
+import com.antsfamily.danskflashcards.domain.GetLoggedInUserUseCase
+import com.antsfamily.danskflashcards.domain.IsOnboardingPassedUseCase
 import com.antsfamily.danskflashcards.domain.StartAppUpdateUseCase
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private const val SPLASH_DURATION_DELAY = 1000L
-
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val getAppUpdateInfoUseCase: GetAppUpdateInfoUseCase,
-    private val startAppUpdateUseCase: StartAppUpdateUseCase
+    private val startAppUpdateUseCase: StartAppUpdateUseCase,
+    private val getLoggedInUserUseCase: GetLoggedInUserUseCase,
+    private val isOnboardingPassedUseCase: IsOnboardingPassedUseCase,
 ) : ViewModel() {
+
+    private val _navigationToHomeFlow = MutableSharedFlow<CurrentUserItem>()
+    val navigationToHomeFlow: SharedFlow<CurrentUserItem> = _navigationToHomeFlow.asSharedFlow()
+
+    private val _navigationToOnboardingFlow = MutableSharedFlow<CurrentUserItem>()
+    val navigationToOnboardingFlow: SharedFlow<CurrentUserItem> = _navigationToOnboardingFlow.asSharedFlow()
 
     private val _navigationToAuthFlow = MutableSharedFlow<Unit>()
     val navigationToAuthFlow: SharedFlow<Unit> = _navigationToAuthFlow.asSharedFlow()
@@ -36,14 +45,14 @@ class SplashViewModel @Inject constructor(
     }
 
     fun onDismissClick() = viewModelScope.launch {
-        navigateToAuth()
+        checkIsUserLoggedIn()
     }
 
     fun onUpdateClick() = viewModelScope.launch {
         updateInfo?.let {
             startAppUpdateUseCase(it)
         } ?: run {
-            navigateToAuth()
+            checkIsUserLoggedIn()
         }
     }
 
@@ -53,12 +62,25 @@ class SplashViewModel @Inject constructor(
             this.updateInfo = it
             _updateAvailabilityFlow.emit(true)
         } ?: run {
-            navigateToAuth()
+            checkIsUserLoggedIn()
         }
     }
 
-    private suspend fun navigateToAuth() {
-        delay(SPLASH_DURATION_DELAY)
-        _navigationToAuthFlow.emit(Unit)
+    private suspend fun checkIsUserLoggedIn() {
+        val loggedInUserItem = getLoggedInUserUseCase()?.mapToItem()
+        loggedInUserItem?.let {
+            checkOnboardingPass(it)
+        } ?: run {
+            _navigationToAuthFlow.emit(Unit)
+        }
+    }
+
+    private suspend fun checkOnboardingPass(item: CurrentUserItem) {
+        val isOnboardingPassed = isOnboardingPassedUseCase()
+        if (isOnboardingPassed) {
+            _navigationToHomeFlow.emit(item)
+        } else {
+            _navigationToOnboardingFlow.emit(item)
+        }
     }
 }

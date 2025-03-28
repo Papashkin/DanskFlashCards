@@ -20,17 +20,30 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.antsfamily.danskflashcards.R
+import com.antsfamily.danskflashcards.core.model.CurrentUserItem
 
 @Composable
 fun SplashScreen(
     viewModel: SplashViewModel = hiltViewModel(),
     navigateToAuth: () -> Unit,
+    navigateToHome: (CurrentUserItem) -> Unit,
+    navigateToOnboarding: (CurrentUserItem) -> Unit,
 ) {
     val isUpdateAvailable: Boolean by viewModel.updateAvailabilityFlow.collectAsState(false)
 
     LaunchedEffect(Unit) {
         viewModel.navigationToAuthFlow.collect {
             navigateToAuth()
+        }
+    }
+    LaunchedEffect(Unit) {
+        viewModel.navigationToHomeFlow.collect {
+            navigateToHome(it)
+        }
+    }
+    LaunchedEffect(Unit) {
+        viewModel.navigationToOnboardingFlow.collect {
+            navigateToOnboarding(it)
         }
     }
 
