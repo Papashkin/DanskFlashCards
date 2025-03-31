@@ -51,9 +51,6 @@ class HomeViewModel @AssistedInject constructor(
     private val _navigationToGameFlow = MutableSharedFlow<Int>()
     val navigationToGameFlow: SharedFlow<Int> = _navigationToGameFlow.asSharedFlow()
 
-    private val _navigationBackFlow = MutableSharedFlow<Unit>()
-    val navigationBackFlow: SharedFlow<Unit> = _navigationBackFlow.asSharedFlow()
-
     init {
         getCards()
     }
@@ -64,17 +61,6 @@ class HomeViewModel @AssistedInject constructor(
 
     fun onStartClick() = viewModelScope.launch(Dispatchers.IO) {
         _navigationToGameFlow.emit(currentUser?.score.orZero())
-    }
-
-    fun onBackButtonClick() = viewModelScope.launch(Dispatchers.IO) {
-        try {
-            _state.value = HomeUiState.Loading
-            signOutWithGoogleUseCase()
-        } catch (e: Exception) {
-            // no-op
-        } finally {
-            _navigationBackFlow.emit(Unit)
-        }
     }
 
     private fun getCards() {

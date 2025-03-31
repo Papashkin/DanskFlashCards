@@ -11,6 +11,9 @@ data object Splash: Screen()
 data object Auth: Screen()
 
 @Serializable
+data object Settings: Screen()
+
+@Serializable
 data class Onboarding(val id: String, val name: String): Screen()
 
 @Serializable
