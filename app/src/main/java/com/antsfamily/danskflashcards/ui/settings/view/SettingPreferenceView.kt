@@ -37,7 +37,8 @@ fun SettingPreferenceView(
     modifier: Modifier = Modifier,
     @DrawableRes leadIconId: Int,
     @StringRes preferenceId: Int,
-    @StringRes value: Int,
+    @StringRes valueId: Int? = null,
+    value: String? = null,
     onClick: () -> Unit,
 ) {
     ListItem(
@@ -65,8 +66,9 @@ fun SettingPreferenceView(
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                Image(
+                Icon(
                     imageVector = ImageVector.vectorResource(leadIconId),
+                    tint = grey_500,
                     contentDescription = null,
                     modifier = modifier.size(36.dp)
                 )
@@ -75,7 +77,7 @@ fun SettingPreferenceView(
         trailingContent = {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = stringResource(value),
+                    text = valueId?.let { stringResource(it) } ?: value.orEmpty(),
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center,
                 )
@@ -95,6 +97,6 @@ private fun SettingPreferenceViewPreview() {
     SettingPreferenceView(
         preferenceId = R.string.settings_pref_language,
         leadIconId = R.drawable.ic_settings_language,
-        value = R.string.language_de,
+        valueId = R.string.language_dk,
     ) {}
 }

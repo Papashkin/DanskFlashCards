@@ -40,14 +40,15 @@ fun LeaderboardIcon(
                 contentScale = ContentScale.Crop
             )
         }
-
-        Text(
-            text = item.place.toString(),
-            color = item.mapToColor(),
-            modifier = modifier.padding(top = if (item.place <= 3) Padding.medium else Padding.none),
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Bold
-        )
+        if (item.place > 1) {
+            Text(
+                text = item.place.toString(),
+                color = item.mapToColor(),
+                modifier = modifier.padding(bottom = if (item.place <= 3) Padding.small else Padding.none),
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 }
 
@@ -61,6 +62,7 @@ fun LeaderboardIconPreview(modifier: Modifier = Modifier) {
         index = 0
     )
     Column(modifier.padding(top = Padding.huge)) {
+        LeaderboardIcon(item = item.copy(index = 0))
         LeaderboardIcon(item = item.copy(index = 1))
         LeaderboardIcon(item = item.copy(index = 2))
         LeaderboardIcon(item = item.copy(index = 8))
