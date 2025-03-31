@@ -15,6 +15,17 @@ fun LanguageType.toStringRes(): Int {
         LanguageType.RU -> R.string.language_ru
     }
 }
+
+
+fun LanguageType.toDisplayName(): String {
+    return when (this) {
+        LanguageType.DK -> "Danish"
+        LanguageType.DE -> "Deutsch"
+        LanguageType.EN -> "English"
+        LanguageType.RU -> "Русский"
+    }
+}
+
 @DrawableRes
 fun LanguageType.toFlagIconRes(): Int {
     return when (this) {

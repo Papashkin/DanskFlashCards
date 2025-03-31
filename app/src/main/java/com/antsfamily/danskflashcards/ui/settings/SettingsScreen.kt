@@ -10,11 +10,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -40,8 +38,10 @@ import com.antsfamily.danskflashcards.R
 import com.antsfamily.danskflashcards.core.presentation.ErrorViewWithRetry
 import com.antsfamily.danskflashcards.core.presentation.FullScreenLoading
 import com.antsfamily.danskflashcards.core.presentation.TopBar
-import com.antsfamily.danskflashcards.core.util.toStringRes
+import com.antsfamily.danskflashcards.core.util.toDisplayName
 import com.antsfamily.danskflashcards.domain.model.LanguageType
+import com.antsfamily.danskflashcards.ui.onboarding.model.LanguageItem
+import com.antsfamily.danskflashcards.ui.settings.view.LanguageBottomSheet
 import com.antsfamily.danskflashcards.ui.settings.view.LogOutDialog
 import com.antsfamily.danskflashcards.ui.settings.view.SettingPreferenceView
 import com.antsfamily.danskflashcards.ui.theme.FontSize
@@ -50,6 +50,7 @@ import com.antsfamily.danskflashcards.ui.theme.grey_500
 import com.antsfamily.danskflashcards.ui.theme.wistful_100
 import com.antsfamily.danskflashcards.ui.theme.wistful_700
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel<SettingsViewModel>(),
@@ -57,6 +58,9 @@ fun SettingsScreen(
     onLogOut: () -> Unit,
 ) {
     val state = viewModel.state.collectAsState()
+
+    var isLanguageBottomSheetVisible by remember { mutableStateOf(false) }
+    val (languages, setLanguages) = remember { mutableStateOf<List<LanguageItem>>(emptyList()) }
 
     when (val stateValue = state.value) {
         is SettingsUiState.Content -> SettingsContent(
@@ -78,6 +82,26 @@ fun SettingsScreen(
             onLogOut()
         }
     }
+
+    LaunchedEffect(Unit) {
+        viewModel.showLanguageBottomSheetFlow.collect {
+            setLanguages(it)
+            isLanguageBottomSheetVisible = true
+        }
+    }
+
+    if (isLanguageBottomSheetVisible && languages.isNotEmpty()) {
+        LanguageBottomSheet(
+            languages = languages,
+            onDismiss = {
+                setLanguages(emptyList())
+                isLanguageBottomSheetVisible = false
+            },
+            onLanguageSelected = {
+                viewModel.onNewLanguageSelected(it)
+            }
+        )
+    }
 }
 
 @Composable
@@ -93,7 +117,7 @@ fun SettingsContent(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = Padding.medium, vertical = Padding.small)
+            .padding(horizontal = Padding.medium)
     ) {
         Column {
             TopBar(
@@ -178,16 +202,16 @@ fun SettingsContent(
                     SettingPreferenceView(
                         preferenceId = R.string.settings_pref_language,
                         leadIconId = R.drawable.ic_settings_language,
-                        value = state.languageType.toStringRes()
+                        value = state.selectedLanguage
                     ) {
                         onLanguageClick()
                     }
                     SettingPreferenceView(
                         preferenceId = R.string.settings_pref_theme,
                         leadIconId = R.drawable.ic_settings_theme,
-                        value = R.string.settings_theme_light
+                        valueId = R.string.settings_theme_light
                     ) {
-                        // no-op
+                        //TODO implement theme switch
                     }
                 }
                 Column(
@@ -207,13 +231,17 @@ fun SettingsContent(
                         text = stringResource(R.string.about_development_description),
                         style = MaterialTheme.typography.bodyMedium,
                         color = grey_500,
-                        modifier = Modifier.padding(top = Padding.small),
+                        modifier = Modifier.padding(top = Padding.xSmall),
                     )
                     Text(
                         text = stringResource(R.string.about_year),
                         style = MaterialTheme.typography.bodySmall,
                         color = grey_500,
-                        modifier = Modifier.padding(top = Padding.xSmall),
+                    )
+                    Text(
+                        text = state.appVersion,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = grey_500,
                     )
                 }
             }
@@ -228,7 +256,7 @@ private fun ContentPreview() {
     SettingsContent(
         state = SettingsUiState.Content(
             username = "John Doe",
-            languageType = LanguageType.DE,
+            selectedLanguage = LanguageType.DE.toDisplayName(),
             appVersion = "1.0.0 (81)"
         ),
         onLogoutConfirm = {},
