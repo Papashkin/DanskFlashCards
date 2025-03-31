@@ -5,17 +5,19 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.antsfamily.danskflashcards.R
 import com.antsfamily.danskflashcards.core.model.CurrentUserItem
 import com.antsfamily.danskflashcards.core.presentation.ErrorViewWithRetry
 import com.antsfamily.danskflashcards.core.presentation.FullScreenLoading
@@ -77,8 +79,9 @@ fun HomeScreenContent(
                 onClick = { onSettingsClick() }
             ) {
                 Icon(
-                    imageVector = Icons.Rounded.Settings,
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_home_settings),
                     tint = grey_500,
+                    modifier = Modifier.size(24.dp),
                     contentDescription = null
                 )
             }

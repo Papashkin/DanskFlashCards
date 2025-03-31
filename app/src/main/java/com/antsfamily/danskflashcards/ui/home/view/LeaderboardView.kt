@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,6 +24,7 @@ import com.antsfamily.danskflashcards.ui.home.model.LeaderItem
 import com.antsfamily.danskflashcards.ui.home.model.LeaderboardItem
 import com.antsfamily.danskflashcards.ui.theme.FontSize
 import com.antsfamily.danskflashcards.ui.theme.Padding
+import com.antsfamily.danskflashcards.ui.theme.grey_200
 
 @Composable
 fun LeaderboardView(
@@ -105,7 +107,7 @@ fun LeaderboardViewPreview0(modifier: Modifier = Modifier) {
     )
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 fun LeaderboardViewPreview1(modifier: Modifier = Modifier) {
     LeaderboardView(
@@ -120,7 +122,7 @@ fun LeaderboardViewPreview1(modifier: Modifier = Modifier) {
     )
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 fun LeaderboardViewPreview2(modifier: Modifier = Modifier) {
     LeaderboardView(
@@ -135,7 +137,7 @@ fun LeaderboardViewPreview2(modifier: Modifier = Modifier) {
     )
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 fun LeaderboardViewPreview3(modifier: Modifier = Modifier) {
     LeaderboardView(

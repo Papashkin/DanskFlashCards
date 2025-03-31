@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.Button
@@ -18,11 +19,18 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,6 +42,7 @@ import com.antsfamily.danskflashcards.core.presentation.FullScreenLoading
 import com.antsfamily.danskflashcards.core.presentation.TopBar
 import com.antsfamily.danskflashcards.core.util.toStringRes
 import com.antsfamily.danskflashcards.domain.model.LanguageType
+import com.antsfamily.danskflashcards.ui.settings.view.LogOutDialog
 import com.antsfamily.danskflashcards.ui.settings.view.SettingPreferenceView
 import com.antsfamily.danskflashcards.ui.theme.FontSize
 import com.antsfamily.danskflashcards.ui.theme.Padding
@@ -53,7 +62,7 @@ fun SettingsScreen(
         is SettingsUiState.Content -> SettingsContent(
             state = stateValue,
             onLanguageClick = { viewModel.onLanguageClick() },
-            onLogoutClick = { viewModel.onLogOutClick() },
+            onLogoutConfirm = { viewModel.onLogOutConfirm() },
             onNavigateBack = { navigateBack() }
         )
 
@@ -63,6 +72,12 @@ fun SettingsScreen(
 
         is SettingsUiState.Loading -> FullScreenLoading()
     }
+
+    LaunchedEffect(Unit) {
+        viewModel.navigateToAuthFlow.collect {
+            onLogOut()
+        }
+    }
 }
 
 @Composable
@@ -70,16 +85,17 @@ fun SettingsContent(
     modifier: Modifier = Modifier,
     state: SettingsUiState.Content,
     onLanguageClick: () -> Unit,
-    onLogoutClick: () -> Unit,
+    onLogoutConfirm: () -> Unit,
     onNavigateBack: () -> Unit,
 ) {
+    var isLogOutDialogVisible by remember { mutableStateOf(false) }
+
     Box(
         modifier = modifier
             .fillMaxSize()
             .padding(horizontal = Padding.medium, vertical = Padding.small)
     ) {
         Column {
-
             TopBar(
                 onNavigationBack = { onNavigateBack() },
             ) {
@@ -89,7 +105,7 @@ fun SettingsContent(
                         contentColor = grey_500
                     ),
                     contentPadding = PaddingValues(0.dp),
-                    onClick = { onLogoutClick() }
+                    onClick = { isLogOutDialogVisible = true }
                 ) {
                     Text(
                         modifier = Modifier.padding(horizontal = Padding.small),
@@ -99,14 +115,23 @@ fun SettingsContent(
                 }
             }
 
+            if (isLogOutDialogVisible) {
+                LogOutDialog(
+                    onDismiss = { isLogOutDialogVisible = false },
+                    onConfirmClick = {
+                        onLogoutConfirm()
+                        isLogOutDialogVisible = false
+                    }
+                )
+            }
+
             Column(
                 modifier = modifier.fillMaxSize(),
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f)
-                        ,
+                        .weight(1f),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -120,7 +145,7 @@ fun SettingsContent(
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
-                            Icons.Rounded.Person,
+                            imageVector = ImageVector.vectorResource(R.drawable.ic_avatar),
                             contentDescription = null,
                             tint = wistful_700,
                             modifier = modifier.size(60.dp)
@@ -206,7 +231,7 @@ private fun ContentPreview() {
             languageType = LanguageType.DE,
             appVersion = "1.0.0 (81)"
         ),
-        onLogoutClick = {},
+        onLogoutConfirm = {},
         onLanguageClick = {},
         onNavigateBack = {}
     )

@@ -65,8 +65,9 @@ fun SettingPreferenceView(
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                Image(
+                Icon(
                     imageVector = ImageVector.vectorResource(leadIconId),
+                    tint = grey_500,
                     contentDescription = null,
                     modifier = modifier.size(36.dp)
                 )
