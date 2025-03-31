@@ -19,11 +19,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.antsfamily.danskflashcards.core.util.toModel
-import com.antsfamily.danskflashcards.ui.about.AboutScreen
 import com.antsfamily.danskflashcards.ui.auth.AuthScreen
 import com.antsfamily.danskflashcards.ui.game.GameScreen
 import com.antsfamily.danskflashcards.ui.home.HomeScreen
 import com.antsfamily.danskflashcards.ui.onboarding.OnboardingScreen
+import com.antsfamily.danskflashcards.ui.settings.SettingsScreen
 import com.antsfamily.danskflashcards.ui.splash.SplashScreen
 
 @Composable
@@ -97,10 +97,7 @@ fun Navigator() {
                     val data = entry.toRoute<Home>()
                     HomeScreen(
                         user = data.toModel(),
-                        navigateBack = {
-                            navController.navigate(Auth) { popUpToRoute(Splash) }
-                        },
-                        navigateToAbout = { navController.navigate(About) },
+                        navigateToSettings = { navController.navigate(Settings) },
                         navigateToGame = { score ->
                             navController.navigate(
                                 Game(id = data.id, name = data.name, score = score)
@@ -108,7 +105,22 @@ fun Navigator() {
                         }
                     )
                 }
-                composable<About>(
+                //TODO remove useless screen
+//                composable<About>(
+//                    enterTransition = {
+//                        slideIntoContainer(
+//                            AnimatedContentTransitionScope.SlideDirection.Up, tween(500)
+//                        )
+//                    },
+//                    exitTransition = {
+//                        slideOutOfContainer(
+//                            AnimatedContentTransitionScope.SlideDirection.Down, tween(500)
+//                        )
+//                    },
+//                ) {
+//                    AboutScreen { navController.popBackStack() }
+//                }
+                composable<Settings>(
                     enterTransition = {
                         slideIntoContainer(
                             AnimatedContentTransitionScope.SlideDirection.Up, tween(500)
@@ -120,7 +132,10 @@ fun Navigator() {
                         )
                     },
                 ) {
-                    AboutScreen { navController.popBackStack() }
+                    SettingsScreen(
+                        onLogOut = { navController.navigate(Auth) { popUpToRoute(Splash) } },
+                        navigateBack = { navController.popBackStack() }
+                    )
                 }
                 composable<Game>(
                     enterTransition = {

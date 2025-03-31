@@ -53,7 +53,7 @@ fun ButtonWithLoading(
 
 @Preview(showBackground = true)
 @Composable
-fun ButtonWithLoadingPreview() {
+private fun ButtonWithLoadingPreview() {
     Column(Modifier.fillMaxSize()) {
         ButtonWithLoading(
             Modifier,

@@ -10,6 +10,9 @@ val light_surface = Color(0xFFF5F5F5)
 val light_text = Color(0xFF000000)
 val light_neutral = Color(0xFF009688)
 
+val grey_500 = Color(0xFF9E9E9E)
+val grey_200 = Color(0xFFEEEEEE)
+
 val wistful_0 = Color(0xFFFFFFFF)
 val wistful_50 = Color(0xFFF1F5FC)
 val wistful_100 = Color(0xFFE6ECf9)

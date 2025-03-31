@@ -6,8 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ExitToApp
-import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -18,16 +17,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.antsfamily.danskflashcards.core.model.CurrentUserItem
-import com.antsfamily.danskflashcards.core.presentation.TopBar
+import com.antsfamily.danskflashcards.core.presentation.ErrorViewWithRetry
 import com.antsfamily.danskflashcards.core.presentation.FullScreenLoading
+import com.antsfamily.danskflashcards.core.presentation.TopBar
 import com.antsfamily.danskflashcards.ui.home.model.LeaderItem
 import com.antsfamily.danskflashcards.ui.home.model.LeaderboardItem
 import com.antsfamily.danskflashcards.ui.home.model.UserItem
-import com.antsfamily.danskflashcards.core.presentation.ErrorViewWithRetry
 import com.antsfamily.danskflashcards.ui.home.view.HomeTitle
 import com.antsfamily.danskflashcards.ui.home.view.LeaderboardView
 import com.antsfamily.danskflashcards.ui.home.view.PersonalBestCard
 import com.antsfamily.danskflashcards.ui.theme.Padding
+import com.antsfamily.danskflashcards.ui.theme.grey_500
 
 @Composable
 fun HomeScreen(
@@ -35,9 +35,8 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel<HomeViewModel, HomeViewModel.Factory> {
         it.create(user = user)
     },
-    navigateBack: () -> Unit,
     navigateToGame: (Int) -> Unit,
-    navigateToAbout: () -> Unit
+    navigateToSettings: () -> Unit
 ) {
     val state = viewModel.state.collectAsState()
     when (val stateValue = state.value) {
@@ -45,10 +44,7 @@ fun HomeScreen(
         is HomeUiState.Content -> HomeScreenContent(
             content = stateValue,
             onStartClick = viewModel::onStartClick,
-            onBackButtonClick = viewModel::onBackButtonClick,
-            onInfoButtonClick = {
-                navigateToAbout()
-            }
+            onSettingsClick = { navigateToSettings() }
         )
 
         is HomeUiState.Error -> {
@@ -63,41 +59,26 @@ fun HomeScreen(
             navigateToGame(it)
         }
     }
-
-    LaunchedEffect(Unit) {
-        viewModel.navigationBackFlow.collect {
-            navigateBack()
-        }
-    }
 }
 
 @Composable
 fun HomeScreenContent(
     content: HomeUiState.Content,
     onStartClick: () -> Unit,
-    onBackButtonClick: () -> Unit,
-    onInfoButtonClick: () -> Unit,
+    onSettingsClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
             .padding(horizontal = Padding.medium, vertical = Padding.small)
             .fillMaxSize(),
     ) {
-        //TODO implement onSettingsClick later
         TopBar {
             IconButton(
-                onClick = { onInfoButtonClick() }
+                onClick = { onSettingsClick() }
             ) {
                 Icon(
-                    imageVector = Icons.Outlined.Info,
-                    contentDescription = null
-                )
-            }
-            IconButton(
-                onClick = { onBackButtonClick() }
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Outlined.ExitToApp,
+                    imageVector = Icons.Rounded.Settings,
+                    tint = grey_500,
                     contentDescription = null
                 )
             }
@@ -140,7 +121,7 @@ fun HomeScreenContentPreview1() {
             ),
             cardsSize = 879,
         ), {}, {}
-    ) {}
+    )
 }
 
 @Preview(showBackground = true)
@@ -166,5 +147,5 @@ fun HomeScreenContentPreview2() {
             ),
             cardsSize = 879,
         ), {}, {}
-    ) {}
+    )
 }
