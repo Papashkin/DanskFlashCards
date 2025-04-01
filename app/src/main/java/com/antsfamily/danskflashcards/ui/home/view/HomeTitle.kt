@@ -23,8 +23,7 @@ fun HomeTitle(
         } else {
             stringResource(R.string.home_title_welcome_back, username)
         },
-        style = MaterialTheme.typography.headlineSmall,
-        fontWeight = FontWeight.Bold,
+        style = MaterialTheme.typography.headlineLarge,
         textAlign = TextAlign.Start
     )
 }

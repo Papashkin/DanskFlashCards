@@ -23,7 +23,6 @@ import com.antsfamily.danskflashcards.core.presentation.ErrorViewWithRetry
 import com.antsfamily.danskflashcards.core.presentation.FullScreenLoading
 import com.antsfamily.danskflashcards.core.presentation.TopBar
 import com.antsfamily.danskflashcards.ui.home.model.LeaderItem
-import com.antsfamily.danskflashcards.ui.home.model.LeaderboardItem
 import com.antsfamily.danskflashcards.ui.home.model.UserItem
 import com.antsfamily.danskflashcards.ui.home.view.HomeTitle
 import com.antsfamily.danskflashcards.ui.home.view.LeaderboardView
@@ -71,7 +70,7 @@ fun HomeScreenContent(
 ) {
     Column(
         modifier = Modifier
-            .padding(horizontal = Padding.medium, vertical = Padding.small)
+            .padding(horizontal = Padding.medium)
             .fillMaxSize(),
     ) {
         TopBar {
@@ -98,10 +97,8 @@ fun HomeScreenContent(
         ) {
             onStartClick()
         }
-        if (content.leaderboard != null) {
-            Spacer(modifier = Modifier.height(40.dp))
-            LeaderboardView(model = content.leaderboard)
-        }
+        Spacer(modifier = Modifier.height(40.dp))
+        LeaderboardView(items = content.leaderboard)
     }
 }
 
@@ -115,14 +112,11 @@ fun HomeScreenContentPreview1() {
                 name = "Johnny",
                 surname = "Doesome",
                 isCurrentUser = true,
-                score = 43,
-                date = "10.02.2024 11:22:33"
+                score = 0,
+                date = null
             ),
-            leaderboard = LeaderboardItem(
-                leaders = emptyList(),
-                user = LeaderItem(index = 1, name = "Johnny", surname = "Doesome", score = 43)
-            ),
-            cardsSize = 879,
+            leaderboard = emptyList(),
+            cardsSize = 1000,
         ), {}, {}
     )
 }
@@ -137,18 +131,17 @@ fun HomeScreenContentPreview2() {
                 name = "Johnny",
                 surname = "Doesome",
                 isCurrentUser = true,
-                score = 0,
-                date = null
+                score = 143,
+                date = "10.02.2024 11:22:33"
             ),
-            leaderboard = LeaderboardItem(
-                leaders = listOf(
-                    LeaderItem(name = "John", surname = "Doe", score = 44, index = 0),
-                    LeaderItem(name = "Paolo", surname = "Scoba", score = 32, index = 1),
-                    LeaderItem(name = "Andrea", surname = "Corti", score = 29, index = 2),
-                ),
-                user = LeaderItem(name = "Pablo", surname = "Escobar", score = 12, index = 10),
+            leaderboard = listOf(
+                    LeaderItem(name = "John", surname = "Doe", score = 44, index = 0, isUser = false),
+                    LeaderItem(name = "Paolo", surname = "Scoba", score = 32, index = 1, isUser = false),
+                    LeaderItem(name = "Andrea", surname = "Corti", score = 29, index = 2, isUser = false),
+                    LeaderItem(name = "Ethan", surname = "Caldwell", score = 29, index = 3, isUser = true),
+                    LeaderItem(name = "Isabella", surname = "Vaughn", score = 29, index = 4, isUser = false),
             ),
-            cardsSize = 879,
+            cardsSize = 1000,
         ), {}, {}
     )
 }
