@@ -23,6 +23,7 @@ import com.antsfamily.danskflashcards.ui.auth.AuthScreen
 import com.antsfamily.danskflashcards.ui.game.GameScreen
 import com.antsfamily.danskflashcards.ui.home.HomeScreen
 import com.antsfamily.danskflashcards.ui.onboarding.OnboardingScreen
+import com.antsfamily.danskflashcards.ui.onboarding2.Onboarding2Screen
 import com.antsfamily.danskflashcards.ui.settings.SettingsScreen
 import com.antsfamily.danskflashcards.ui.splash.SplashScreen
 
@@ -34,40 +35,36 @@ fun Navigator() {
     Scaffold(
         modifier = Modifier.systemBarsPadding(),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        content = {
-            print(it.toString())
+        content = { values ->
+            print(values.toString())
             NavHost(
                 navController = navController,
                 startDestination = Splash
             ) {
-                composable<Splash> {
+                composable<Splash> { _ ->
                     SplashScreen(
                         navigateToAuth = {
                             navController.navigate(Auth) { popUpToTop(navController) }
                         },
-                        navigateToHome = { user ->
-                            navController.navigate(
-                                Home(id = user.userId, name = user.username)
-                            )
+                        navigateToHome = {
+                            navController.navigate(Home(id = it.userId, name = it.username))
                         },
-                        navigateToOnboarding = { user ->
-                            navController.navigate(
-                                Onboarding(id = user.userId, name = user.username)
-                            )
+                        navigateToOnboarding = {
+                            navController.navigate(Onboarding1(id = it.userId, name = it.username))
                         }
                     )
                 }
-                composable<Auth> {
+                composable<Auth> { _ ->
                     AuthScreen(
                         onNavigateToHome = {
                             navController.navigate(Home(id = it.userId, name = it.username))
                         },
                         onNavigateToOnboarding = {
-                            navController.navigate(Onboarding(id = it.userId, name = it.username))
+                            navController.navigate(Onboarding1(id = it.userId, name = it.username))
                         }
                     )
                 }
-                composable<Onboarding>(
+                composable<Onboarding1>(
                     enterTransition = {
                         slideIntoContainer(
                             AnimatedContentTransitionScope.SlideDirection.Left, tween(500)
@@ -82,8 +79,28 @@ fun Navigator() {
                     BackHandler(true) {
                         //no-op
                     }
-                    val data = entry.toRoute<Onboarding>()
+                    val data = entry.toRoute<Onboarding1>()
                     OnboardingScreen(user = data.toModel()) {
+                        navController.navigate(Onboarding2(id = it.userId, name = it.username))
+                    }
+                }
+                composable<Onboarding2>(
+                    enterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left, tween(500)
+                        )
+                    },
+                    exitTransition = {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left, tween(500)
+                        )
+                    },
+                ) { entry ->
+                    BackHandler(true) {
+                        //no-op
+                    }
+                    val data = entry.toRoute<Onboarding2>()
+                    Onboarding2Screen(user = data.toModel()) {
                         navController.navigate(Home(id = it.userId, name = it.username))
                     }
                 }
@@ -105,21 +122,7 @@ fun Navigator() {
                         }
                     )
                 }
-                //TODO remove useless screen
-//                composable<About>(
-//                    enterTransition = {
-//                        slideIntoContainer(
-//                            AnimatedContentTransitionScope.SlideDirection.Up, tween(500)
-//                        )
-//                    },
-//                    exitTransition = {
-//                        slideOutOfContainer(
-//                            AnimatedContentTransitionScope.SlideDirection.Down, tween(500)
-//                        )
-//                    },
-//                ) {
-//                    AboutScreen { navController.popBackStack() }
-//                }
+
                 composable<Settings>(
                     enterTransition = {
                         slideIntoContainer(

@@ -7,8 +7,9 @@ import com.antsfamily.danskflashcards.core.model.mapToItem
 import com.antsfamily.danskflashcards.core.util.toDisplayName
 import com.antsfamily.danskflashcards.domain.GetAppVersionUseCase
 import com.antsfamily.danskflashcards.domain.GetLoggedInUserUseCase
-import com.antsfamily.danskflashcards.domain.GetSelectedLanguageUseCase
-import com.antsfamily.danskflashcards.domain.SetSelectedLanguageUseCase
+import com.antsfamily.danskflashcards.domain.GetLearningLanguageUseCase
+import com.antsfamily.danskflashcards.domain.GetPrimaryLanguageUseCase
+import com.antsfamily.danskflashcards.domain.SetLanguageUseCase
 import com.antsfamily.danskflashcards.domain.SignOutWithGoogleUseCase
 import com.antsfamily.danskflashcards.domain.model.LanguageType
 import com.antsfamily.danskflashcards.ui.onboarding.model.LanguageItem
@@ -26,8 +27,9 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val getLoggedInUserUseCase: GetLoggedInUserUseCase,
     private val getAppVersionUseCase: GetAppVersionUseCase,
-    private val getSelectedLanguageUseCase: GetSelectedLanguageUseCase,
-    private val setSelectedLanguageUseCase: SetSelectedLanguageUseCase,
+    private val getLearningLanguageUseCase: GetLearningLanguageUseCase,
+    private val getPrimaryLanguageUseCase: GetPrimaryLanguageUseCase,
+    private val setLanguageUseCase: SetLanguageUseCase,
     private val signOutWithGoogleUseCase: SignOutWithGoogleUseCase,
 ) : ViewModel() {
 
@@ -42,6 +44,8 @@ class SettingsViewModel @Inject constructor(
     private val _state = MutableStateFlow<SettingsUiState>(SettingsUiState.Loading)
     val state: StateFlow<SettingsUiState>
         get() = _state.asStateFlow()
+
+    private var primaryLanguage: LanguageType? = null
 
     init {
         getUserData()
@@ -64,17 +68,17 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun onLanguageClick() = viewModelScope.launch {
-        val selectedLanguage = (_state.value as SettingsUiState.Content).selectedLanguage
+        val learningLanguage = (_state.value as SettingsUiState.Content).learningLanguage
         val languages = LanguageType.entries
-            .map { LanguageItem(it, it.toDisplayName() == selectedLanguage) }
-            .filter { !it.languageType.isEnglish() }
+            .map { LanguageItem(it, it.toDisplayName() == learningLanguage) }
+            .filter { it.languageType != primaryLanguage }
         _showLanguageBottomSheetFlow.emit(languages)
     }
 
     fun onNewLanguageSelected(item: LanguageItem) = viewModelScope.launch {
-        setSelectedLanguageUseCase(item.languageType)
+        setLanguageUseCase(item.languageType, false)
         val newState =
-            (_state.value as SettingsUiState.Content).copy(selectedLanguage = item.languageType.toDisplayName())
+            (_state.value as SettingsUiState.Content).copy(learningLanguage = item.languageType.toDisplayName())
         _state.value = newState
     }
 
@@ -90,16 +94,20 @@ class SettingsViewModel @Inject constructor(
     private suspend fun getAppVersion(username: String) {
         val version = getAppVersionUseCase()
         version?.let {
-            getSelectedLanguage(username, it)
+            getLanguages(username, it)
         } ?: run {
             handleErrorState(Exception("user data is empty"))
-
         }
     }
 
-    private suspend fun getSelectedLanguage(username: String, version: String) {
-        val language = getSelectedLanguageUseCase()
-        _state.value = SettingsUiState.Content(username, language.toDisplayName(), version)
+    private suspend fun getLanguages(username: String, version: String) {
+        primaryLanguage = getPrimaryLanguageUseCase()
+        val learningLanguage = getLearningLanguageUseCase()
+        _state.value = SettingsUiState.Content(
+            username = username,
+            learningLanguage = learningLanguage.toDisplayName(),
+            appVersion = version
+        )
     }
 
     private fun handleErrorState(e: Exception) {

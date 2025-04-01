@@ -14,10 +14,10 @@ data object Auth: Screen()
 data object Settings: Screen()
 
 @Serializable
-data class Onboarding(val id: String, val name: String): Screen()
+data class Onboarding1(val id: String, val name: String): Screen()
 
 @Serializable
-data object About: Screen()
+data class Onboarding2(val id: String, val name: String): Screen()
 
 @Serializable
 data class Home(val id: String, val name: String): Screen()

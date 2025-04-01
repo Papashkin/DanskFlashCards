@@ -1,4 +1,4 @@
-package com.antsfamily.danskflashcards.ui.onboarding
+package com.antsfamily.danskflashcards.ui.onboarding2
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -49,34 +49,34 @@ import com.antsfamily.danskflashcards.ui.theme.Padding
 import com.antsfamily.danskflashcards.ui.theme.wistful_1000
 
 @Composable
-fun OnboardingScreen(
+fun Onboarding2Screen(
     user: CurrentUserItem,
-    viewModel: OnboardingViewModel = hiltViewModel<OnboardingViewModel>(),
-    onNavigateToOnboarding2: (CurrentUserItem) -> Unit
+    viewModel: Onboarding2ViewModel = hiltViewModel<Onboarding2ViewModel>(),
+    onNavigateToHome: (CurrentUserItem) -> Unit
 ) {
 
     val state = viewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.navigationToOnboarding2Flow.collect {
-            onNavigateToOnboarding2(user)
+        viewModel.navigationToHomeFlow.collect {
+            onNavigateToHome(user)
         }
     }
 
     when (val stateValue = state.value) {
-        is OnboardingUiState.Content -> OnboardingContent(
+        is Onboarding2UiState.Content -> Onboarding2Content(
             state = stateValue,
             onLanguageSelected = { viewModel.onLanguageSelected(it) },
             onContinueClick = { viewModel.onContinueClick() }
         )
 
-        is OnboardingUiState.Loading -> FullScreenLoading()
+        is Onboarding2UiState.Loading -> FullScreenLoading()
     }
 }
 
 @Composable
-fun OnboardingContent(
-    state: OnboardingUiState.Content,
+fun Onboarding2Content(
+    state: Onboarding2UiState.Content,
     onLanguageSelected: (LanguageItem) -> Unit,
     onContinueClick: () -> Unit
 ) {
@@ -112,17 +112,17 @@ fun OnboardingContent(
                     verticalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Text(
-                        text = stringResource(R.string.onboarding_title),
+                        text = stringResource(R.string.onboarding2_title),
                         style = MaterialTheme.typography.headlineLarge,
                         textAlign = TextAlign.Center,
                     )
                     Text(
-                        text = stringResource(R.string.onboarding_subtitle_1),
+                        text = stringResource(R.string.onboarding2_subtitle_1),
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.padding(vertical = Padding.small)
                     )
                     Text(
-                        text = stringResource(R.string.onboarding_subtitle_2),
+                        text = stringResource(R.string.onboarding2_subtitle_2),
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.padding(vertical = Padding.small)
                     )
@@ -193,8 +193,8 @@ fun OnboardingContent(
 @Preview(showBackground = true)
 @Composable
 private fun OnboardingPreview() {
-    OnboardingContent(
-        state = OnboardingUiState.Content(
+    Onboarding2Content(
+        state = Onboarding2UiState.Content(
             languages = listOf(
                 LanguageType.DE,
                 LanguageType.DK,

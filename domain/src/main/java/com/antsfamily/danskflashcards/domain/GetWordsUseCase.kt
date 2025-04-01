@@ -7,17 +7,19 @@ import com.antsfamily.danskflashcards.domain.model.mapToDomain
 import javax.inject.Inject
 
 class GetWordsUseCase @Inject constructor(
-    private val getSelectedLanguageUseCase: GetSelectedLanguageUseCase,
+    private val getLearningLanguageUseCase: GetLearningLanguageUseCase,
+    private val getPrimaryLanguageUseCase: GetPrimaryLanguageUseCase,
     private val repository: DataRepository
 ) {
 
     suspend operator fun invoke(): Pair<List<WordDomain>, List<WordDomain>> {
         try {
-            val selectedLanguage = getSelectedLanguageUseCase()
+            val learningLanguage = getLearningLanguageUseCase()
+            val primaryLanguage = getPrimaryLanguageUseCase()
             val words = repository.getWords()
 
-            val wordsFirstLang = words.mapNotNull { it.mapToDomain(selectedLanguage) }
-            val wordsSecondLang = words.mapNotNull { it.mapToDomain(LanguageType.EN) }
+            val wordsFirstLang = words.mapNotNull { it.mapToDomain(learningLanguage) }
+            val wordsSecondLang = words.mapNotNull { it.mapToDomain(primaryLanguage) }
 
             return wordsFirstLang to wordsSecondLang
         } catch (e: Exception) {
