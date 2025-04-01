@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,24 +17,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.antsfamily.danskflashcards.core.util.mapToTextColor
 import com.antsfamily.danskflashcards.ui.home.model.LeaderItem
-import com.antsfamily.danskflashcards.ui.home.model.mapToTextColor
 import com.antsfamily.danskflashcards.ui.theme.Padding
 import com.antsfamily.danskflashcards.ui.theme.grey_200
-import com.antsfamily.danskflashcards.ui.theme.grey_500
 import com.antsfamily.danskflashcards.ui.theme.light_accent
-import com.antsfamily.danskflashcards.ui.theme.wistful_0
-import com.antsfamily.danskflashcards.ui.theme.wistful_700
 
 @Composable
 fun LeaderboardCard(
     modifier: Modifier = Modifier,
     item: LeaderItem,
-    isUser: Boolean,
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
+            .height(60.dp)
             .background(MaterialTheme.colorScheme.background)
     ) {
         Column {
@@ -51,7 +47,7 @@ fun LeaderboardCard(
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Medium,
                         textAlign = TextAlign.Start,
-                        color = if (isUser) light_accent else item.mapToTextColor()
+                        color = if (item.isUser) light_accent else item.mapToTextColor()
                     )
 
                     Text(
@@ -60,7 +56,7 @@ fun LeaderboardCard(
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Medium,
                         textAlign = TextAlign.Center,
-                        color = if (isUser) light_accent else item.mapToTextColor()
+                        color = if (item.isUser) light_accent else item.mapToTextColor()
                     )
                 }
             }
@@ -76,11 +72,9 @@ fun LeaderboardCard(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun LeaderboardItemPreview(modifier: Modifier = Modifier) {
-    Column {
-        HorizontalDivider(thickness = 20.dp)
-        LeaderboardCard(item = LeaderItem(name = "John", surname = "Doe", score = 25, index = 0), isUser = false)
-        LeaderboardCard(item = LeaderItem(name = "John", surname = "   ", score = 25, index = 1), isUser = false)
-        LeaderboardCard(item = LeaderItem(name = "John", surname = "", score = 25, index = 2), isUser = false)
-        LeaderboardCard(item = LeaderItem(name = "John", surname = null, score = 25, index = 7), isUser = true)
+    Column(modifier) {
+        LeaderboardCard(item = LeaderItem(name = "John", surname = "   ", score = 25, index = 1, isUser = false))
+        LeaderboardCard(item = LeaderItem(name = "John", surname = "", score = 25, index = 2, isUser = false))
+        LeaderboardCard(item = LeaderItem(name = "John", surname = null, score = 25, index = 7, isUser = true))
     }
 }

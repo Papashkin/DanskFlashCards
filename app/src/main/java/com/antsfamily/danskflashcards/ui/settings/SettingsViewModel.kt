@@ -4,10 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.antsfamily.danskflashcards.core.model.mapToErrorType
 import com.antsfamily.danskflashcards.core.model.mapToItem
-import com.antsfamily.danskflashcards.core.util.toDisplayName
 import com.antsfamily.danskflashcards.domain.GetAppVersionUseCase
-import com.antsfamily.danskflashcards.domain.GetLoggedInUserUseCase
 import com.antsfamily.danskflashcards.domain.GetLearningLanguageUseCase
+import com.antsfamily.danskflashcards.domain.GetLoggedInUserUseCase
 import com.antsfamily.danskflashcards.domain.GetPrimaryLanguageUseCase
 import com.antsfamily.danskflashcards.domain.SetLanguageUseCase
 import com.antsfamily.danskflashcards.domain.SignOutWithGoogleUseCase
@@ -70,7 +69,7 @@ class SettingsViewModel @Inject constructor(
     fun onLanguageClick() = viewModelScope.launch {
         val learningLanguage = (_state.value as SettingsUiState.Content).learningLanguage
         val languages = LanguageType.entries
-            .map { LanguageItem(it, it.toDisplayName() == learningLanguage) }
+            .map { LanguageItem(it, it == learningLanguage) }
             .filter { it.languageType != primaryLanguage }
         _showLanguageBottomSheetFlow.emit(languages)
     }
@@ -78,7 +77,7 @@ class SettingsViewModel @Inject constructor(
     fun onNewLanguageSelected(item: LanguageItem) = viewModelScope.launch {
         setLanguageUseCase(item.languageType, false)
         val newState =
-            (_state.value as SettingsUiState.Content).copy(learningLanguage = item.languageType.toDisplayName())
+            (_state.value as SettingsUiState.Content).copy(learningLanguage = item.languageType)
         _state.value = newState
     }
 
@@ -105,7 +104,7 @@ class SettingsViewModel @Inject constructor(
         val learningLanguage = getLearningLanguageUseCase()
         _state.value = SettingsUiState.Content(
             username = username,
-            learningLanguage = learningLanguage.toDisplayName(),
+            learningLanguage = learningLanguage,
             appVersion = version
         )
     }

@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,25 +21,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.antsfamily.danskflashcards.R
 import com.antsfamily.danskflashcards.ui.home.model.LeaderItem
-import com.antsfamily.danskflashcards.ui.home.model.LeaderboardItem
-import com.antsfamily.danskflashcards.ui.theme.FontSize
 import com.antsfamily.danskflashcards.ui.theme.Padding
-import com.antsfamily.danskflashcards.ui.theme.grey_200
 
 @Composable
 fun LeaderboardView(
     modifier: Modifier = Modifier,
-    model: LeaderboardItem,
+    items: List<LeaderItem>,
 ) {
     Column(modifier) {
         Text(
             stringResource(R.string.leaderboard_title),
             modifier.fillMaxWidth(),
             textAlign = TextAlign.Start,
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleLarge,
         )
-        if (model.leaders.isNotEmpty()) {
-            LeaderboardContent(modifier, model)
+        if (items.isNotEmpty()) {
+            LeaderboardContent(modifier, items)
         } else {
             EmptyLeaderboard(modifier)
         }
@@ -47,28 +44,11 @@ fun LeaderboardView(
 }
 
 @Composable
-fun LeaderboardContent(modifier: Modifier = Modifier, model: LeaderboardItem) {
-    LazyColumn {
-        items(model.leaders.size) {
-            LeaderboardCard(
-                item = if (model.user.index == it) model.user else model.leaders[it],
-                isUser = (model.user.index == it)
-            )
+fun LeaderboardContent(modifier: Modifier = Modifier, items: List<LeaderItem>) {
+    LazyColumn(modifier.padding(vertical = Padding.small)) {
+        items(items) { item ->
+            LeaderboardCard(modifier, item)
         }
-    }
-    if (model.user.index == 3) {
-        LeaderboardCard(item = model.user, isUser = true)
-    }
-    if (model.user.index > 3) {
-        Text(
-            ".....",
-            modifier
-                .fillMaxWidth()
-                .padding(bottom = Padding.small),
-            textAlign = TextAlign.Center,
-            fontSize = FontSize.H4,
-        )
-        LeaderboardCard(item = model.user, isUser = true)
     }
 }
 
@@ -99,25 +79,17 @@ fun EmptyLeaderboard(modifier: Modifier = Modifier) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun LeaderboardViewPreview0(modifier: Modifier = Modifier) {
-    LeaderboardView(
-        model = LeaderboardItem(
-            leaders = emptyList(),
-            user = LeaderItem(name = "Pablo", surname = "Escobar", score = 32, index = 1),
-        )
-    )
+    LeaderboardView(items = emptyList())
 }
 
 @Preview(showBackground = true)
 @Composable
 fun LeaderboardViewPreview1(modifier: Modifier = Modifier) {
     LeaderboardView(
-        model = LeaderboardItem(
-            leaders = listOf(
-                LeaderItem(name = "John", surname = "Doe", score = 44, index = 0),
-                LeaderItem(name = "Pablo", surname = "Escobar", score = 32, index = 1),
-                LeaderItem(name = "Andrea", surname = "Corti", score = 29, index = 2),
-            ),
-            user = LeaderItem(name = "Pablo", surname = "Escobar", score = 32, index = 1),
+        items = listOf(
+            LeaderItem(name = "John", surname = "Doe", score = 44, index = 0, isUser = false),
+            LeaderItem(name = "Pablo", surname = "Escobar", score = 32, index = 1, isUser = false),
+            LeaderItem(name = "Andrea", surname = "Corti", score = 29, index = 2, isUser = true)
         )
     )
 }
@@ -126,28 +98,12 @@ fun LeaderboardViewPreview1(modifier: Modifier = Modifier) {
 @Composable
 fun LeaderboardViewPreview2(modifier: Modifier = Modifier) {
     LeaderboardView(
-        model = LeaderboardItem(
-            leaders = listOf(
-                LeaderItem(name = "John", surname = "Doe", score = 44, index = 0),
-                LeaderItem(name = "Michael", surname = "Pupsik", score = 32, index = 1),
-                LeaderItem(name = "Andrea", surname = "Corti", score = 29, index = 2),
-            ),
-            user = LeaderItem(name = "Pablo", surname = "Escobar", score = 12, index = 10),
-        )
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun LeaderboardViewPreview3(modifier: Modifier = Modifier) {
-    LeaderboardView(
-        model = LeaderboardItem(
-            leaders = listOf(
-                LeaderItem(name = "John", surname = "Doe", score = 44, index = 0),
-                LeaderItem(name = "Michael", surname = "Pupsik", score = 32, index = 1),
-                LeaderItem(name = "Andrea", surname = "Corti", score = 29, index = 2),
-            ),
-            user = LeaderItem(name = "Pablo", surname = "Escobar", score = 27, index = 3),
+        items = listOf(
+            LeaderItem(name = "John", surname = "Doe", score = 44, index = 0, isUser = false),
+            LeaderItem(name = "Michael", surname = "Pupsik", score = 32, index = 1, isUser = false),
+            LeaderItem(name = "Andrea", surname = "Corti", score = 29, index = 2, isUser = false),
+            LeaderItem(name = "Sophia", surname = "Mercer", score = 32, index = 3, isUser = false),
+            LeaderItem(name = "Noah", surname = "Sinclair", score = 29, index = 4, isUser = false)
         )
     )
 }

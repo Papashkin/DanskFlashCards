@@ -2,6 +2,7 @@ package com.antsfamily.danskflashcards.ui.onboarding
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -45,6 +46,7 @@ import com.antsfamily.danskflashcards.core.util.toStringRes
 import com.antsfamily.danskflashcards.domain.model.LanguageType
 import com.antsfamily.danskflashcards.ui.onboarding.model.LanguageItem
 import com.antsfamily.danskflashcards.ui.theme.Padding
+import com.antsfamily.danskflashcards.ui.theme.wistful_100
 import com.antsfamily.danskflashcards.ui.theme.wistful_1000
 import com.antsfamily.danskflashcards.ui.theme.wistful_200
 import com.antsfamily.danskflashcards.ui.theme.wistful_400
@@ -123,23 +125,20 @@ fun OnboardingContent(
                         textAlign = TextAlign.Center,
                     )
                     Text(
-                        text = stringResource(R.string.onboarding_subtitle_1),
-                        style = MaterialTheme.typography.bodyMedium,
+                        text = stringResource(R.string.onboarding_subtitle),
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Center,
                         modifier = Modifier.padding(top = Padding.medium)
-                    )
-                    Text(
-                        text = stringResource(R.string.onboarding_subtitle_2),
-                        style = MaterialTheme.typography.bodyMedium,
                     )
                 }
                 LazyColumn(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1f).padding(vertical = Padding.medium),
                     verticalArrangement = Arrangement.spacedBy(Padding.small)
                 ) {
                     items(state.languages) { item ->
                         ListItem(
                             modifier = Modifier
-                                .height(60.dp)
+                                .height(48.dp)
                                 .clickable { onLanguageSelected(item) },
                             headlineContent = {
                                 Text(
@@ -155,8 +154,10 @@ fun OnboardingContent(
                                 Image(
                                     imageVector = ImageVector.vectorResource(item.languageType.toFlagIconRes()),
                                     modifier = Modifier
-                                        .size(40.dp)
-                                        .clip(CircleShape),
+                                        .size(32.dp)
+                                        .clip(CircleShape)
+                                        .border(0.5.dp, color = wistful_100, shape = CircleShape)
+                                    ,
                                     contentDescription = null
                                 )
                             },

@@ -16,9 +16,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.antsfamily.danskflashcards.core.util.mapToColor
+import com.antsfamily.danskflashcards.core.util.mapToIcon
 import com.antsfamily.danskflashcards.ui.home.model.LeaderItem
-import com.antsfamily.danskflashcards.ui.home.model.mapToColor
-import com.antsfamily.danskflashcards.ui.home.model.mapToIcon
 import com.antsfamily.danskflashcards.ui.theme.Padding
 
 @Composable
@@ -59,7 +59,8 @@ fun LeaderboardIconPreview(modifier: Modifier = Modifier) {
         name = "John",
         surname = "Doe",
         score = 25,
-        index = 0
+        index = 0,
+        isUser = false
     )
     Column(modifier.padding(top = Padding.huge)) {
         LeaderboardIcon(item = item.copy(index = 0))
@@ -68,5 +69,4 @@ fun LeaderboardIconPreview(modifier: Modifier = Modifier) {
         LeaderboardIcon(item = item.copy(index = 8))
         LeaderboardIcon(item = item.copy(index = 25))
     }
-
 }

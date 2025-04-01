@@ -38,7 +38,7 @@ import com.antsfamily.danskflashcards.R
 import com.antsfamily.danskflashcards.core.presentation.ErrorViewWithRetry
 import com.antsfamily.danskflashcards.core.presentation.FullScreenLoading
 import com.antsfamily.danskflashcards.core.presentation.TopBar
-import com.antsfamily.danskflashcards.core.util.toDisplayName
+import com.antsfamily.danskflashcards.core.util.toStringRes
 import com.antsfamily.danskflashcards.domain.model.LanguageType
 import com.antsfamily.danskflashcards.ui.onboarding.model.LanguageItem
 import com.antsfamily.danskflashcards.ui.settings.view.LanguageBottomSheet
@@ -202,7 +202,7 @@ fun SettingsContent(
                     SettingPreferenceView(
                         preferenceId = R.string.settings_pref_language,
                         leadIconId = R.drawable.ic_settings_language,
-                        value = state.learningLanguage
+                        valueId = state.learningLanguage.toStringRes()
                     ) {
                         onLanguageClick()
                     }
@@ -256,7 +256,7 @@ private fun ContentPreview() {
     SettingsContent(
         state = SettingsUiState.Content(
             username = "John Doe",
-            learningLanguage = LanguageType.DE.toDisplayName(),
+            learningLanguage = LanguageType.DE,
             appVersion = "1.0.0 (81)"
         ),
         onLogoutConfirm = {},
