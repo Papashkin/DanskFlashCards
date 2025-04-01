@@ -202,7 +202,7 @@ fun SettingsContent(
                     SettingPreferenceView(
                         preferenceId = R.string.settings_pref_language,
                         leadIconId = R.drawable.ic_settings_language,
-                        value = state.selectedLanguage
+                        value = state.learningLanguage
                     ) {
                         onLanguageClick()
                     }
@@ -256,7 +256,7 @@ private fun ContentPreview() {
     SettingsContent(
         state = SettingsUiState.Content(
             username = "John Doe",
-            selectedLanguage = LanguageType.DE.toDisplayName(),
+            learningLanguage = LanguageType.DE.toDisplayName(),
             appVersion = "1.0.0 (81)"
         ),
         onLogoutConfirm = {},

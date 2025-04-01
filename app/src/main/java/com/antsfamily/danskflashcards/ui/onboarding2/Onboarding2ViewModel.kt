@@ -1,8 +1,10 @@
-package com.antsfamily.danskflashcards.ui.onboarding
+package com.antsfamily.danskflashcards.ui.onboarding2
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.antsfamily.danskflashcards.domain.GetLearningLanguageUseCase
 import com.antsfamily.danskflashcards.domain.SetLanguageUseCase
+import com.antsfamily.danskflashcards.domain.SetOnboardingIsPassedUseCase
 import com.antsfamily.danskflashcards.domain.model.LanguageType
 import com.antsfamily.danskflashcards.ui.onboarding.model.LanguageItem
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,15 +18,17 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class OnboardingViewModel @Inject constructor(
+class Onboarding2ViewModel @Inject constructor(
+    private val getLearningLanguageUseCase: GetLearningLanguageUseCase,
     private val setLanguageUseCase: SetLanguageUseCase,
+    private val setOnboardingIsPassedUseCase: SetOnboardingIsPassedUseCase,
 ) : ViewModel() {
 
-    private val _navigationToOnboarding2Flow = MutableSharedFlow<Unit>()
-    val navigationToOnboarding2Flow: SharedFlow<Unit> = _navigationToOnboarding2Flow.asSharedFlow()
+    private val _navigationToHomeFlow = MutableSharedFlow<Unit>()
+    val navigationToHomeFlow: SharedFlow<Unit> = _navigationToHomeFlow.asSharedFlow()
 
-    private val _state = MutableStateFlow<OnboardingUiState>(OnboardingUiState.Loading)
-    val state: StateFlow<OnboardingUiState> = _state.asStateFlow()
+    private val _state = MutableStateFlow<Onboarding2UiState>(Onboarding2UiState.Loading)
+    val state: StateFlow<Onboarding2UiState> = _state.asStateFlow()
 
     private var selectedLanguageItem: LanguageItem? = null
 
@@ -34,7 +38,7 @@ class OnboardingViewModel @Inject constructor(
 
     fun onLanguageSelected(item: LanguageItem) = viewModelScope.launch {
         selectedLanguageItem = item
-        (_state.value as? OnboardingUiState.Content)?.let { content ->
+        (_state.value as? Onboarding2UiState.Content)?.let { content ->
             _state.value = content.copy(
                 languages = content.languages.map {
                     it.copy(isSelected = it.languageType == item.languageType)
@@ -46,18 +50,21 @@ class OnboardingViewModel @Inject constructor(
 
     fun onContinueClick() = viewModelScope.launch {
         selectedLanguageItem?.let {
-            (_state.value as? OnboardingUiState.Content)?.let { content ->
+            (_state.value as? Onboarding2UiState.Content)?.let { content ->
                 _state.value = content.copy(isButtonLoadingVisible = true)
             }
-            setLanguageUseCase(it.languageType, false)
-            _navigationToOnboarding2Flow.emit(Unit)
+            setLanguageUseCase(it.languageType, true)
+            setOnboardingIsPassedUseCase()
+            _navigationToHomeFlow.emit(Unit)
         }
     }
 
-    private fun getLanguages() {
+    private fun getLanguages() = viewModelScope.launch {
+        val learningLanguage = getLearningLanguageUseCase()
         val languages = LanguageType.entries
+            .filter { it != learningLanguage }
             .map { LanguageItem(it, false) }
-        _state.value = OnboardingUiState.Content(
+        _state.value = Onboarding2UiState.Content(
             languages = languages,
             isButtonAvailable = false,
             isButtonLoadingVisible = false

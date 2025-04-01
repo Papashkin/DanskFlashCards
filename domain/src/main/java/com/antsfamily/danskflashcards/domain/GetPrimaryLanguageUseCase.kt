@@ -4,11 +4,11 @@ import com.antsfamily.danskflashcards.data.repository.DataRepository
 import com.antsfamily.danskflashcards.domain.model.LanguageType
 import javax.inject.Inject
 
-class SetSelectedLanguageUseCase @Inject constructor(
+class GetPrimaryLanguageUseCase @Inject constructor(
     private val repository: DataRepository
 ) {
-
-    suspend operator fun invoke(type: LanguageType) {
-        return repository.setSelectedLanguage(type.name)
+    suspend operator fun invoke(): LanguageType {
+        val languageName = repository.getPrimaryLanguage()
+        return languageName?.let { LanguageType.valueOf(languageName) } ?: LanguageType.DK
     }
 }

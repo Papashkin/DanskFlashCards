@@ -5,7 +5,9 @@ interface LocalSource {
     fun getAppVersion(): String?
 
     suspend fun isOnboardingPassed(): Boolean
-    suspend fun getSelectedLanguage(): String?
-    suspend fun setSelectedLanguage(language: String)
+    suspend fun getLearningLanguage(): String?
+    suspend fun setLearningLanguage(language: String)
+    suspend fun getPrimaryLanguage(): String?
+    suspend fun setPrimaryLanguage(language: String)
     suspend fun setOnboardingPassed()
 }

@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 private const val PREFERENCES_KEY_LEARNING_LANG = "learning_language"
+private const val PREFERENCES_KEY_PRIMARY_LANG = "primary_language"
 private const val PREFERENCES_KEY_IS_ONBOARDING_PASSED = "is_onboarding_passed"
 
 class LocalSourceImpl @Inject constructor(
@@ -20,6 +21,7 @@ class LocalSourceImpl @Inject constructor(
 
     companion object {
         private val KEY_LEARNING_LANG = stringPreferencesKey(PREFERENCES_KEY_LEARNING_LANG)
+        private val KEY_PRIMARY_LANG = stringPreferencesKey(PREFERENCES_KEY_PRIMARY_LANG)
         private val KEY_IS_ONBOARDING_PASSED =
             booleanPreferencesKey(PREFERENCES_KEY_IS_ONBOARDING_PASSED)
     }
@@ -38,15 +40,27 @@ class LocalSourceImpl @Inject constructor(
         }.first()
     }
 
-    override suspend fun getSelectedLanguage(): String? {
+    override suspend fun getLearningLanguage(): String? {
         return dataStore.data.map {
             it[KEY_LEARNING_LANG]
         }.first()
     }
 
-    override suspend fun setSelectedLanguage(language: String) {
+    override suspend fun setLearningLanguage(language: String) {
         dataStore.edit {
             it[KEY_LEARNING_LANG] = language
+        }
+    }
+
+    override suspend fun getPrimaryLanguage(): String? {
+        return dataStore.data.map {
+            it[KEY_PRIMARY_LANG]
+        }.first()
+    }
+
+    override suspend fun setPrimaryLanguage(language: String) {
+        dataStore.edit {
+            it[KEY_PRIMARY_LANG] = language
         }
     }
 
