@@ -29,7 +29,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
@@ -47,6 +46,8 @@ import com.antsfamily.danskflashcards.domain.model.LanguageType
 import com.antsfamily.danskflashcards.ui.onboarding.model.LanguageItem
 import com.antsfamily.danskflashcards.ui.theme.Padding
 import com.antsfamily.danskflashcards.ui.theme.wistful_1000
+import com.antsfamily.danskflashcards.ui.theme.wistful_200
+import com.antsfamily.danskflashcards.ui.theme.wistful_400
 
 @Composable
 fun OnboardingScreen(
@@ -84,53 +85,55 @@ fun OnboardingContent(
         Image(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(0.8f),
-            painter = painterResource(R.drawable.ic_onboarding),
+                .weight(0.7f),
+            imageVector = ImageVector.vectorResource(R.drawable.ic_onboarding_1),
             contentDescription = null,
             contentScale = ContentScale.Crop
         )
         Box(
             modifier = Modifier
-                .weight(1.2f)
+                .weight(1.0f)
                 .background(
                     brush = Brush.verticalGradient(
                         endY = 120f,
                         colors = listOf(
-                            Color(0xFFA1CFdF),
+                            wistful_400,
+                            wistful_200,
                             MaterialTheme.colorScheme.background
                         )
                     )
                 )
         ) {
             Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.SpaceAround
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = Padding.medium, end = Padding.medium, top = Padding.small),
+                verticalArrangement = Arrangement.Bottom
             ) {
                 Column(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = Padding.medium),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = Padding.small),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Text(
                         text = stringResource(R.string.onboarding_title),
-                        style = MaterialTheme.typography.headlineLarge,
+                        style = MaterialTheme.typography.headlineMedium,
                         textAlign = TextAlign.Center,
                     )
                     Text(
                         text = stringResource(R.string.onboarding_subtitle_1),
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(vertical = Padding.small)
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(top = Padding.medium)
                     )
                     Text(
                         text = stringResource(R.string.onboarding_subtitle_2),
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(vertical = Padding.small)
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                 }
                 LazyColumn(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(Padding.small),
+                    modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(Padding.small)
                 ) {
                     items(state.languages) { item ->
@@ -198,6 +201,7 @@ private fun OnboardingPreview() {
             languages = listOf(
                 LanguageType.DE,
                 LanguageType.DK,
+                LanguageType.EN,
                 LanguageType.RU
             ).map { LanguageItem(it, false) },
             true,
