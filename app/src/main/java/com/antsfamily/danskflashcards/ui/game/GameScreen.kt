@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,6 +37,7 @@ import com.antsfamily.danskflashcards.ui.game.view.GameTimer
 import com.antsfamily.danskflashcards.ui.game.view.StartAnimationPreloader
 import com.antsfamily.danskflashcards.core.presentation.ErrorViewWithRetry
 import com.antsfamily.danskflashcards.ui.theme.Padding
+import com.antsfamily.danskflashcards.ui.theme.SetSystemBarColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,6 +52,8 @@ fun GameScreen(
 ) {
     var isTimeUpAnimationVisible by remember { mutableStateOf(false) }
     var bottomSheetData by remember { mutableStateOf<GameOverItem?>(null) }
+
+    SetSystemBarColors(MaterialTheme.colorScheme.background, false)
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     val state = viewModel.state.collectAsState()
