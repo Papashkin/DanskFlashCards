@@ -39,6 +39,7 @@ import com.antsfamily.danskflashcards.ui.home.view.HomeTitle
 import com.antsfamily.danskflashcards.ui.home.view.LeaderboardView
 import com.antsfamily.danskflashcards.ui.theme.FontSize
 import com.antsfamily.danskflashcards.ui.theme.Padding
+import com.antsfamily.danskflashcards.ui.theme.SetSystemBarColors
 import com.antsfamily.danskflashcards.ui.theme.wistful_0
 import com.antsfamily.danskflashcards.ui.theme.wistful_700
 
@@ -80,6 +81,8 @@ fun HomeScreenContent(
     onStartClick: () -> Unit,
     onSettingsClick: () -> Unit,
 ) {
+    SetSystemBarColors(wistful_700, true)
+
     Column(
         modifier = Modifier
             .background(wistful_700)

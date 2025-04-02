@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -46,6 +48,7 @@ import com.antsfamily.danskflashcards.ui.settings.view.LogOutDialog
 import com.antsfamily.danskflashcards.ui.settings.view.SettingPreferenceView
 import com.antsfamily.danskflashcards.ui.theme.FontSize
 import com.antsfamily.danskflashcards.ui.theme.Padding
+import com.antsfamily.danskflashcards.ui.theme.SetSystemBarColors
 import com.antsfamily.danskflashcards.ui.theme.grey_500
 import com.antsfamily.danskflashcards.ui.theme.wistful_100
 import com.antsfamily.danskflashcards.ui.theme.wistful_700
@@ -57,10 +60,12 @@ fun SettingsScreen(
     navigateBack: () -> Unit,
     onLogOut: () -> Unit,
 ) {
-    val state = viewModel.state.collectAsState()
+    SetSystemBarColors(MaterialTheme.colorScheme.background, false)
 
     var isLanguageBottomSheetVisible by remember { mutableStateOf(false) }
     val (languages, setLanguages) = remember { mutableStateOf<List<LanguageItem>>(emptyList()) }
+
+    val state = viewModel.state.collectAsState()
 
     when (val stateValue = state.value) {
         is SettingsUiState.Content -> SettingsContent(
@@ -117,7 +122,7 @@ fun SettingsContent(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = Padding.medium)
+            .statusBarsPadding()
     ) {
         Column {
             TopBar(
@@ -183,12 +188,12 @@ fun SettingsContent(
                         modifier = modifier.padding(Padding.medium),
                     )
                 }
-
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(horizontal = Padding.medium)
                         .weight(2f),
-                    verticalArrangement = Arrangement.Center,
+                    verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.Start
                 ) {
                     Text(
@@ -217,7 +222,7 @@ fun SettingsContent(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = Padding.large)
+                        .navigationBarsPadding()
                         .weight(1f),
                     verticalArrangement = Arrangement.Bottom,
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -250,7 +255,7 @@ fun SettingsContent(
 }
 
 
-@Preview(showBackground = true, showSystemUi = false)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun ContentPreview() {
     SettingsContent(
