@@ -74,7 +74,7 @@ fun LeaderboardCard(
 fun LeaderboardItemPreview(modifier: Modifier = Modifier) {
     Column(modifier) {
         LeaderboardCard(item = LeaderItem(name = "John", surname = "   ", score = 25, index = 1, isUser = false))
-        LeaderboardCard(item = LeaderItem(name = "John", surname = "", score = 25, index = 2, isUser = false))
-        LeaderboardCard(item = LeaderItem(name = "John", surname = null, score = 25, index = 7, isUser = true))
+        LeaderboardCard(item = LeaderItem(name = "John", surname = "", score = 25, index = 777, isUser = false))
+        LeaderboardCard(item = LeaderItem(name = "John", surname = null, score = 999, index = 7, isUser = true))
     }
 }

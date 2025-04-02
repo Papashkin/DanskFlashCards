@@ -113,14 +113,14 @@ class HomeViewModel @AssistedInject constructor(
         _state.value = HomeUiState.Content(
             user = user,
             cardsSize = wordsAmount.orZero(),
-            leaderboard = leaderboardItems
+            leaderboard = leaderboardItems.take(LEADERBOARD_SIZE),
+            userPlace = leaderboardItems.first { it.isUser }.place
         )
     }
 
     private fun getLeaderboard(users: List<UserItem>): List<LeaderItem> {
         val sortedUsers = users.sortedByDescending { it.score }
         val leaderItems = sortedUsers
-            .take(LEADERBOARD_SIZE)
             .mapIndexed { index, sortedUser ->
                 LeaderItem(
                     name = sortedUser.name,

@@ -2,7 +2,6 @@ package com.antsfamily.danskflashcards.ui.settings.view
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -30,7 +29,6 @@ import com.antsfamily.danskflashcards.R
 import com.antsfamily.danskflashcards.ui.theme.Padding
 import com.antsfamily.danskflashcards.ui.theme.grey_200
 import com.antsfamily.danskflashcards.ui.theme.grey_500
-import com.antsfamily.danskflashcards.ui.theme.wistful_1000
 
 @Composable
 fun SettingPreferenceView(
@@ -45,7 +43,7 @@ fun SettingPreferenceView(
         modifier = Modifier.clickable { onClick() },
         colors = ListItemDefaults.colors(
             containerColor = MaterialTheme.colorScheme.background,
-            headlineColor = wistful_1000,
+            headlineColor = MaterialTheme.colorScheme.onBackground,
             trailingIconColor = grey_500
         ),
         headlineContent = {
