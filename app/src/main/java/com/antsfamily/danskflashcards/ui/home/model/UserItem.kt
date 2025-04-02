@@ -12,7 +12,7 @@ data class UserItem(
     val date: String?,
 ) {
 
-    fun isFirstTime(): Boolean = date.isNullOrBlank()
+    fun isFirstTime(): Boolean = (score == 0) && date.isNullOrBlank()
 }
 
 fun UserDomain.toItem(currentUserId: String): UserItem {

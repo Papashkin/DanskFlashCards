@@ -1,15 +1,11 @@
 package com.antsfamily.danskflashcards.ui.theme
 
 import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -39,6 +35,7 @@ private val lightColorScheme = lightColorScheme(
 @Composable
 fun DanskFlashCardsTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    statusBarColor: Color = MaterialTheme.colorScheme.background,
     content: @Composable () -> Unit
 ) {
     val colorScheme = lightColorScheme //TODO think to set both themes
@@ -46,19 +43,29 @@ fun DanskFlashCardsTheme(
 //        darkTheme -> darkColorScheme
 //        else -> lightColorScheme
 //    }
-    val view = LocalView.current
-    if (!view.isInEditMode) {
-        SideEffect {
-            val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.background.toArgb()
-            window.navigationBarColor = Color.Transparent.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
-        }
-    }
-
+    SetSystemBarColors(statusBarColor, darkTheme)
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
         content = content
     )
+}
+
+@Suppress("DEPRECATION")
+@Composable
+fun SetSystemBarColors(statusBarColor: Color, darkTheme: Boolean) {
+    val context = LocalContext.current
+    val window = (context as? Activity)?.window
+    val view = LocalView.current
+
+    LaunchedEffect(statusBarColor, darkTheme) {
+        window?.let {
+            it.statusBarColor = statusBarColor.toArgb()
+            it.navigationBarColor = Color.Transparent.toArgb()
+            WindowCompat.getInsetsController(it, view).apply {
+                isAppearanceLightStatusBars = !darkTheme
+                isAppearanceLightNavigationBars = !darkTheme
+            }
+        }
+    }
 }

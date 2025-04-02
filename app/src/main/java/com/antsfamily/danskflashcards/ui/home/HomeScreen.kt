@@ -1,18 +1,28 @@
 package com.antsfamily.danskflashcards.ui.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,11 +34,13 @@ import com.antsfamily.danskflashcards.core.presentation.FullScreenLoading
 import com.antsfamily.danskflashcards.core.presentation.TopBar
 import com.antsfamily.danskflashcards.ui.home.model.LeaderItem
 import com.antsfamily.danskflashcards.ui.home.model.UserItem
+import com.antsfamily.danskflashcards.ui.home.view.CurrentUserCard
 import com.antsfamily.danskflashcards.ui.home.view.HomeTitle
 import com.antsfamily.danskflashcards.ui.home.view.LeaderboardView
-import com.antsfamily.danskflashcards.ui.home.view.PersonalBestCard
+import com.antsfamily.danskflashcards.ui.theme.FontSize
 import com.antsfamily.danskflashcards.ui.theme.Padding
-import com.antsfamily.danskflashcards.ui.theme.grey_500
+import com.antsfamily.danskflashcards.ui.theme.wistful_0
+import com.antsfamily.danskflashcards.ui.theme.wistful_700
 
 @Composable
 fun HomeScreen(
@@ -70,39 +82,80 @@ fun HomeScreenContent(
 ) {
     Column(
         modifier = Modifier
-            .padding(horizontal = Padding.medium)
-            .fillMaxSize(),
+            .background(wistful_700)
+            .fillMaxSize()
+            .statusBarsPadding()
     ) {
-        TopBar {
-            IconButton(
-                onClick = { onSettingsClick() }
+        Column(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
+                .fillMaxSize()
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(320.dp)
+                    .background(
+                        color = wistful_700,
+                        shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp)
+                    ),
             ) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_home_settings),
-                    tint = grey_500,
-                    modifier = Modifier.size(24.dp),
-                    contentDescription = null
+                TopBar {
+                    IconButton(
+                        onClick = { onSettingsClick() }
+                    ) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.ic_home_settings),
+                            modifier = Modifier.size(24.dp),
+                            tint = wistful_0,
+                            contentDescription = null
+                        )
+                    }
+                }
+                HomeTitle(
+                    username = content.user.name,
+                    color = wistful_0,
+                    isFirstTime = content.user.isFirstTime()
+                )
+                Spacer(Modifier.height(16.dp))
+                CurrentUserCard(
+                    modifier = Modifier.padding(
+                        horizontal = Padding.huge,
+                        vertical = Padding.xSmall
+                    ),
+                    score = content.user.score,
+                    cardsSize = content.cardsSize,
+                    place = content.userPlace
                 )
             }
+            Spacer(modifier = Modifier.height(24.dp))
+            LeaderboardView(items = content.leaderboard)
+            Spacer(modifier = Modifier
+                .height(24.dp)
+                .weight(1f))
+            Button(
+                onClick = { onStartClick() },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ),
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .padding(horizontal = Padding.huge)
+            ) {
+                Text(
+                    text = stringResource(R.string.start),
+                    fontSize = FontSize.H6,
+                )
+            }
+            Spacer(modifier = Modifier.navigationBarsPadding())
         }
-        HomeTitle(
-            username = content.user.name,
-            isFirstTime = content.user.isFirstTime()
-        )
-        PersonalBestCard(
-            modifier = Modifier.padding(top = Padding.large),
-            score = content.user.score,
-            cardsSize = content.cardsSize,
-            date = content.user.date
-        ) {
-            onStartClick()
-        }
-        Spacer(modifier = Modifier.height(40.dp))
-        LeaderboardView(items = content.leaderboard)
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun HomeScreenContentPreview1() {
     HomeScreenContent(
@@ -117,11 +170,12 @@ fun HomeScreenContentPreview1() {
             ),
             leaderboard = emptyList(),
             cardsSize = 1000,
+            userPlace = null
         ), {}, {}
     )
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun HomeScreenContentPreview2() {
     HomeScreenContent(
@@ -135,13 +189,24 @@ fun HomeScreenContentPreview2() {
                 date = "10.02.2024 11:22:33"
             ),
             leaderboard = listOf(
-                    LeaderItem(name = "John", surname = "Doe", score = 44, index = 0, isUser = false),
-                    LeaderItem(name = "Paolo", surname = "Scoba", score = 32, index = 1, isUser = false),
-                    LeaderItem(name = "Andrea", surname = "Corti", score = 29, index = 2, isUser = false),
-                    LeaderItem(name = "Ethan", surname = "Caldwell", score = 29, index = 3, isUser = true),
-                    LeaderItem(name = "Isabella", surname = "Vaughn", score = 29, index = 4, isUser = false),
+                LeaderItem(
+                    name = "John", surname = "Doe", score = 44, index = 0, isUser = false
+                ),
+                LeaderItem(
+                    name = "Paolo", surname = "Scoba", score = 32, index = 1, isUser = false
+                ),
+                LeaderItem(
+                    name = "Andrea", surname = "Corti", score = 29, index = 2, isUser = false
+                ),
+                LeaderItem(
+                    name = "Ethan", surname = "Caldwell", score = 29, index = 3, isUser = true
+                ),
+                LeaderItem(
+                    name = "Isabella", surname = "Vaughn", score = 29, index = 4, isUser = false
+                ),
             ),
             cardsSize = 1000,
+            userPlace = 3
         ), {}, {}
     )
 }

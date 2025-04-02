@@ -3,6 +3,7 @@ package com.antsfamily.danskflashcards.ui.home.view
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -31,23 +32,24 @@ fun LeaderboardView(
     Column(modifier) {
         Text(
             stringResource(R.string.leaderboard_title),
-            modifier.fillMaxWidth(),
+            modifier.fillMaxWidth().padding(horizontal = Padding.huge),
             textAlign = TextAlign.Start,
             style = MaterialTheme.typography.titleLarge,
         )
+        Spacer(Modifier.height(12.dp))
         if (items.isNotEmpty()) {
-            LeaderboardContent(modifier, items)
+            LeaderboardContent(items)
         } else {
-            EmptyLeaderboard(modifier)
+            EmptyLeaderboard()
         }
     }
 }
 
 @Composable
-fun LeaderboardContent(modifier: Modifier = Modifier, items: List<LeaderItem>) {
-    LazyColumn(modifier.padding(vertical = Padding.small)) {
+fun LeaderboardContent(items: List<LeaderItem>) {
+    LazyColumn {
         items(items) { item ->
-            LeaderboardCard(modifier, item)
+            LeaderboardCard(item = item)
         }
     }
 }
