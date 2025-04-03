@@ -5,6 +5,8 @@ import com.antsfamily.danskflashcards.data.source.local.LocalSource
 import com.antsfamily.danskflashcards.data.source.remote.RemoteSource
 import com.google.android.gms.tasks.Task
 import com.google.android.play.core.appupdate.AppUpdateInfo
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -14,12 +16,20 @@ class DataRepositoryImpl @Inject constructor(
     private val remoteSource: RemoteSource,
 ): DataRepository {
 
+    override fun getCurrentUser(): FirebaseUser? {
+        return remoteSource.getCurrentUser()
+    }
+
     override fun getAppUpdateInfo(): Task<AppUpdateInfo> {
         return remoteSource.getAppUpdateInfo()
     }
 
     override fun startAppUpdate(updateInfo: AppUpdateInfo) {
         return remoteSource.startAppUpdate(updateInfo)
+    }
+
+    override suspend fun getUserByID(id: String): DocumentSnapshot? {
+        return remoteSource.getUserByID(id)
     }
 
     override suspend fun getWords(): List<WordApiModel> {

@@ -1,6 +1,5 @@
 package com.antsfamily.danskflashcards.ui.settings.view
 
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,8 +32,9 @@ import com.antsfamily.danskflashcards.ui.theme.grey_500
 @Composable
 fun SettingPreferenceView(
     modifier: Modifier = Modifier,
-    @DrawableRes leadIconId: Int,
-    @StringRes preferenceId: Int,
+    leadIcon: ImageVector,
+    title: String,
+    subtitle: String? = null,
     @StringRes valueId: Int? = null,
     value: String? = null,
     onClick: () -> Unit,
@@ -48,11 +48,21 @@ fun SettingPreferenceView(
         ),
         headlineContent = {
             Text(
-                text = stringResource(preferenceId),
+                text = title,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(start = Padding.small),
             )
+        },
+        supportingContent = {
+            subtitle?.let {
+                Text(
+                    text = it,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.padding(start = Padding.small),
+                )
+            }
         },
         leadingContent = {
             Box(
@@ -65,10 +75,10 @@ fun SettingPreferenceView(
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = ImageVector.vectorResource(leadIconId),
+                    imageVector = leadIcon,
                     tint = grey_500,
                     contentDescription = null,
-                    modifier = modifier.size(36.dp)
+                    modifier = modifier.size(32.dp)
                 )
             }
         },
@@ -93,8 +103,8 @@ fun SettingPreferenceView(
 @Composable
 private fun SettingPreferenceViewPreview() {
     SettingPreferenceView(
-        preferenceId = R.string.settings_pref_language,
-        leadIconId = R.drawable.ic_settings_language,
+        title = stringResource(R.string.settings_pref_language),
+        leadIcon = ImageVector.vectorResource(R.drawable.ic_settings_language,),
         valueId = R.string.language_dk,
     ) {}
 }

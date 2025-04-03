@@ -1,23 +1,23 @@
 package com.antsfamily.danskflashcards.domain
 
-import com.antsfamily.danskflashcards.data.CurrentUserApiModel
-import com.antsfamily.danskflashcards.data.GoogleAuthUiClient.Companion.STRING_UNKNOWN_PERSON
-import com.antsfamily.danskflashcards.data.source.remote.FirebaseHandler
-import kotlinx.coroutines.suspendCancellableCoroutine
+import com.antsfamily.danskflashcards.data.repository.DataRepository
+import com.antsfamily.danskflashcards.domain.model.UserDomain
+import com.antsfamily.danskflashcards.domain.model.mapToDomain
 import javax.inject.Inject
-import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 class GetLoggedInUserUseCase @Inject constructor(
-    private val firebaseHandler: FirebaseHandler
+    private val repository: DataRepository
 ) {
 
-    suspend operator fun invoke(): CurrentUserApiModel? = suspendCancellableCoroutine {
-        val user = firebaseHandler.getUser()?.let { user ->
-            CurrentUserApiModel(
-                userId = user.uid,
-                username = user.displayName ?: STRING_UNKNOWN_PERSON,
-            )
+    suspend operator fun invoke(): UserDomain? {
+        try {
+            val user = repository.getCurrentUser()?.let { user ->
+                repository.getUserByID(user.uid).mapToDomain(user.uid)
+            }
+            return user
+        } catch (e: Exception) {
+            throw e
         }
-        it.resume(user)
     }
 }

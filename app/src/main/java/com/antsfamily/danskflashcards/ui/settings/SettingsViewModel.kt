@@ -3,12 +3,12 @@ package com.antsfamily.danskflashcards.ui.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.antsfamily.danskflashcards.core.model.mapToErrorType
-import com.antsfamily.danskflashcards.core.model.mapToItem
 import com.antsfamily.danskflashcards.domain.GetAppVersionUseCase
 import com.antsfamily.danskflashcards.domain.GetLearningLanguageUseCase
 import com.antsfamily.danskflashcards.domain.GetLoggedInUserUseCase
 import com.antsfamily.danskflashcards.domain.GetPrimaryLanguageUseCase
 import com.antsfamily.danskflashcards.domain.SetLanguageUseCase
+import com.antsfamily.danskflashcards.domain.SetUsernameUseCase
 import com.antsfamily.danskflashcards.domain.SignOutWithGoogleUseCase
 import com.antsfamily.danskflashcards.domain.model.LanguageType
 import com.antsfamily.danskflashcards.ui.onboarding.model.LanguageItem
@@ -29,12 +29,17 @@ class SettingsViewModel @Inject constructor(
     private val getLearningLanguageUseCase: GetLearningLanguageUseCase,
     private val getPrimaryLanguageUseCase: GetPrimaryLanguageUseCase,
     private val setLanguageUseCase: SetLanguageUseCase,
+    private val setUsernameUseCase: SetUsernameUseCase,
     private val signOutWithGoogleUseCase: SignOutWithGoogleUseCase,
 ) : ViewModel() {
 
-    private val _showLanguageBottomSheetFlow = MutableSharedFlow<List<LanguageItem>>()
-    val showLanguageBottomSheetFlow: SharedFlow<List<LanguageItem>>
-        get() = _showLanguageBottomSheetFlow.asSharedFlow()
+    private val _showLearningLanguageBottomSheetFlow = MutableSharedFlow<List<LanguageItem>>()
+    val showLearningLanguageBottomSheetFlow: SharedFlow<List<LanguageItem>>
+        get() = _showLearningLanguageBottomSheetFlow.asSharedFlow()
+
+    private val _showPrimaryLanguageBottomSheetFlow = MutableSharedFlow<List<LanguageItem>>()
+    val showPrimaryLanguageBottomSheetFlow: SharedFlow<List<LanguageItem>>
+        get() = _showPrimaryLanguageBottomSheetFlow.asSharedFlow()
 
     private val _navigateToAuthFlow = MutableSharedFlow<Unit>()
     val navigateToAuthFlow: SharedFlow<Unit>
@@ -44,7 +49,7 @@ class SettingsViewModel @Inject constructor(
     val state: StateFlow<SettingsUiState>
         get() = _state.asStateFlow()
 
-    private var primaryLanguage: LanguageType? = null
+    private lateinit var userId: String
 
     init {
         getUserData()
@@ -66,24 +71,56 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun onLanguageClick() = viewModelScope.launch {
-        val learningLanguage = (_state.value as SettingsUiState.Content).learningLanguage
-        val languages = LanguageType.entries
-            .map { LanguageItem(it, it == learningLanguage) }
-            .filter { it.languageType != primaryLanguage }
-        _showLanguageBottomSheetFlow.emit(languages)
+    fun onUsernameChanged(username: String) = viewModelScope.launch {
+        try {
+            setUsernameUseCase(userId, username)
+            val newState = (_state.value as SettingsUiState.Content).copy(
+                username = username
+            )
+            _state.value = newState
+        } catch (e: Exception) {
+            handleErrorState(e)
+        }
     }
 
-    fun onNewLanguageSelected(item: LanguageItem) = viewModelScope.launch {
-        setLanguageUseCase(item.languageType, false)
-        val newState =
-            (_state.value as SettingsUiState.Content).copy(learningLanguage = item.languageType)
-        _state.value = newState
+    fun onLanguageClick(isPrimary: Boolean) = viewModelScope.launch {
+        with(_state.value as SettingsUiState.Content) {
+            if (isPrimary) {
+                showPrimaryLanguageBottomSheet(this)
+            } else {
+                showLearningLanguageBottomSheet(this)
+            }
+        }
+    }
+
+    private suspend fun showLearningLanguageBottomSheet(content: SettingsUiState.Content) {
+        val languages = LanguageType.entries
+            .map { LanguageItem(it, it == content.learningLanguage) }
+            .filter { it.languageType != content.primaryLanguage }
+        _showLearningLanguageBottomSheetFlow.emit(languages)
+    }
+
+    private suspend fun showPrimaryLanguageBottomSheet(content: SettingsUiState.Content) {
+        val languages = LanguageType.entries
+            .map { LanguageItem(it, it == content.primaryLanguage) }
+            .filter { it.languageType != content.learningLanguage }
+        _showPrimaryLanguageBottomSheetFlow.emit(languages)
+    }
+
+    fun onNewLanguageSelected(item: LanguageItem, isPrimary: Boolean) = viewModelScope.launch {
+        setLanguageUseCase(item.languageType, isPrimary)
+        val content = _state.value as SettingsUiState.Content
+        val newContent = content.copy(
+            learningLanguage = if (isPrimary) content.learningLanguage else item.languageType,
+            primaryLanguage = if (isPrimary) item.languageType else content.primaryLanguage
+        )
+        _state.value = newContent
     }
 
     private fun getUserData() = viewModelScope.launch {
-        val user = getLoggedInUserUseCase()?.mapToItem()
+        val user = getLoggedInUserUseCase()
         user?.let {
+            userId = it.id
             getAppVersion(it.username)
         } ?: run {
             handleErrorState(Exception("user data is empty"))
@@ -100,11 +137,12 @@ class SettingsViewModel @Inject constructor(
     }
 
     private suspend fun getLanguages(username: String, version: String) {
-        primaryLanguage = getPrimaryLanguageUseCase()
+        val primaryLanguage = getPrimaryLanguageUseCase()
         val learningLanguage = getLearningLanguageUseCase()
         _state.value = SettingsUiState.Content(
             username = username,
             learningLanguage = learningLanguage,
+            primaryLanguage = primaryLanguage,
             appVersion = version
         )
     }

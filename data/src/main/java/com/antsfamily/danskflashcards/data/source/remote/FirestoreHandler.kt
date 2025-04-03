@@ -1,8 +1,10 @@
 package com.antsfamily.danskflashcards.data.source.remote
 
 import com.antsfamily.danskflashcards.data.util.FirebaseConstants.COLLECTION_USERS
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.channels.awaitClose
@@ -15,6 +17,19 @@ import kotlin.coroutines.resumeWithException
 class FirestoreHandler @Inject constructor() {
 
     private val firestore: FirebaseFirestore = Firebase.firestore
+
+    suspend fun getUserByID(id: String): DocumentSnapshot? = suspendCancellableCoroutine {
+        firestore
+            .collection(COLLECTION_USERS)
+            .document(id)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                it.resume(snapshot)
+            }
+            .addOnFailureListener { exception ->
+                it.resumeWithException(exception)
+            }
+    }
 
     suspend fun getUsers(): QuerySnapshot = suspendCancellableCoroutine {
         firestore
@@ -32,7 +47,7 @@ class FirestoreHandler @Inject constructor() {
         firestore
             .collection(COLLECTION_USERS)
             .document(id)
-            .set(data)
+            .set(data, SetOptions.merge())
             .addOnSuccessListener { _ ->
                 it.resume(Unit)
             }

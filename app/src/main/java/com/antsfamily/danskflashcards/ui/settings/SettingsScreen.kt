@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -12,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,6 +49,8 @@ import com.antsfamily.danskflashcards.ui.onboarding.model.LanguageItem
 import com.antsfamily.danskflashcards.ui.settings.view.LanguageBottomSheet
 import com.antsfamily.danskflashcards.ui.settings.view.LogOutDialog
 import com.antsfamily.danskflashcards.ui.settings.view.SettingPreferenceView
+import com.antsfamily.danskflashcards.ui.settings.view.TextWithTrailingIcon
+import com.antsfamily.danskflashcards.ui.settings.view.UsernameChangeDialog
 import com.antsfamily.danskflashcards.ui.theme.FontSize
 import com.antsfamily.danskflashcards.ui.theme.Padding
 import com.antsfamily.danskflashcards.ui.theme.SetSystemBarColors
@@ -62,7 +67,8 @@ fun SettingsScreen(
 ) {
     SetSystemBarColors(MaterialTheme.colorScheme.background, false)
 
-    var isLanguageBottomSheetVisible by remember { mutableStateOf(false) }
+    var isLearningLanguageBottomSheetVisible by remember { mutableStateOf(false) }
+    var isPrimaryLanguageBottomSheetVisible by remember { mutableStateOf(false) }
     val (languages, setLanguages) = remember { mutableStateOf<List<LanguageItem>>(emptyList()) }
 
     val state = viewModel.state.collectAsState()
@@ -70,9 +76,12 @@ fun SettingsScreen(
     when (val stateValue = state.value) {
         is SettingsUiState.Content -> SettingsContent(
             state = stateValue,
-            onLanguageClick = { viewModel.onLanguageClick() },
+            onLearningLanguageClick = { viewModel.onLanguageClick(false) },
+            onPrimaryLanguageClick = { viewModel.onLanguageClick(true) },
             onLogoutConfirm = { viewModel.onLogOutConfirm() },
-            onNavigateBack = { navigateBack() }
+            onNavigateBack = { navigateBack() },
+            onUsernameChanged = { viewModel.onUsernameChanged(it) },
+            onAvatarChangeClick = {}
         )
 
         is SettingsUiState.Error -> ErrorViewWithRetry(errorType = stateValue.type) {
@@ -89,21 +98,41 @@ fun SettingsScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.showLanguageBottomSheetFlow.collect {
+        viewModel.showLearningLanguageBottomSheetFlow.collect {
             setLanguages(it)
-            isLanguageBottomSheetVisible = true
+            isLearningLanguageBottomSheetVisible = true
+        }
+    }
+    LaunchedEffect(Unit) {
+        viewModel.showPrimaryLanguageBottomSheetFlow.collect {
+            setLanguages(it)
+            isPrimaryLanguageBottomSheetVisible = true
         }
     }
 
-    if (isLanguageBottomSheetVisible && languages.isNotEmpty()) {
+    if (isLearningLanguageBottomSheetVisible && languages.isNotEmpty()) {
         LanguageBottomSheet(
             languages = languages,
             onDismiss = {
                 setLanguages(emptyList())
-                isLanguageBottomSheetVisible = false
+                isLearningLanguageBottomSheetVisible = false
             },
+            isPrimary = false,
             onLanguageSelected = {
-                viewModel.onNewLanguageSelected(it)
+                viewModel.onNewLanguageSelected(it, false)
+            }
+        )
+    }
+    if (isPrimaryLanguageBottomSheetVisible && languages.isNotEmpty()) {
+        LanguageBottomSheet(
+            languages = languages,
+            onDismiss = {
+                setLanguages(emptyList())
+                isPrimaryLanguageBottomSheetVisible = false
+            },
+            isPrimary = true,
+            onLanguageSelected = {
+                viewModel.onNewLanguageSelected(it, true)
             }
         )
     }
@@ -113,11 +142,15 @@ fun SettingsScreen(
 fun SettingsContent(
     modifier: Modifier = Modifier,
     state: SettingsUiState.Content,
-    onLanguageClick: () -> Unit,
+    onLearningLanguageClick: () -> Unit,
+    onPrimaryLanguageClick: () -> Unit,
     onLogoutConfirm: () -> Unit,
     onNavigateBack: () -> Unit,
+    onUsernameChanged: (String) -> Unit,
+    onAvatarChangeClick: () -> Unit
 ) {
-    var isLogOutDialogVisible by remember { mutableStateOf(false) }
+    val (isLogOutDialogVisible, setIsLogOutDialogVisible) = remember { mutableStateOf(false) }
+    val (isUsernameDialogVisible, setIsUsernameDialogVisible) = remember { mutableStateOf(false) }
 
     Box(
         modifier = modifier
@@ -126,6 +159,7 @@ fun SettingsContent(
     ) {
         Column {
             TopBar(
+                modifier = Modifier.padding(end = Padding.small),
                 onNavigationBack = { onNavigateBack() },
             ) {
                 Button(
@@ -134,7 +168,7 @@ fun SettingsContent(
                         contentColor = grey_500
                     ),
                     contentPadding = PaddingValues(0.dp),
-                    onClick = { isLogOutDialogVisible = true }
+                    onClick = { setIsLogOutDialogVisible(true) }
                 ) {
                     Text(
                         modifier = Modifier.padding(horizontal = Padding.small),
@@ -146,21 +180,33 @@ fun SettingsContent(
 
             if (isLogOutDialogVisible) {
                 LogOutDialog(
-                    onDismiss = { isLogOutDialogVisible = false },
+                    onDismiss = { setIsLogOutDialogVisible(false) },
                     onConfirmClick = {
                         onLogoutConfirm()
-                        isLogOutDialogVisible = false
+                        setIsLogOutDialogVisible(false)
+                    }
+                )
+            }
+
+            if (isUsernameDialogVisible) {
+                UsernameChangeDialog(
+                    value = state.username,
+                    onDismiss = { setIsUsernameDialogVisible(false) },
+                    onConfirmClick = {
+                        onUsernameChanged(it)
+                        setIsUsernameDialogVisible(false)
                     }
                 )
             }
 
             Column(
                 modifier = modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f),
+                        .padding(horizontal = Padding.medium),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -180,19 +226,18 @@ fun SettingsContent(
                             modifier = modifier.size(60.dp)
                         )
                     }
-                    Text(
-                        text = state.username,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.titleLarge,
+                    TextWithTrailingIcon(
                         modifier = modifier.padding(Padding.medium),
-                    )
+                        text = state.username,
+                        icon = Icons.Rounded.Edit
+                    ) {
+                        setIsUsernameDialogVisible(true)
+                    }
                 }
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = Padding.medium)
-                        .weight(2f),
+                        .padding(horizontal = Padding.medium),
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.Start
                 ) {
@@ -205,15 +250,25 @@ fun SettingsContent(
                         color = grey_500
                     )
                     SettingPreferenceView(
-                        preferenceId = R.string.settings_pref_language,
-                        leadIconId = R.drawable.ic_settings_language,
+                        title = stringResource(R.string.settings_pref_language),
+                        subtitle = stringResource(R.string.preference_subtitle_learning),
+                        leadIcon = ImageVector.vectorResource(R.drawable.ic_settings_language),
                         valueId = state.learningLanguage.toStringRes()
                     ) {
-                        onLanguageClick()
+                        onLearningLanguageClick()
+                    }
+
+                    SettingPreferenceView(
+                        title = stringResource(R.string.settings_pref_language),
+                        subtitle = stringResource(R.string.preference_subtitle_primary),
+                        leadIcon = ImageVector.vectorResource(R.drawable.ic_settings_language),
+                        valueId = state.primaryLanguage.toStringRes()
+                    ) {
+                        onPrimaryLanguageClick()
                     }
                     SettingPreferenceView(
-                        preferenceId = R.string.settings_pref_theme,
-                        leadIconId = R.drawable.ic_settings_theme,
+                        title = stringResource(R.string.settings_pref_theme),
+                        leadIcon = ImageVector.vectorResource(R.drawable.ic_settings_theme),
                         valueId = R.string.settings_theme_light
                     ) {
                         //TODO implement theme switch
@@ -222,8 +277,30 @@ fun SettingsContent(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .navigationBarsPadding()
-                        .weight(1f),
+                        .padding(horizontal = Padding.medium),
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    Text(
+                        modifier = Modifier.padding(vertical = Padding.small),
+                        text = stringResource(R.string.settings_actions),
+                        fontSize = FontSize.Body1,
+                        fontWeight = FontWeight.SemiBold,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = grey_500
+                    )
+                    SettingPreferenceView(
+                        title = stringResource(R.string.settings_action_change_avatar),
+                        leadIcon = ImageVector.vectorResource(R.drawable.ic_home_settings),
+                    ) {
+                        onAvatarChangeClick()
+                    }
+                }
+                Spacer(Modifier.weight(2f))
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .navigationBarsPadding(),
                     verticalArrangement = Arrangement.Bottom,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -260,12 +337,16 @@ fun SettingsContent(
 private fun ContentPreview() {
     SettingsContent(
         state = SettingsUiState.Content(
-            username = "John Doe",
+            username = "Long-lasting Partymaker Doe",
             learningLanguage = LanguageType.DE,
+            primaryLanguage = LanguageType.EN,
             appVersion = "1.0.0 (81)"
         ),
         onLogoutConfirm = {},
-        onLanguageClick = {},
-        onNavigateBack = {}
+        onLearningLanguageClick = {},
+        onPrimaryLanguageClick = {},
+        onNavigateBack = {},
+        onAvatarChangeClick = {},
+        onUsernameChanged = {}
     )
 }

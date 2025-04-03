@@ -8,6 +8,7 @@ sealed class SettingsUiState {
     data class Content(
         val username: String,
         val learningLanguage: LanguageType,
+        val primaryLanguage: LanguageType,
         val appVersion: String
     ) : SettingsUiState()
     data class Error(val type: ErrorType): SettingsUiState()
