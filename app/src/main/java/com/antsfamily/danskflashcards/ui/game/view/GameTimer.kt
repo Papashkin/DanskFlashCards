@@ -1,5 +1,11 @@
 package com.antsfamily.danskflashcards.ui.game.view
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -12,6 +18,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,6 +38,8 @@ fun GameTimer(
     isAnimationVisible: Boolean,
     onAnimationEnd: () -> Unit,
 ) {
+    val infiniteTransition = rememberInfiniteTransition(label = "infinite")
+
     val composition by rememberLottieComposition(
         LottieCompositionSpec.RawRes(R.raw.timer_up_new)
     )
@@ -38,6 +47,14 @@ fun GameTimer(
         composition = composition,
         iterations = 1,
         isPlaying = isAnimationVisible
+    )
+    val pulsarScale by infiniteTransition.animateFloat(
+        initialValue = 0.9f,
+        targetValue = 1.1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 800, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ), label = "pulsar"
     )
 
     LaunchedEffect(animationProgress) {
@@ -57,6 +74,8 @@ fun GameTimer(
         )
 
         Text(
+            modifier = Modifier
+                .scale(if (model.isLastResort) pulsarScale else 1f),
             text = model.remainTimeString,
             color = if (model.isLastResort) alert else wistful_700,
             fontSize = if (model.isLastResort) FontSize.H3 else FontSize.H4,

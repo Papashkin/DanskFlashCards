@@ -1,29 +1,28 @@
 <resources>
     <string name="app_name">Ant\'s Flashcards</string>
-    <string name="start">start</string>
-    <string name="game_over">Game over</string>
-    <string name="new_record">THAT\'S YOUR NEW PERSONAL BEST!!</string>
-    <string name="your_best_result">Your best result is still %1$s</string>
-    <string name="game_over_dialog_description">You guessed %1$s pairs.\n%2$s</string>
-    <string name="button_exit">exit</string>
-    <string name="sign_up_google">Sign up with Google</string>
-    <string name="date_of_the_pb">Date of the PB</string>
-    <string name="personal_best">Your best result:</string>
-    <string name="leaderboard_title">Leaderboard</string>
-    <string name="home_title_welcome">Welcome,\n%1$s!</string>
-    <string name="home_title_welcome_back">Welcome back,\n%1$s!</string>
+
     <string name="auth_title">Welcome!</string>
     <string name="auth_subtitle">Please login to access to the cards</string>
+
+    <string name="game_over">Game over</string>
+    <string name="game_over_dialog_current_result">Your current result: %1$d</string>
+    <string name="game_over_dialog_best_result">Your best result: %1$d</string>
+    <string name="game_over_dialog_description">You guessed %1$s pairs.\n%2$s</string>
+    <string name="game_button_exit">Exit</string>
+    <string name="game_button_try_again">Try again</string>
+    <string name="sign_up_google">Sign up with Google</string>
+
+    <string name="home_start">Start</string>
+    <string name="home_title_welcome">Welcome,\n%1$s</string>
+    <string name="home_title_welcome_back">Welcome back,\n%1$s</string>
+    <string name="home_leaderboard_title">Leaderboard</string>
+    <string name="home_leaderboard_is_empty">Leaderboard is empty</string>
 
     <string name="error_text_network">No internet connection.\nPlease check your connection</string>
     <string name="error_text_server">Seems it\'s a problem on our side.\nPlease try later</string>
     <string name="error_text_unknown">Something went wrong :(</string>
-    <string name="about_development_description">developed by Papashkin</string>
-    <string name="about_year">2025</string>
-    <string name="about_app_version">version %1$s</string>
-    <string name="button_retry">Retry</string>
-    <string name="button_logout">Logout</string>
-    <string name="leaderboard_is_empty">Leaderboard is empty</string>
+    <string name="error_button_retry">Retry</string>
+
     <string name="dialog_update_title">Update Available</string>
     <string name="dialog_update_subtitle">A new update is available. Please update the app.</string>
     <string name="dialog_update_button_update">Update</string>
@@ -41,15 +40,14 @@
     <string name="onboarding2_title">Last one step!</string>
     <string name="onboarding2_subtitle">Select your primary language.\nThis is the language you will use as a reference.</string>
 
+    <string name="settings_button_logout">Logout</string>
     <string name="settings_pref_language">Language</string>
     <string name="settings_pref_theme">Theme</string>
     <string name="settings_theme_light">Light</string>
     <string name="settings_theme_dark">Dark</string>
     <string name="settings_preferences">Preferences</string>
-
-    <string name="logout_dialog_title">Are you sure you want to quit?</string>
-    <string name="logout_dialog_confirm">Yes</string>
-    <string name="logout_dialog_cancel">Cancel</string>
+    <string name="settings_development_description">developed by Papashkin</string>
+    <string name="settings_year">2025</string>
     <string name="settings_language_selection_confirm">Confirm</string>
     <string name="settings_actions">Actions</string>
     <string name="settings_action_change_username">Change username</string>
@@ -62,4 +60,8 @@
     <string name="username_change_label">insert your username</string>
     <string name="learning_language_bottomsheet_title">Please select learning language</string>
     <string name="primary_language_bottomsheet_title">Please select primary language</string>
+    <string name="logout_dialog_title">Are you sure you want to quit?</string>
+    <string name="logout_dialog_confirm">Yes</string>
+    <string name="logout_dialog_cancel">Cancel</string>
+
 </resources>

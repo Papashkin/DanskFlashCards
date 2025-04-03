@@ -9,8 +9,8 @@ sealed class GameUiState {
     data object Loading: GameUiState()
     data object Countdown: GameUiState()
     data class Content(
-        val danish: List<WordItem> = emptyList(),
-        val english: List<WordItem> = emptyList(),
+        val learningWords: List<WordItem> = emptyList(),
+        val primaryWords: List<WordItem> = emptyList(),
         val timerItem: TimerItem = TimerItem(),
         val status: GameStatus = GameStatus.READY,
     ): GameUiState()
