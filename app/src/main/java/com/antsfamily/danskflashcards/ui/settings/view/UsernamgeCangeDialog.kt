@@ -51,7 +51,7 @@ fun UsernameChangeDialog(
     onDismiss: () -> Unit,
     onConfirmClick: (String) -> Unit,
 ) {
-    var username by rememberSaveable { mutableStateOf(value) }
+    val (username, setUsername) = rememberSaveable { mutableStateOf(value) }
 
     Dialog(onDismissRequest = {}) {
         Card(
@@ -96,7 +96,7 @@ fun UsernameChangeDialog(
                     value = username,
                     textStyle = MaterialTheme.typography.bodyLarge,
                     onValueChange = {
-                        username = it
+                        setUsername(it)
                     },
                     label = {
                         Text(stringResource(R.string.username_change_label))
@@ -104,10 +104,9 @@ fun UsernameChangeDialog(
                     isError = username.isBlank(),
                     trailingIcon = {
                         Icon(
-                            modifier = Modifier.clickable { username = "" },
+                            modifier = Modifier.clickable { setUsername("") },
                             imageVector = Icons.Outlined.Close,
-                            contentDescription = null,
-                            tint = grey_500
+                            contentDescription = null
                         )
                     },
                     colors = TextFieldDefaults.colors(
@@ -116,6 +115,8 @@ fun UsernameChangeDialog(
                         errorContainerColor = wistful_0,
                         errorTrailingIconColor = alert,
                         errorLabelColor = alert,
+                        focusedTrailingIconColor = grey_500,
+                        unfocusedTrailingIconColor = grey_500,
                         errorIndicatorColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
