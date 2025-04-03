@@ -51,4 +51,15 @@
     <string name="logout_dialog_confirm">Yes</string>
     <string name="logout_dialog_cancel">Cancel</string>
     <string name="settings_language_selection_confirm">Confirm</string>
+    <string name="settings_actions">Actions</string>
+    <string name="settings_action_change_username">Change username</string>
+    <string name="settings_action_change_avatar">Change avatar</string>
+    <string name="preference_subtitle_learning">Learning</string>
+    <string name="preference_subtitle_primary">Primary</string>
+    <string name="username_change_dialog_confirm">Confirm</string>
+    <string name="username_change_dialog_cancel">Cancel</string>
+    <string name="username_change_title">Add your username. You can do this at any time.</string>
+    <string name="username_change_label">insert your username</string>
+    <string name="learning_language_bottomsheet_title">Please select learning language</string>
+    <string name="primary_language_bottomsheet_title">Please select primary language</string>
 </resources>

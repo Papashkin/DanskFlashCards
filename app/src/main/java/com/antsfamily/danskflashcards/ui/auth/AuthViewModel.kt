@@ -6,10 +6,9 @@ import com.antsfamily.danskflashcards.core.model.CurrentUserItem
 import com.antsfamily.danskflashcards.core.model.ErrorType
 import com.antsfamily.danskflashcards.core.model.mapToErrorType
 import com.antsfamily.danskflashcards.core.model.mapToItem
-import com.antsfamily.danskflashcards.data.SignInResult
 import com.antsfamily.danskflashcards.data.model.SignInType
 import com.antsfamily.danskflashcards.domain.IsOnboardingPassedUseCase
-import com.antsfamily.danskflashcards.domain.SignInWithCredentialsUseCase
+import com.antsfamily.danskflashcards.domain.SignInUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val signInWithCredentialsUseCase: SignInWithCredentialsUseCase,
+    private val signInUseCase: SignInUseCase,
     private val isOnboardingPassedUseCase: IsOnboardingPassedUseCase,
 ) : ViewModel() {
 
@@ -40,9 +39,9 @@ class AuthViewModel @Inject constructor(
     fun onGoogleClick() = viewModelScope.launch {
         _state.value = AuthUiState.Loading
         try {
-            val response = signInWithCredentialsUseCase(SignInType.GOOGLE)
-            response?.let {
-                proceedWithSignedUser(it)
+            val result = signInUseCase(SignInType.GOOGLE)
+            result?.let {
+                proceedWithSignedUser(it.mapToItem())
             } ?: run {
                 setDefaultUiState()
             }
@@ -51,10 +50,11 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    private suspend fun proceedWithSignedUser(result: SignInResult) {
-        val userModel = result.data?.mapToItem()
-        if (userModel?.isValid() == true) {
-            proceedWithUserData(userModel)
+    private suspend fun proceedWithSignedUser(item: CurrentUserItem?) {
+        if (item?.isValid() == true) {
+            proceedWithUserData(item)
+        } else {
+            proceedWithError(Exception("User data is empty").mapToErrorType())
         }
     }
 

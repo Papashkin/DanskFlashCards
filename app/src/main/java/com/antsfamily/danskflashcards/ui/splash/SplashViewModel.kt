@@ -67,9 +67,10 @@ class SplashViewModel @Inject constructor(
     }
 
     private suspend fun checkIsUserLoggedIn() {
-        val loggedInUserItem = getLoggedInUserUseCase()?.mapToItem()
-        loggedInUserItem?.let {
-            checkOnboardingPass(it)
+        val loggedInUser = getLoggedInUserUseCase()
+        loggedInUser?.let {
+            val userItem = CurrentUserItem(userId = it.id, username = it.username)
+            checkOnboardingPass(userItem)
         } ?: run {
             _navigationToAuthFlow.emit(Unit)
         }

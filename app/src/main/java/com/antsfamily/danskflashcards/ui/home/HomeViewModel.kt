@@ -114,7 +114,7 @@ class HomeViewModel @AssistedInject constructor(
             user = user,
             cardsSize = wordsAmount.orZero(),
             leaderboard = leaderboardItems.take(LEADERBOARD_SIZE),
-            userPlace = leaderboardItems.first { it.isUser }.place
+            userPlace = leaderboardItems.firstOrNull { it.isUser }?.place
         )
     }
 

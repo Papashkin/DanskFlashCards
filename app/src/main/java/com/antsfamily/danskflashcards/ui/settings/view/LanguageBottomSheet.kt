@@ -52,6 +52,7 @@ import com.antsfamily.danskflashcards.ui.theme.wistful_1000
 @Composable
 fun LanguageBottomSheet(
     languages: List<LanguageItem>,
+    isPrimary: Boolean,
     sheetState: SheetState = rememberModalBottomSheetState(),
     onLanguageSelected: (LanguageItem) -> Unit,
     onDismiss: () -> Unit
@@ -69,7 +70,11 @@ fun LanguageBottomSheet(
         ) {
             Text(
                 modifier = Modifier.padding(horizontal = Padding.medium),
-                text = "Please select learning language",
+                text = if (isPrimary) {
+                    stringResource(R.string.primary_language_bottomsheet_title)
+                } else {
+                    stringResource(R.string.learning_language_bottomsheet_title)
+                },
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,
@@ -153,6 +158,7 @@ fun LanguageBottomSheetPreview(modifier: Modifier = Modifier) {
             LanguageType.RU
         ).map { LanguageItem(it, false) },
         onLanguageSelected = {},
+        isPrimary = true,
         onDismiss = {}
     )
 }
