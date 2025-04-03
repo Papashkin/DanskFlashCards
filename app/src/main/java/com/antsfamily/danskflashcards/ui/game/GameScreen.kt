@@ -5,41 +5,29 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.animateLottieCompositionAsState
-import com.airbnb.lottie.compose.rememberLottieComposition
-import com.antsfamily.danskflashcards.R
+import com.antsfamily.danskflashcards.core.presentation.ErrorViewWithRetry
+import com.antsfamily.danskflashcards.core.presentation.FullScreenLoading
 import com.antsfamily.danskflashcards.ui.game.model.GameOverItem
 import com.antsfamily.danskflashcards.ui.game.model.GameStatus
 import com.antsfamily.danskflashcards.ui.game.model.TimerItem
 import com.antsfamily.danskflashcards.ui.game.model.WordItem
-import com.antsfamily.danskflashcards.core.presentation.FullScreenLoading
 import com.antsfamily.danskflashcards.ui.game.view.GameOverDialog
 import com.antsfamily.danskflashcards.ui.game.view.GameScreenContent
 import com.antsfamily.danskflashcards.ui.game.view.GameTimer
 import com.antsfamily.danskflashcards.ui.game.view.StartAnimationPreloader
-import com.antsfamily.danskflashcards.core.presentation.ErrorViewWithRetry
 import com.antsfamily.danskflashcards.ui.theme.Padding
 import com.antsfamily.danskflashcards.ui.theme.SetSystemBarColors
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GameScreen(
     userId: String,
@@ -50,26 +38,36 @@ fun GameScreen(
     },
     navigateBack: () -> Unit,
 ) {
-    var isTimeUpAnimationVisible by remember { mutableStateOf(false) }
-    var bottomSheetData by remember { mutableStateOf<GameOverItem?>(null) }
-
     SetSystemBarColors(MaterialTheme.colorScheme.background, false)
 
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
+    val (isTimeUpAnimationVisible, setIsTimeUpAnimationVisible) = remember {
+        mutableStateOf(false)
+    }
+    val (isGameOverDialogVisible, setIsGameOverDialogVisible) = remember { mutableStateOf(false) }
+    val (gameOverItem, setGameOverItem) = remember { mutableStateOf(GameOverItem()) }
+
     val state = viewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.startAnimationFlow.collect {
-            isTimeUpAnimationVisible = true
+            setIsTimeUpAnimationVisible(true)
         }
     }
-
+    LaunchedEffect(Unit) {
+        viewModel.navigateBackFlow.collect {
+            navigateBack()
+        }
+    }
     LaunchedEffect(Unit) {
         viewModel.gameOverFlow.collect {
-            bottomSheetData = it
-            if (!sheetState.isVisible) {
-                sheetState.show()
-            }
+            setIsGameOverDialogVisible(true)
+            setGameOverItem(it)
+        }
+    }
+    LaunchedEffect(Unit) {
+        viewModel.closeGameOverDialogFlow.collect {
+            setIsGameOverDialogVisible(false)
+            setGameOverItem(GameOverItem())
         }
     }
 
@@ -85,10 +83,10 @@ fun GameScreen(
         is GameUiState.Loading -> FullScreenLoading()
         is GameUiState.Content -> GameContent(
             stateValue,
-            isTimeUpAnimationVisible,
-            onAnimationEnd = { isTimeUpAnimationVisible = false },
-            onDanishWordClick = { viewModel.onDanishWordCardClick(it) },
-            onEnglishWordClick = { viewModel.onEnglishWordCardClick(it) }
+            isTimeUpAnimationVisible = isTimeUpAnimationVisible,
+            onAnimationEnd = { setIsTimeUpAnimationVisible(false) },
+            onLearningWordClick = { viewModel.onLearningWordClick(it) },
+            onPrimaryWordClick = { viewModel.onPrimaryWordClick(it) }
         )
 
         is GameUiState.Error -> ErrorViewWithRetry(errorType = stateValue.type) {
@@ -96,12 +94,15 @@ fun GameScreen(
         }
     }
 
-    bottomSheetData?.let {
-        GameOverDialog(data = it, sheetState) {
-            viewModel.onGameOverDialogClose()
-            bottomSheetData = null
-            navigateBack()
-        }
+    if (isGameOverDialogVisible) {
+        GameOverDialog(
+            item = gameOverItem,
+            onExitClick = {
+                viewModel.onGameOverDialogClose()
+                setIsGameOverDialogVisible(false)
+                          },
+            onPlayAgainClick = { viewModel.onPlayAgainClick() }
+        )
     }
 }
 
@@ -110,22 +111,25 @@ fun GameContent(
     content: GameUiState.Content,
     isTimeUpAnimationVisible: Boolean,
     onAnimationEnd: () -> Unit,
-    onDanishWordClick: (WordItem) -> Unit,
-    onEnglishWordClick: (WordItem) -> Unit,
+    onLearningWordClick: (WordItem) -> Unit,
+    onPrimaryWordClick: (WordItem) -> Unit,
 ) {
     Column(
         modifier = Modifier
             .padding(Padding.small)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceAround
+        verticalArrangement = Arrangement.SpaceEvenly
     ) {
         with(content) {
             if (status == GameStatus.STARTED) {
-                GameTimer(content.timerItem, isAnimationVisible = isTimeUpAnimationVisible) {
+                GameTimer(
+                    content.timerItem,
+                    isAnimationVisible = isTimeUpAnimationVisible,
+                ) {
                     onAnimationEnd()
                 }
-                GameScreenContent(content, onDanishWordClick, onEnglishWordClick)
+                GameScreenContent(content, onLearningWordClick, onPrimaryWordClick)
             }
         }
     }
@@ -165,8 +169,8 @@ fun GameScreenContentPreview() {
 
     GameContent(
         GameUiState.Content(
-            danish = WORD_CARDS_DANISH,
-            english = WORD_CARDS_ENGLISH,
+            learningWords = WORD_CARDS_DANISH,
+            primaryWords = WORD_CARDS_ENGLISH,
             timerItem = TimerItem(),
             status = GameStatus.STARTED,
         ),

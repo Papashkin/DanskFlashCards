@@ -63,7 +63,7 @@ fun ErrorViewWithRetry(
                 onClick = { onRetry() }
             ) {
                 Text(
-                    text = stringResource(R.string.button_retry),
+                    text = stringResource(R.string.error_button_retry),
                     style = MaterialTheme.typography.titleLarge
                 )
             }

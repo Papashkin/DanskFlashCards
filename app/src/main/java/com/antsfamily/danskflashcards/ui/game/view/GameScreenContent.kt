@@ -20,8 +20,8 @@ import com.antsfamily.danskflashcards.ui.theme.Padding
 @Composable
 fun GameScreenContent(
     content: GameUiState.Content,
-    onDanishWordClick: (WordItem) -> Unit,
-    onEnglishWordClick: (WordItem) -> Unit,
+    onLearningWordClick: (WordItem) -> Unit,
+    onPrimaryWordClick: (WordItem) -> Unit,
 ) {
     Box(modifier = Modifier.padding(vertical = Padding.medium)) {
         Row(
@@ -34,9 +34,9 @@ fun GameScreenContent(
                     .padding(Padding.small),
                 verticalArrangement = Arrangement.spacedBy(Padding.small)
             ) {
-                items(content.danish.size) {
-                    WordCard(content.status, content.danish[it]) { model ->
-                        onDanishWordClick(model)
+                items(content.learningWords.size) {
+                    WordCard(content.status, content.learningWords[it]) { model ->
+                        onLearningWordClick(model)
                     }
                     Spacer(modifier = Modifier.height(Padding.small))
                 }
@@ -47,9 +47,9 @@ fun GameScreenContent(
                     .padding(Padding.small),
                 verticalArrangement = Arrangement.spacedBy(Padding.small)
             ) {
-                items(content.english.size) {
-                    WordCard(content.status, content.english[it]) { model ->
-                        onEnglishWordClick(model)
+                items(content.primaryWords.size) {
+                    WordCard(content.status, content.primaryWords[it]) { model ->
+                        onPrimaryWordClick(model)
                     }
                     Spacer(modifier = Modifier.height(Padding.small))
                 }
@@ -81,12 +81,12 @@ fun GameScreenContentPreview(modifier: Modifier = Modifier) {
 
     GameScreenContent(
         content = GameUiState.Content(
-            danish = WORD_CARDS_DANISH,
-            english = WORD_CARDS_ENGLISH,
+            learningWords = WORD_CARDS_DANISH,
+            primaryWords = WORD_CARDS_ENGLISH,
             TimerItem(),
             status = GameStatus.STARTED,
         ),
-        onDanishWordClick = {},
-        onEnglishWordClick = {}
+        onLearningWordClick = {},
+        onPrimaryWordClick = {}
     )
 }

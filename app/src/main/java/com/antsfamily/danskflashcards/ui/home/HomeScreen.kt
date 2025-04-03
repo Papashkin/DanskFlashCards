@@ -149,7 +149,7 @@ fun HomeScreenContent(
                     .padding(horizontal = Padding.huge)
             ) {
                 Text(
-                    text = stringResource(R.string.start),
+                    text = stringResource(R.string.home_start),
                     fontSize = FontSize.H6,
                 )
             }

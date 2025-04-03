@@ -18,10 +18,10 @@ class GetWordsUseCase @Inject constructor(
             val primaryLanguage = getPrimaryLanguageUseCase()
             val words = repository.getWords()
 
-            val wordsFirstLang = words.mapNotNull { it.mapToDomain(learningLanguage) }
-            val wordsSecondLang = words.mapNotNull { it.mapToDomain(primaryLanguage) }
+            val learningWords = words.mapNotNull { it.mapToDomain(learningLanguage) }
+            val primaryWords = words.mapNotNull { it.mapToDomain(primaryLanguage) }
 
-            return wordsFirstLang to wordsSecondLang
+            return learningWords to primaryWords
         } catch (e: Exception) {
             throw e
         }

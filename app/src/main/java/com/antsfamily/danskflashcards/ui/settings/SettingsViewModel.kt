@@ -73,7 +73,7 @@ class SettingsViewModel @Inject constructor(
 
     fun onUsernameChanged(username: String) = viewModelScope.launch {
         try {
-            setUsernameUseCase(userId, username)
+            setUsernameUseCase(userId, username.trim())
             val newState = (_state.value as SettingsUiState.Content).copy(
                 username = username
             )

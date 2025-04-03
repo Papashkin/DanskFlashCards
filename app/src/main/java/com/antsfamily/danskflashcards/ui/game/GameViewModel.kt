@@ -14,7 +14,6 @@ import com.antsfamily.danskflashcards.core.util.orZero
 import com.antsfamily.danskflashcards.domain.CountdownTimerFlow
 import com.antsfamily.danskflashcards.domain.GetWordsUseCase
 import com.antsfamily.danskflashcards.domain.SetPersonalBestUseCase
-import com.antsfamily.danskflashcards.domain.model.LanguageType
 import com.antsfamily.danskflashcards.domain.model.WordDomain
 import com.antsfamily.danskflashcards.ui.game.model.GameOverItem
 import com.antsfamily.danskflashcards.ui.game.model.GameStatus
@@ -57,9 +56,8 @@ class GameViewModel @AssistedInject constructor(
     }
 
     private var guessingItems = emptyList<GuessingItem>()
-    private var danishWords = emptyList<WordItem>()
-    private var englishWords = emptyList<WordItem>()
-    private var isTimerStarted: Boolean = false
+    private var learningWords = emptyList<WordItem>()
+    private var primaryWords = emptyList<WordItem>()
     private var countdownJob: Job? = null
     private var pairsCounter: Int = 0
 
@@ -70,8 +68,14 @@ class GameViewModel @AssistedInject constructor(
     private val _startAnimationFlow = MutableSharedFlow<Unit>()
     val startAnimationFlow = _startAnimationFlow.asSharedFlow()
 
+    private val _navigateBackFlow = MutableSharedFlow<Unit>()
+    val navigateBackFlow = _navigateBackFlow.asSharedFlow()
+
     private val _gameOverFlow = MutableSharedFlow<GameOverItem>()
     val gameOverFlow = _gameOverFlow.asSharedFlow()
+
+    private val _closeGameOverDialogFlow = MutableSharedFlow<Unit>()
+    val closeGameOverDialogFlow = _closeGameOverDialogFlow.asSharedFlow()
 
     init {
         getWords()
@@ -87,58 +91,81 @@ class GameViewModel @AssistedInject constructor(
         getWords()
     }
 
-    fun onDanishWordCardClick(word: WordItem) = viewModelScope.launch {
+    fun onLearningWordClick(word: WordItem) = viewModelScope.launch {
         if (word.isGuessed) return@launch
 
         if (!word.isSelected) {
-            invalidateDanishWordSelection(word.id)
-            getEnglishSelectedWord()?.let { englishWord ->
-                if (englishWord.id == word.id) {
+            invalidateLearningWordSelection(word.id)
+            getPrimarySelectedWord()?.let { primaryWord ->
+                if (primaryWord.id == word.id) {
                     markWordsAsGuessed(word.id)
                 } else {
-                    markWordsAsWrong(danishWordId = word.id, englishWordId = englishWord.id)
+                    markWordsAsWrong(learningWordId = word.id, primaryWordId = primaryWord.id)
                 }
             } ?: run {
-                markDanishWordSelected(word.id)
+                markLearningWordSelected(word.id)
             }
         }
     }
 
-    fun onEnglishWordCardClick(word: WordItem) = viewModelScope.launch {
+    fun onPrimaryWordClick(word: WordItem) = viewModelScope.launch {
         if (word.isGuessed) return@launch
 
         if (!word.isSelected) {
-            invalidateEnglishWordSelection(word.id)
-            getDanishSelectedWord()?.let { danishWord ->
-                if (danishWord.id == word.id) {
+            invalidatePrimaryWordSelection(word.id)
+            getLearningSelectedWord()?.let { learningWord ->
+                if (learningWord.id == word.id) {
                     markWordsAsGuessed(word.id)
                 } else {
-                    markWordsAsWrong(danishWordId = danishWord.id, englishWordId = word.id)
+                    markWordsAsWrong(learningWordId = learningWord.id, primaryWordId = word.id)
                 }
             } ?: run {
-                markEnglishWordSelected(word.id)
+                markPrimaryWordSelected(word.id)
             }
         }
     }
 
-    fun onGameOverDialogClose() {
+    fun onGameOverDialogClose() = viewModelScope.launch {
         pairsCounter = 0
+        _navigateBackFlow.emit(Unit)
+        _closeGameOverDialogFlow.emit(Unit)
     }
 
-    private fun markDanishWordSelected(id: Int) {
+    fun onPlayAgainClick() = viewModelScope.launch {
+        invalidateGameData()
+        _closeGameOverDialogFlow.emit(Unit)
+        _state.value = GameUiState.Countdown
+    }
+
+    private fun invalidateGameData() {
+        pairsCounter = 0
+        learningWords = learningWords.map { it.copy(
+            isSelected = false,
+            isGuessed = false,
+            isWrong = false,
+        ) }
+        primaryWords = primaryWords.map { it.copy(
+            isSelected = false,
+            isGuessed = false,
+            isWrong = false,
+        ) }
+        guessingItems = learningWords.map { GuessingItem(it.id, false) }
+    }
+
+    private fun markLearningWordSelected(id: Int) {
         getContentOrNull()?.let { content ->
             _state.value = content.copy(
-                danish = content.danish.map {
+                learningWords = content.learningWords.map {
                     if (it.id == id) it.copy(isSelected = true) else it
                 }
             )
         }
     }
 
-    private fun markEnglishWordSelected(id: Int) {
+    private fun markPrimaryWordSelected(id: Int) {
         getContentOrNull()?.let { content ->
             _state.value = content.copy(
-                english = content.english.map {
+                primaryWords = content.primaryWords.map {
                     if (it.id == id) it.copy(isSelected = true) else it
                 }
             )
@@ -155,9 +182,9 @@ class GameViewModel @AssistedInject constructor(
     }
 
     private fun handleSuccessWordsResult(words: Pair<List<WordDomain>, List<WordDomain>>) {
-        danishWords = words.first.map { it.mapToItem() }
-        englishWords = words.second.map { it.mapToItem() }
-        guessingItems = danishWords.map { GuessingItem(it.id, false) }
+        learningWords = words.first.map { it.mapToItem() }
+        primaryWords = words.second.map { it.mapToItem() }
+        guessingItems = learningWords.map { GuessingItem(it.id, false) }
         _state.value = GameUiState.Countdown
     }
 
@@ -172,8 +199,8 @@ class GameViewModel @AssistedInject constructor(
         )
 
         _state.value = GameUiState.Content(
-            danish = getPackOfDanishWords(packIds),
-            english = getPackOfEnglishWords(packIds),
+            learningWords = getPackOfLearningWords(packIds),
+            primaryWords = getPackOfPrimaryWords(packIds),
             timerItem = timerItem,
             status = content?.status ?: GameStatus.STARTED
         )
@@ -184,16 +211,15 @@ class GameViewModel @AssistedInject constructor(
         return pack.map { it.id }
     }
 
-    private fun getPackOfDanishWords(ids: List<Int>): List<WordItem> {
-        return danishWords.filter { it.id in ids }.shuffled()
+    private fun getPackOfLearningWords(ids: List<Int>): List<WordItem> {
+        return learningWords.filter { it.id in ids }.shuffled()
     }
 
-    private fun getPackOfEnglishWords(ids: List<Int>): List<WordItem> {
-        return englishWords.filter { it.id in ids }.shuffled()
+    private fun getPackOfPrimaryWords(ids: List<Int>): List<WordItem> {
+        return primaryWords.filter { it.id in ids }.shuffled()
     }
 
     private fun startTimer() = viewModelScope.launch {
-        isTimerStarted = true
         countdownJob = launchTimerFlow()
     }
 
@@ -201,17 +227,21 @@ class GameViewModel @AssistedInject constructor(
         timerFlow.run(COUNTDOWN_STEP)
             .cancellable()
             .collect {
-                getContentOrNull()?.let { content ->
-                    val remainTime = content.timerItem.remainTime - 1
-                    _state.value = content.copy(
-                        timerItem = content.timerItem.copy(
-                            remainTime = remainTime,
-                            progress = remainTime.toFloat().div(COUNTDOWN_TIME_SEC)
-                        ),
-                    )
-                }
-                checkRemainingTime()
+                handleTimerChange()
             }
+    }
+
+    private fun handleTimerChange() {
+        getContentOrNull()?.let { content ->
+            val remainTime = content.timerItem.remainTime - 1
+            _state.value = content.copy(
+                timerItem = content.timerItem.copy(
+                    remainTime = remainTime,
+                    progress = remainTime.toFloat().div(COUNTDOWN_TIME_SEC)
+                ),
+            )
+        }
+        checkRemainingTime()
     }
 
     private fun checkRemainingTime() = viewModelScope.launch {
@@ -236,29 +266,28 @@ class GameViewModel @AssistedInject constructor(
 
     private fun stopTimer() {
         countdownJob?.cancel()
-        isTimerStarted = false
     }
 
     private fun getContentOrNull() = (_state.value as? GameUiState.Content)
 
-    private fun getEnglishSelectedWord(): WordItem? =
-        getContentOrNull()?.english?.firstOrNull { it.isSelected }
+    private fun getPrimarySelectedWord(): WordItem? =
+        getContentOrNull()?.primaryWords?.firstOrNull { it.isSelected }
 
-    private fun getDanishSelectedWord(): WordItem? =
-        getContentOrNull()?.danish?.firstOrNull { it.isSelected }
+    private fun getLearningSelectedWord(): WordItem? =
+        getContentOrNull()?.learningWords?.firstOrNull { it.isSelected }
 
-    private fun invalidateDanishWordSelection(id: Int) {
+    private fun invalidateLearningWordSelection(id: Int) {
         getContentOrNull()?.let { content ->
             _state.value = content.copy(
-                danish = content.danish.map { it.copy(isSelected = it.id == id) }
+                learningWords = content.learningWords.map { it.copy(isSelected = it.id == id) }
             )
         }
     }
 
-    private fun invalidateEnglishWordSelection(id: Int) {
+    private fun invalidatePrimaryWordSelection(id: Int) {
         getContentOrNull()?.let { content ->
             _state.value = content.copy(
-                english = content.english.map { it.copy(isSelected = it.id == id) }
+                primaryWords = content.primaryWords.map { it.copy(isSelected = it.id == id) }
             )
         }
     }
@@ -267,10 +296,10 @@ class GameViewModel @AssistedInject constructor(
         getContentOrNull()?.let { content ->
             pairsCounter += 1
             _state.value = content.copy(
-                danish = content.danish.map {
+                learningWords = content.learningWords.map {
                     if (it.id == id) it.copy(isSelected = false, isGuessed = true) else it
                 },
-                english = content.english.map {
+                primaryWords = content.primaryWords.map {
                     if (it.id == id) it.copy(isSelected = false, isGuessed = true) else it
                 }
             )
@@ -281,29 +310,29 @@ class GameViewModel @AssistedInject constructor(
         }
     }
 
-    private suspend fun markWordsAsWrong(danishWordId: Int, englishWordId: Int) {
+    private suspend fun markWordsAsWrong(learningWordId: Int, primaryWordId: Int) {
         getContentOrNull()?.let { content ->
             _state.value = content.copy(
-                danish = content.danish.map {
-                    if (it.id == danishWordId) it.copy(isSelected = false, isWrong = true) else it
+                learningWords = content.learningWords.map {
+                    if (it.id == learningWordId) it.copy(isSelected = false, isWrong = true) else it
                 },
-                english = content.english.map {
-                    if (it.id == englishWordId) it.copy(isSelected = false, isWrong = true) else it
+                primaryWords = content.primaryWords.map {
+                    if (it.id == primaryWordId) it.copy(isSelected = false, isWrong = true) else it
                 }
             )
             delay(WRONG_GUESS_ERROR_DURATION)
-            invalidateWrongWords(danishWordId, englishWordId)
+            invalidateWrongWords(learningWordId, primaryWordId)
         }
     }
 
-    private fun invalidateWrongWords(danishWordId: Int, englishWordId: Int) {
+    private fun invalidateWrongWords(learningWordId: Int, primaryWordId: Int) {
         getContentOrNull()?.let { content ->
             _state.value = content.copy(
-                danish = content.danish.map {
-                    if (it.id == danishWordId) it.copy(isSelected = false, isWrong = false) else it
+                learningWords = content.learningWords.map {
+                    if (it.id == learningWordId) it.copy(isSelected = false, isWrong = false) else it
                 },
-                english = content.english.map {
-                    if (it.id == englishWordId) it.copy(isSelected = false, isWrong = false) else it
+                primaryWords = content.primaryWords.map {
+                    if (it.id == primaryWordId) it.copy(isSelected = false, isWrong = false) else it
                 }
             )
         }
@@ -311,15 +340,15 @@ class GameViewModel @AssistedInject constructor(
 
     private fun isWholePackGuessed(): Boolean {
         val isGuessed = getContentOrNull()?.let { content ->
-            val isAllEnglishWordsGuessed = content.english.all { it.isGuessed }
-            val isAllDanishWordsGuessed = content.danish.all { it.isGuessed }
-            isAllEnglishWordsGuessed && isAllDanishWordsGuessed
+            val isAllPrimaryWordsGuessed = content.primaryWords.all { it.isGuessed }
+            val isAllLearningWordsGuessed = content.learningWords.all { it.isGuessed }
+            isAllPrimaryWordsGuessed && isAllLearningWordsGuessed
         } ?: false
         return isGuessed
     }
 
     private fun updatePackOfWords() {
-        val currentPackIds = getContentOrNull()?.danish.orEmpty().map { it.id }
+        val currentPackIds = getContentOrNull()?.learningWords.orEmpty().map { it.id }
         guessingItems = guessingItems.map { item ->
             if (item.id in currentPackIds) item.copy(isGuessed = true) else item
         }
@@ -350,10 +379,10 @@ class GameViewModel @AssistedInject constructor(
             _state.value = content.copy(
                 timerItem = TimerItem(),
                 status = GameStatus.FINISHED,
-                danish = content.danish.map {
+                learningWords = content.learningWords.map {
                     it.copy(isSelected = false, isGuessed = false, isWrong = false)
                 },
-                english = content.english.map {
+                primaryWords = content.primaryWords.map {
                     it.copy(isSelected = false, isGuessed = false, isWrong = false)
                 }
             )

@@ -31,7 +31,7 @@ fun LeaderboardView(
 ) {
     Column(modifier) {
         Text(
-            stringResource(R.string.leaderboard_title),
+            stringResource(R.string.home_leaderboard_title),
             modifier.fillMaxWidth().padding(horizontal = Padding.huge),
             textAlign = TextAlign.Start,
             style = MaterialTheme.typography.titleLarge,
@@ -70,7 +70,7 @@ fun EmptyLeaderboard(modifier: Modifier = Modifier) {
             alpha = 0.7f
         )
         Text(
-            text = stringResource(R.string.leaderboard_is_empty),
+            text = stringResource(R.string.home_leaderboard_is_empty),
             color = MaterialTheme.colorScheme.onSurface,
             modifier = modifier.padding(Padding.large),
         )

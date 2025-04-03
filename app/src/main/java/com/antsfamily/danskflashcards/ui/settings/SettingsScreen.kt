@@ -35,7 +35,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -172,7 +171,7 @@ fun SettingsContent(
                 ) {
                     Text(
                         modifier = Modifier.padding(horizontal = Padding.small),
-                        text = stringResource(R.string.button_logout),
+                        text = stringResource(R.string.settings_button_logout),
                         style = MaterialTheme.typography.titleMedium
                     )
                 }
@@ -310,13 +309,13 @@ fun SettingsContent(
                         color = grey_500,
                     )
                     Text(
-                        text = stringResource(R.string.about_development_description),
+                        text = stringResource(R.string.settings_development_description),
                         style = MaterialTheme.typography.bodyMedium,
                         color = grey_500,
                         modifier = Modifier.padding(top = Padding.xSmall),
                     )
                     Text(
-                        text = stringResource(R.string.about_year),
+                        text = stringResource(R.string.settings_year),
                         style = MaterialTheme.typography.bodySmall,
                         color = grey_500,
                     )
