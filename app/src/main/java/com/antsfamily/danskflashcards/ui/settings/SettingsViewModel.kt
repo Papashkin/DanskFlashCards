@@ -2,12 +2,14 @@ package com.antsfamily.danskflashcards.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.antsfamily.danskflashcards.core.model.Avatar
 import com.antsfamily.danskflashcards.core.model.mapToErrorType
 import com.antsfamily.danskflashcards.domain.GetAppVersionUseCase
 import com.antsfamily.danskflashcards.domain.GetLearningLanguageUseCase
 import com.antsfamily.danskflashcards.domain.GetLoggedInUserUseCase
 import com.antsfamily.danskflashcards.domain.GetPrimaryLanguageUseCase
 import com.antsfamily.danskflashcards.domain.SetLanguageUseCase
+import com.antsfamily.danskflashcards.domain.SetUserAvatarUseCase
 import com.antsfamily.danskflashcards.domain.SetUsernameUseCase
 import com.antsfamily.danskflashcards.domain.SignOutWithGoogleUseCase
 import com.antsfamily.danskflashcards.domain.model.LanguageType
@@ -31,6 +33,7 @@ class SettingsViewModel @Inject constructor(
     private val setLanguageUseCase: SetLanguageUseCase,
     private val setUsernameUseCase: SetUsernameUseCase,
     private val signOutWithGoogleUseCase: SignOutWithGoogleUseCase,
+    private val setUserAvatarUseCase: SetUserAvatarUseCase,
 ) : ViewModel() {
 
     private val _showLearningLanguageBottomSheetFlow = MutableSharedFlow<List<LanguageItem>>()
@@ -41,6 +44,10 @@ class SettingsViewModel @Inject constructor(
     val showPrimaryLanguageBottomSheetFlow: SharedFlow<List<LanguageItem>>
         get() = _showPrimaryLanguageBottomSheetFlow.asSharedFlow()
 
+    private val _showAvatarChangeDialogFlow = MutableSharedFlow<Unit>()
+    val showAvatarChangeDialogFlow: SharedFlow<Unit>
+        get() = _showAvatarChangeDialogFlow.asSharedFlow()
+
     private val _navigateToAuthFlow = MutableSharedFlow<Unit>()
     val navigateToAuthFlow: SharedFlow<Unit>
         get() = _navigateToAuthFlow.asSharedFlow()
@@ -50,6 +57,7 @@ class SettingsViewModel @Inject constructor(
         get() = _state.asStateFlow()
 
     private lateinit var userId: String
+    private lateinit var userAvatar: Avatar
 
     init {
         getUserData()
@@ -77,6 +85,20 @@ class SettingsViewModel @Inject constructor(
             val newState = (_state.value as SettingsUiState.Content).copy(
                 username = username
             )
+            _state.value = newState
+        } catch (e: Exception) {
+            handleErrorState(e)
+        }
+    }
+
+    fun onAvatarChangeClick() = viewModelScope.launch {
+        _showAvatarChangeDialogFlow.emit(Unit)
+    }
+
+    fun onAvatarSelected(newAvatar: Avatar) = viewModelScope.launch {
+        try {
+            setUserAvatarUseCase(userId, newAvatar.ordinal)
+            val newState = (_state.value as SettingsUiState.Content).copy(avatar = newAvatar)
             _state.value = newState
         } catch (e: Exception) {
             handleErrorState(e)
@@ -121,6 +143,7 @@ class SettingsViewModel @Inject constructor(
         val user = getLoggedInUserUseCase()
         user?.let {
             userId = it.id
+            userAvatar = it.avatarId?.let { id -> Avatar.entries[id] } ?: Avatar.DEFAULT
             getAppVersion(it.username)
         } ?: run {
             handleErrorState(Exception("user data is empty"))
@@ -143,7 +166,8 @@ class SettingsViewModel @Inject constructor(
             username = username,
             learningLanguage = learningLanguage,
             primaryLanguage = primaryLanguage,
-            appVersion = version
+            appVersion = version,
+            avatar = userAvatar
         )
     }
 

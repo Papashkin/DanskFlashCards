@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import com.antsfamily.danskflashcards.R
 
 enum class Avatar {
+    DEFAULT,
     PEN,
     DOLLY,
     SPIRIT,
@@ -17,11 +18,14 @@ enum class Avatar {
     AVOCADO,
     COFFEE,
     ;
+
+    fun isDefault(): Boolean = this == DEFAULT
 }
 
 @DrawableRes
 fun Avatar.toIconRes(): Int {
     return when(this) {
+        Avatar.DEFAULT -> R.drawable.ic_avatar
         Avatar.PEN -> R.drawable.ic_avatar_01
         Avatar.DOLLY -> R.drawable.ic_avatar_02
         Avatar.SPIRIT -> R.drawable.ic_avatar_03

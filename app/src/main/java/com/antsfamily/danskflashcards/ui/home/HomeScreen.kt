@@ -139,7 +139,7 @@ fun HomeScreenContent(
                 CurrentUserCard(
                     modifier = Modifier.padding(
                         horizontal = Padding.huge,
-                        vertical = Padding.xSmall
+                        vertical = Padding.small
                     ),
                     score = content.user.score,
                     cardsSize = content.cardsSize,
@@ -185,7 +185,7 @@ fun HomeScreenContentPreview1() {
                 isCurrentUser = true,
                 score = 0,
                 date = null,
-                avatar = null
+                avatar = Avatar.DEFAULT
             ),
             leaderboard = emptyList(),
             cardsSize = 1000,

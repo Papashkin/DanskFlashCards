@@ -36,7 +36,7 @@ fun CurrentUserCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(70.dp),
+            .height(80.dp),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(
