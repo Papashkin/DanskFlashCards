@@ -30,7 +30,6 @@ import com.antsfamily.danskflashcards.ui.theme.wistful_700
 fun CurrentUserCard(
     modifier: Modifier = Modifier,
     score: Int,
-    cardsSize: Int,
     place: Int?,
 ) {
     Card(
@@ -54,7 +53,7 @@ fun CurrentUserCard(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "$score/$cardsSize",
+                        text = score.toString(),
                         fontSize = FontSize.H6,
                         textAlign = TextAlign.Center,
                     )
@@ -68,7 +67,7 @@ fun CurrentUserCard(
                 )
             }
             VerticalDivider(
-                Modifier.width(1.dp).padding(vertical = Padding.small),
+                modifier = Modifier.width(1.dp).padding(vertical = Padding.small),
                 color = wistful_300
             )
             Column(
@@ -101,5 +100,5 @@ fun CurrentUserCard(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun CurrentUserCardPreview() {
-    CurrentUserCard(score = 65, cardsSize = 982, place = 12)
+    CurrentUserCard(score = 65, place = 12)
 }

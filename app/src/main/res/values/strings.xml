@@ -49,9 +49,6 @@
     <string name="settings_development_description">developed by Papashkin</string>
     <string name="settings_year">2025</string>
     <string name="settings_language_selection_confirm">Confirm</string>
-    <string name="settings_actions">Actions</string>
-    <string name="settings_action_change_username">Change username</string>
-    <string name="settings_action_change_avatar">Change avatar</string>
     <string name="preference_subtitle_learning">Learning</string>
     <string name="preference_subtitle_primary">Primary</string>
     <string name="username_change_dialog_confirm">Confirm</string>

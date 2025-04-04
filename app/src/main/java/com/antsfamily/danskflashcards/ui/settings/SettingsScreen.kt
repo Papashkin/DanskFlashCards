@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -216,7 +217,9 @@ fun SettingsContent(
             }
 
             Column(
-                modifier = modifier.fillMaxSize(),
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(top = Padding.huge),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Column(
@@ -229,18 +232,18 @@ fun SettingsContent(
                     AvatarIcon(
                         modifier = Modifier.padding(vertical = Padding.medium),
                         avatar = state.avatar
-                    )
+                    ) {
+                        onAvatarChangeClick()
+                    }
                     TextWithTrailingIcon(
-                        modifier = modifier.padding(
-                            vertical = Padding.small,
-                            horizontal = Padding.medium
-                        ),
+                        modifier = modifier.padding(Padding.medium),
                         text = state.username,
                         icon = Icons.Rounded.Edit
                     ) {
                         setIsUsernameDialogVisible(true)
                     }
                 }
+                Spacer(Modifier.height(60.dp))
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -280,28 +283,6 @@ fun SettingsContent(
 //                        valueId = R.string.settings_theme_light
 //                    ) {
 //                    }
-                }
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = Padding.medium),
-                    verticalArrangement = Arrangement.Top,
-                    horizontalAlignment = Alignment.Start
-                ) {
-                    Text(
-                        modifier = Modifier.padding(vertical = Padding.small),
-                        text = stringResource(R.string.settings_actions),
-                        fontSize = FontSize.Body1,
-                        fontWeight = FontWeight.SemiBold,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = grey_500
-                    )
-                    SettingPreferenceView(
-                        title = stringResource(R.string.settings_action_change_avatar),
-                        leadIcon = ImageVector.vectorResource(R.drawable.ic_gallery),
-                    ) {
-                        onAvatarChangeClick()
-                    }
                 }
                 Spacer(Modifier.weight(2f))
                 Column(
