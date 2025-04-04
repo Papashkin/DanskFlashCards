@@ -6,7 +6,6 @@ import com.antsfamily.danskflashcards.core.model.CurrentUserItem
 import com.antsfamily.danskflashcards.core.model.mapToErrorType
 import com.antsfamily.danskflashcards.core.util.orZero
 import com.antsfamily.danskflashcards.domain.GetUsersUseCase
-import com.antsfamily.danskflashcards.domain.GetWordsAmountUseCase
 import com.antsfamily.danskflashcards.domain.UserUpdateFLowUseCase
 import com.antsfamily.danskflashcards.domain.model.UserDomain
 import com.antsfamily.danskflashcards.ui.home.model.LeaderItem
@@ -27,7 +26,6 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = HomeViewModel.Factory::class)
 class HomeViewModel @AssistedInject constructor(
-    private val getWordsAmountUseCase: GetWordsAmountUseCase,
     private val getUsersUseCase: GetUsersUseCase,
     private val userUpdateFLowUseCase: UserUpdateFLowUseCase,
     @Assisted("user") private val user: CurrentUserItem
@@ -42,7 +40,6 @@ class HomeViewModel @AssistedInject constructor(
         private const val LEADERBOARD_SIZE = 5
     }
 
-    private var wordsAmount: Int? = null
     private var currentUser: UserItem? = null
 
     private val _state = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
@@ -53,32 +50,15 @@ class HomeViewModel @AssistedInject constructor(
     val navigationToGameFlow: SharedFlow<Int> = _navigationToGameFlow.asSharedFlow()
 
     init {
-        getCards()
+        getUsers(user)
     }
 
     fun onRetryClick() {
-        getCards()
+        getUsers(user)
     }
 
     fun onStartClick() = viewModelScope.launch(Dispatchers.IO) {
         _navigationToGameFlow.emit(currentUser?.score.orZero())
-    }
-
-    private fun getCards() {
-        if (wordsAmount == null) {
-            getWords()
-        } else {
-            getUsers(user)
-        }
-    }
-
-    private fun getWords() = viewModelScope.launch(Dispatchers.IO) {
-        try {
-            wordsAmount = getWordsAmountUseCase()
-            getUsers(user)
-        } catch (e: Exception) {
-            onGetUsersErrorResult(e)
-        }
     }
 
     private fun getUsers(user: CurrentUserItem) = viewModelScope.launch(Dispatchers.IO) {
@@ -112,7 +92,6 @@ class HomeViewModel @AssistedInject constructor(
         val leaderboardItems = getLeaderboard(users)
         _state.value = HomeUiState.Content(
             user = user,
-            cardsSize = wordsAmount.orZero(),
             leaderboard = leaderboardItems.take(LEADERBOARD_SIZE),
             userPlace = leaderboardItems.firstOrNull { it.isUser }?.place
         )

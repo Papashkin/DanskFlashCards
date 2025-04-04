@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -31,7 +29,6 @@ import com.antsfamily.danskflashcards.ui.theme.Padding
 import com.antsfamily.danskflashcards.ui.theme.grey_500
 import com.antsfamily.danskflashcards.ui.theme.wistful_100
 import com.antsfamily.danskflashcards.ui.theme.wistful_500
-import com.antsfamily.danskflashcards.ui.theme.wistful_700
 import com.antsfamily.danskflashcards.ui.theme.wistful_800
 
 @Composable
@@ -40,15 +37,10 @@ fun LogOutDialog(
     onConfirmClick: () -> Unit,
 ) {
     Dialog(onDismissRequest = { onDismiss() }) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp),
-            shape = RoundedCornerShape(16.dp),
-        ) {
+        Card(shape = RoundedCornerShape(16.dp)) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
                     .padding(Padding.medium),
                 verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -56,6 +48,7 @@ fun LogOutDialog(
                 Box(
                     modifier = Modifier
                         .size(80.dp)
+                        .padding(Padding.large)
                         .background(
                             color = wistful_100,
                             shape = CircleShape
@@ -66,7 +59,7 @@ fun LogOutDialog(
                         imageVector = ImageVector.vectorResource(R.drawable.ic_sad_face),
                         contentDescription = null,
                         tint = grey_500,
-                        modifier = Modifier.size(60.dp)
+                        modifier = Modifier.size(24.dp)
                     )
                 }
                 Text(

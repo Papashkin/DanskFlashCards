@@ -9,7 +9,6 @@ sealed class HomeUiState {
     data class Content(
         val user: UserItem,
         val leaderboard: List<LeaderItem>,
-        val cardsSize: Int,
         val userPlace: Int?
     ) : HomeUiState()
 

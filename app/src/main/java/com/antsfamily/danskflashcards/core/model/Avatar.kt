@@ -17,6 +17,8 @@ enum class Avatar {
     BEAR,
     AVOCADO,
     COFFEE,
+    ARAGOG,
+    SANTA
     ;
 
     fun isDefault(): Boolean = this == DEFAULT
@@ -38,5 +40,7 @@ fun Avatar.toIconRes(): Int {
         Avatar.BEAR -> R.drawable.ic_avatar_10
         Avatar.AVOCADO -> R.drawable.ic_avatar_11
         Avatar.COFFEE -> R.drawable.ic_avatar_12
+        Avatar.SANTA -> R.drawable.ic_avatar_13
+        Avatar.ARAGOG -> R.drawable.ic_avatar_14
     }
 }

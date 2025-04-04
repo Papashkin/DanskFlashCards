@@ -103,7 +103,7 @@ fun HomeScreenContent(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(320.dp)
+                    .height(340.dp)
                     .background(
                         color = wistful_700,
                         shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp)
@@ -133,16 +133,12 @@ fun HomeScreenContent(
                     isFirstTime = content.user.isFirstTime()
                 )
                 AvatarIcon(
-                    modifier = Modifier.padding(vertical = Padding.medium),
-                    avatar = content.user.avatar
+                    modifier = Modifier.padding(Padding.medium),
+                    avatar = content.user.avatar,
                 )
                 CurrentUserCard(
-                    modifier = Modifier.padding(
-                        horizontal = Padding.huge,
-                        vertical = Padding.small
-                    ),
+                    modifier = Modifier.padding(horizontal = Padding.huge),
                     score = content.user.score,
-                    cardsSize = content.cardsSize,
                     place = content.userPlace
                 )
             }
@@ -188,7 +184,6 @@ fun HomeScreenContentPreview1() {
                 avatar = Avatar.DEFAULT
             ),
             leaderboard = emptyList(),
-            cardsSize = 1000,
             userPlace = null
         ), {}, {}
     )
@@ -225,7 +220,6 @@ fun HomeScreenContentPreview2() {
                     name = "Isabella", surname = "Vaughn", score = 29, index = 4, isUser = false
                 ),
             ),
-            cardsSize = 1000,
             userPlace = 3
         ), {}, {}
     )
