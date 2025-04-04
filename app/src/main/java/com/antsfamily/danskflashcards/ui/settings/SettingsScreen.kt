@@ -1,6 +1,5 @@
 package com.antsfamily.danskflashcards.ui.settings
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,15 +9,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.antsfamily.danskflashcards.R
+import com.antsfamily.danskflashcards.core.presentation.AvatarIcon
 import com.antsfamily.danskflashcards.core.presentation.ErrorViewWithRetry
 import com.antsfamily.danskflashcards.core.presentation.FullScreenLoading
 import com.antsfamily.danskflashcards.core.presentation.TopBar
@@ -54,8 +51,6 @@ import com.antsfamily.danskflashcards.ui.theme.FontSize
 import com.antsfamily.danskflashcards.ui.theme.Padding
 import com.antsfamily.danskflashcards.ui.theme.SetSystemBarColors
 import com.antsfamily.danskflashcards.ui.theme.grey_500
-import com.antsfamily.danskflashcards.ui.theme.wistful_100
-import com.antsfamily.danskflashcards.ui.theme.wistful_700
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -209,22 +204,7 @@ fun SettingsContent(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Box(
-                        modifier = modifier
-                            .size(80.dp)
-                            .background(
-                                color = wistful_100,
-                                shape = CircleShape
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(R.drawable.ic_avatar),
-                            contentDescription = null,
-                            tint = wistful_700,
-                            modifier = modifier.size(60.dp)
-                        )
-                    }
+                    AvatarIcon(Modifier.padding(vertical = Padding.medium))
                     TextWithTrailingIcon(
                         modifier = modifier.padding(Padding.medium),
                         text = state.username,

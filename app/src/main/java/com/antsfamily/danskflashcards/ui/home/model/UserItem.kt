@@ -1,5 +1,6 @@
 package com.antsfamily.danskflashcards.ui.home.model
 
+import com.antsfamily.danskflashcards.core.model.Avatar
 import com.antsfamily.danskflashcards.domain.model.UserDomain
 import com.antsfamily.danskflashcards.core.util.toIsoString
 
@@ -10,6 +11,7 @@ data class UserItem(
     val isCurrentUser: Boolean,
     val score: Int,
     val date: String?,
+    val avatar: Avatar?,
 ) {
 
     fun isFirstTime(): Boolean = (score == 0) && date.isNullOrBlank()
@@ -23,6 +25,7 @@ fun UserDomain.toItem(currentUserId: String): UserItem {
         surname = username.last(),
         score = score,
         date = date?.toIsoString(),
-        isCurrentUser = id == currentUserId
+        isCurrentUser = id == currentUserId,
+        avatar = null,
     )
 }

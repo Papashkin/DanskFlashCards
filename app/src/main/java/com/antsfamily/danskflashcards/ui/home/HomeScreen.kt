@@ -15,11 +15,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -28,7 +30,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.antsfamily.danskflashcards.R
+import com.antsfamily.danskflashcards.core.model.Avatar
 import com.antsfamily.danskflashcards.core.model.CurrentUserItem
+import com.antsfamily.danskflashcards.core.presentation.AvatarIcon
 import com.antsfamily.danskflashcards.core.presentation.ErrorViewWithRetry
 import com.antsfamily.danskflashcards.core.presentation.FullScreenLoading
 import com.antsfamily.danskflashcards.core.presentation.TopBar
@@ -41,6 +45,8 @@ import com.antsfamily.danskflashcards.ui.theme.FontSize
 import com.antsfamily.danskflashcards.ui.theme.Padding
 import com.antsfamily.danskflashcards.ui.theme.SetSystemBarColors
 import com.antsfamily.danskflashcards.ui.theme.wistful_0
+import com.antsfamily.danskflashcards.ui.theme.wistful_500
+import com.antsfamily.danskflashcards.ui.theme.wistful_600
 import com.antsfamily.danskflashcards.ui.theme.wistful_700
 
 @Composable
@@ -102,15 +108,21 @@ fun HomeScreenContent(
                         color = wistful_700,
                         shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp)
                     ),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                TopBar {
+                TopBar(modifier = Modifier.padding(end = Padding.small)) {
                     IconButton(
+                        colors = IconButtonColors(
+                            containerColor = wistful_600,
+                            contentColor = wistful_0,
+                            disabledContentColor = wistful_500,
+                            disabledContainerColor = wistful_0
+                        ),
                         onClick = { onSettingsClick() }
                     ) {
                         Icon(
                             imageVector = ImageVector.vectorResource(R.drawable.ic_home_settings),
                             modifier = Modifier.size(24.dp),
-                            tint = wistful_0,
                             contentDescription = null
                         )
                     }
@@ -120,7 +132,10 @@ fun HomeScreenContent(
                     color = wistful_0,
                     isFirstTime = content.user.isFirstTime()
                 )
-                Spacer(Modifier.height(16.dp))
+                AvatarIcon(
+                    modifier = Modifier.padding(vertical = Padding.medium),
+                    avatar = content.user.avatar
+                )
                 CurrentUserCard(
                     modifier = Modifier.padding(
                         horizontal = Padding.huge,
@@ -169,7 +184,8 @@ fun HomeScreenContentPreview1() {
                 surname = "Doesome",
                 isCurrentUser = true,
                 score = 0,
-                date = null
+                date = null,
+                avatar = null
             ),
             leaderboard = emptyList(),
             cardsSize = 1000,
@@ -189,7 +205,8 @@ fun HomeScreenContentPreview2() {
                 surname = "Doesome",
                 isCurrentUser = true,
                 score = 143,
-                date = "10.02.2024 11:22:33"
+                date = "10.02.2024 11:22:33",
+                avatar = Avatar.CACTUS
             ),
             leaderboard = listOf(
                 LeaderItem(

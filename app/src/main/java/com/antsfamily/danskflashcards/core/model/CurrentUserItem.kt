@@ -19,7 +19,8 @@ data class CurrentUserItem(
             surname = username.last(),
             isCurrentUser = true,
             score = 0,
-            date = null
+            date = null,
+            avatar = null
         )
     }
 }
