@@ -6,4 +6,5 @@ object FirebaseConstants {
     const val FIELD_NAME = "name"
     const val FIELD_SCORE = "score"
     const val FIELD_TIMESTAMP = "timestamp"
+    const val FIELD_AVATAR_ID = "avatar"
 }

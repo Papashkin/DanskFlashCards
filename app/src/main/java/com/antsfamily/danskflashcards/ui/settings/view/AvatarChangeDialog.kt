@@ -1,33 +1,28 @@
 package com.antsfamily.danskflashcards.ui.settings.view
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -35,32 +30,27 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.antsfamily.danskflashcards.R
+import com.antsfamily.danskflashcards.core.model.Avatar
+import com.antsfamily.danskflashcards.core.model.toIconRes
 import com.antsfamily.danskflashcards.ui.theme.Padding
-import com.antsfamily.danskflashcards.ui.theme.alert
 import com.antsfamily.danskflashcards.ui.theme.grey_500
-import com.antsfamily.danskflashcards.ui.theme.wistful_0
 import com.antsfamily.danskflashcards.ui.theme.wistful_100
 import com.antsfamily.danskflashcards.ui.theme.wistful_400
 import com.antsfamily.danskflashcards.ui.theme.wistful_900
 
 @Composable
-fun UsernameChangeDialog(
-    value: String,
+fun AvatarChangeDialog(
+    currentAvatar: Avatar,
     onDismiss: () -> Unit,
-    onConfirmClick: (String) -> Unit,
+    onConfirmClick: (Avatar) -> Unit,
 ) {
-    val (username, setUsername) = rememberSaveable { mutableStateOf(value) }
+    val (selectedItem, setSelectedItem) = rememberSaveable { mutableStateOf(currentAvatar) }
 
     Dialog(onDismissRequest = {}) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp),
-            shape = RoundedCornerShape(16.dp),
-        ) {
+        Card(shape = RoundedCornerShape(16.dp)) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
                     .padding(Padding.medium),
                 verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -76,54 +66,34 @@ fun UsernameChangeDialog(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.ic_username_change),
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_gallery),
                         contentDescription = null,
                         tint = grey_500,
                         modifier = Modifier.size(24.dp)
                     )
                 }
                 Text(
-                    text = stringResource(R.string.username_change_title),
+                    text = "Pick up one of following avatars:",
                     style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(Padding.small),
+                    modifier = Modifier.padding(Padding.medium),
                 )
 
-                TextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(60.dp),
-                    value = username,
-                    textStyle = MaterialTheme.typography.bodyLarge,
-                    onValueChange = {
-                        setUsername(it)
-                    },
-                    label = {
-                        Text(stringResource(R.string.username_change_label))
-                    },
-                    isError = username.isBlank(),
-                    trailingIcon = {
-                        Icon(
-                            modifier = Modifier.clickable { setUsername("") },
-                            imageVector = Icons.Outlined.Close,
-                            contentDescription = null
-                        )
-                    },
-                    colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = wistful_0,
-                        focusedContainerColor = wistful_0,
-                        errorContainerColor = wistful_0,
-                        errorTrailingIconColor = alert,
-                        errorLabelColor = alert,
-                        focusedTrailingIconColor = grey_500,
-                        unfocusedTrailingIconColor = grey_500,
-                        errorIndicatorColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent,
-                    ),
-                    shape = RoundedCornerShape(16.dp),
-                    singleLine = true,
-                )
+                LazyVerticalGrid(
+                    modifier = Modifier.padding(start = 12.dp, end = 2.dp, top = 8.dp, bottom = 12.dp),
+                    columns = GridCells.Adaptive(minSize = 90.dp)
+                ) {
+                    items(Avatar.entries) { avatar ->
+                        SelectableImage(
+                            modifier = Modifier.size(90.dp).padding(Padding.small),
+                            imageVector = ImageVector.vectorResource(avatar.toIconRes()),
+                            isSelected = avatar == selectedItem
+                        ) {
+                            setSelectedItem(avatar)
+                        }
+                    }
+                }
+
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
@@ -139,8 +109,7 @@ fun UsernameChangeDialog(
                         )
                     }
                     TextButton(
-                        onClick = { onConfirmClick(username) },
-                        enabled = username.isNotBlank(),
+                        onClick = { onConfirmClick(selectedItem) },
                         modifier = Modifier.padding(Padding.small),
                     ) {
                         Text(
@@ -157,6 +126,10 @@ fun UsernameChangeDialog(
 
 @Preview
 @Composable
-private fun UsernameChangeDialogPreview() {
-    UsernameChangeDialog("John Doe", {}, {})
+private fun AvatarChangeDialogPreview() {
+    AvatarChangeDialog(
+        currentAvatar = Avatar.DOLLY,
+        {},
+        {},
+    )
 }

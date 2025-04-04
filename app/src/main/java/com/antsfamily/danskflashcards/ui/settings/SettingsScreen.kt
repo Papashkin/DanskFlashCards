@@ -35,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.antsfamily.danskflashcards.R
+import com.antsfamily.danskflashcards.core.model.Avatar
 import com.antsfamily.danskflashcards.core.presentation.AvatarIcon
 import com.antsfamily.danskflashcards.core.presentation.ErrorViewWithRetry
 import com.antsfamily.danskflashcards.core.presentation.FullScreenLoading
@@ -42,6 +43,7 @@ import com.antsfamily.danskflashcards.core.presentation.TopBar
 import com.antsfamily.danskflashcards.core.util.toStringRes
 import com.antsfamily.danskflashcards.domain.model.LanguageType
 import com.antsfamily.danskflashcards.ui.onboarding.model.LanguageItem
+import com.antsfamily.danskflashcards.ui.settings.view.AvatarChangeDialog
 import com.antsfamily.danskflashcards.ui.settings.view.LanguageBottomSheet
 import com.antsfamily.danskflashcards.ui.settings.view.LogOutDialog
 import com.antsfamily.danskflashcards.ui.settings.view.SettingPreferenceView
@@ -63,6 +65,9 @@ fun SettingsScreen(
 
     var isLearningLanguageBottomSheetVisible by remember { mutableStateOf(false) }
     var isPrimaryLanguageBottomSheetVisible by remember { mutableStateOf(false) }
+    val (isAvatarChangeDialogVisible, setIsAvatarChangeDialogVisible) = remember {
+        mutableStateOf(false)
+    }
     val (languages, setLanguages) = remember { mutableStateOf<List<LanguageItem>>(emptyList()) }
 
     val state = viewModel.state.collectAsState()
@@ -75,7 +80,7 @@ fun SettingsScreen(
             onLogoutConfirm = { viewModel.onLogOutConfirm() },
             onNavigateBack = { navigateBack() },
             onUsernameChanged = { viewModel.onUsernameChanged(it) },
-            onAvatarChangeClick = {}
+            onAvatarChangeClick = { viewModel.onAvatarChangeClick() }
         )
 
         is SettingsUiState.Error -> ErrorViewWithRetry(errorType = stateValue.type) {
@@ -103,6 +108,11 @@ fun SettingsScreen(
             isPrimaryLanguageBottomSheetVisible = true
         }
     }
+    LaunchedEffect(Unit) {
+        viewModel.showAvatarChangeDialogFlow.collect {
+            setIsAvatarChangeDialogVisible(true)
+        }
+    }
 
     if (isLearningLanguageBottomSheetVisible && languages.isNotEmpty()) {
         LanguageBottomSheet(
@@ -127,6 +137,18 @@ fun SettingsScreen(
             isPrimary = true,
             onLanguageSelected = {
                 viewModel.onNewLanguageSelected(it, true)
+            }
+        )
+    }
+    if (isAvatarChangeDialogVisible) {
+        AvatarChangeDialog(
+            currentAvatar = (state.value as SettingsUiState.Content).avatar,
+            onDismiss = {
+                setIsAvatarChangeDialogVisible(false)
+            },
+            onConfirmClick = {
+                setIsAvatarChangeDialogVisible(false)
+                viewModel.onAvatarSelected(it)
             }
         )
     }
@@ -204,9 +226,15 @@ fun SettingsContent(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    AvatarIcon(Modifier.padding(vertical = Padding.medium))
+                    AvatarIcon(
+                        modifier = Modifier.padding(vertical = Padding.medium),
+                        avatar = state.avatar
+                    )
                     TextWithTrailingIcon(
-                        modifier = modifier.padding(Padding.medium),
+                        modifier = modifier.padding(
+                            vertical = Padding.small,
+                            horizontal = Padding.medium
+                        ),
                         text = state.username,
                         icon = Icons.Rounded.Edit
                     ) {
@@ -245,13 +273,13 @@ fun SettingsContent(
                     ) {
                         onPrimaryLanguageClick()
                     }
-                    SettingPreferenceView(
-                        title = stringResource(R.string.settings_pref_theme),
-                        leadIcon = ImageVector.vectorResource(R.drawable.ic_settings_theme),
-                        valueId = R.string.settings_theme_light
-                    ) {
-                        //TODO implement theme switch
-                    }
+                    //TODO implement theme switch
+//                    SettingPreferenceView(
+//                        title = stringResource(R.string.settings_pref_theme),
+//                        leadIcon = ImageVector.vectorResource(R.drawable.ic_settings_theme),
+//                        valueId = R.string.settings_theme_light
+//                    ) {
+//                    }
                 }
                 Column(
                     modifier = Modifier
@@ -270,7 +298,7 @@ fun SettingsContent(
                     )
                     SettingPreferenceView(
                         title = stringResource(R.string.settings_action_change_avatar),
-                        leadIcon = ImageVector.vectorResource(R.drawable.ic_home_settings),
+                        leadIcon = ImageVector.vectorResource(R.drawable.ic_gallery),
                     ) {
                         onAvatarChangeClick()
                     }
@@ -319,7 +347,8 @@ private fun ContentPreview() {
             username = "Long-lasting Partymaker Doe",
             learningLanguage = LanguageType.DE,
             primaryLanguage = LanguageType.EN,
-            appVersion = "1.0.0 (81)"
+            appVersion = "1.0.0 (81)",
+            avatar = Avatar.AVOCADO
         ),
         onLogoutConfirm = {},
         onLearningLanguageClick = {},

@@ -32,3 +32,4 @@ val leaderboard_silver = Color(0xFFC0C0C0)
 val leaderboard_bronze = Color(0xFFCD7F32)
 
 val alert = Color(0xFFFF4D00)
+val success = Color(0xFF3ED715)

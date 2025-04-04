@@ -11,7 +11,7 @@ data class UserItem(
     val isCurrentUser: Boolean,
     val score: Int,
     val date: String?,
-    val avatar: Avatar?,
+    val avatar: Avatar,
 ) {
 
     fun isFirstTime(): Boolean = (score == 0) && date.isNullOrBlank()
@@ -26,6 +26,6 @@ fun UserDomain.toItem(currentUserId: String): UserItem {
         score = score,
         date = date?.toIsoString(),
         isCurrentUser = id == currentUserId,
-        avatar = null,
+        avatar = avatarId?.let { Avatar.entries.toTypedArray()[it] } ?: Avatar.DEFAULT
     )
 }

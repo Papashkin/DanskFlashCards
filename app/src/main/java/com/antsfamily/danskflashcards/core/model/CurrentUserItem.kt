@@ -20,7 +20,7 @@ data class CurrentUserItem(
             isCurrentUser = true,
             score = 0,
             date = null,
-            avatar = null
+            avatar = Avatar.DEFAULT
         )
     }
 }
