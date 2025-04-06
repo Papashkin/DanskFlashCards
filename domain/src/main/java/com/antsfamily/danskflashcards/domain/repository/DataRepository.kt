@@ -1,23 +1,23 @@
-package com.antsfamily.danskflashcards.data.repository
+package com.antsfamily.danskflashcards.domain.repository
 
-import com.antsfamily.danskflashcards.data.model.WordApiModel
+import com.antsfamily.danskflashcards.domain.model.UserDomain
+import com.antsfamily.danskflashcards.domain.model.WordDomain
 import com.google.android.gms.tasks.Task
 import com.google.android.play.core.appupdate.AppUpdateInfo
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.flow.Flow
 
 interface DataRepository {
-    fun getCurrentUser(): FirebaseUser?
+    suspend fun getCurrentUser(): UserDomain?
     fun getAppUpdateInfo(): Task<AppUpdateInfo>
     fun startAppUpdate(updateInfo: AppUpdateInfo)
-    suspend fun getWords(): List<WordApiModel>
+    suspend fun getWords(): List<WordDomain>
     suspend fun getWebClientId(): String?
-    suspend fun getUserByID(id: String): DocumentSnapshot?
-    suspend fun getUsers(): QuerySnapshot
-    suspend fun getUsersFLow(): Flow<QuerySnapshot>
-    suspend fun updateUser(id: String, data: HashMap<String, Any>)
+    suspend fun getUserByID(id: String): UserDomain?
+    suspend fun getUsers(): List<UserDomain>
+    suspend fun getUsersFLow(): Flow<List<UserDomain>>
+    suspend fun updateUserScore(id: String, name: String, score: Int)
+    suspend fun updateUserName(id: String, name: String)
+    suspend fun updateUserAvatar(id: String, avatarId: Int)
     fun getAppVersion(): String?
     suspend fun isOnboardingPassed(): Boolean
     suspend fun getLearningLanguage(): String?

@@ -1,7 +1,7 @@
 package com.antsfamily.danskflashcards.ui.game.model
 
 import androidx.compose.ui.graphics.Color
-import com.antsfamily.danskflashcards.domain.model.WordDomain
+import com.antsfamily.danskflashcards.domain.model.SpecificLanguageWordDomain
 import com.antsfamily.danskflashcards.ui.theme.alert
 import com.antsfamily.danskflashcards.ui.theme.wistful_0
 import com.antsfamily.danskflashcards.ui.theme.wistful_100
@@ -31,7 +31,7 @@ fun WordItem.mapToTextColor(): Color = when {
     else -> wistful_1000
 }
 
-fun WordDomain.mapToItem(): WordItem {
+fun SpecificLanguageWordDomain.mapToItem(): WordItem {
     return WordItem(
         id = this.id,
         value = this.value,

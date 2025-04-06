@@ -1,4 +1,4 @@
-package com.antsfamily.danskflashcards.data.model
+package com.antsfamily.danskflashcards.domain.model
 
 enum class SignInType {
     GOOGLE,

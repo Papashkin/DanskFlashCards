@@ -11,10 +11,10 @@ import com.antsfamily.danskflashcards.core.util.HOME_SCREEN_PAIRS_AMOUNT
 import com.antsfamily.danskflashcards.core.util.WRONG_GUESS_ERROR_DURATION
 import com.antsfamily.danskflashcards.core.util.ZERO
 import com.antsfamily.danskflashcards.core.util.orZero
-import com.antsfamily.danskflashcards.domain.CountdownTimerFlow
-import com.antsfamily.danskflashcards.domain.GetWordsUseCase
-import com.antsfamily.danskflashcards.domain.SetPersonalBestUseCase
-import com.antsfamily.danskflashcards.domain.model.WordDomain
+import com.antsfamily.danskflashcards.domain.model.SpecificLanguageWordDomain
+import com.antsfamily.danskflashcards.domain.usecase.CountdownTimerFlow
+import com.antsfamily.danskflashcards.domain.usecase.GetWordsUseCase
+import com.antsfamily.danskflashcards.domain.usecase.SetPersonalBestUseCase
 import com.antsfamily.danskflashcards.ui.game.model.GameOverItem
 import com.antsfamily.danskflashcards.ui.game.model.GameStatus
 import com.antsfamily.danskflashcards.ui.game.model.GuessingItem
@@ -175,15 +175,18 @@ class GameViewModel @AssistedInject constructor(
     private fun getWords() = viewModelScope.launch {
         try {
             val words = getWordsUseCase()
-            handleSuccessWordsResult(words)
+            handleSuccessWordsResult(words.first, words.second)
         } catch (e: Exception) {
             _state.value = GameUiState.Error(e.mapToErrorType())
         }
     }
 
-    private fun handleSuccessWordsResult(words: Pair<List<WordDomain>, List<WordDomain>>) {
-        learningWords = words.first.map { it.mapToItem() }
-        primaryWords = words.second.map { it.mapToItem() }
+    private fun handleSuccessWordsResult(
+        learningWords: List<SpecificLanguageWordDomain>,
+        primaryWords: List<SpecificLanguageWordDomain>
+    ) {
+        this.learningWords = learningWords.map { it.mapToItem() }
+        this.primaryWords = primaryWords.map { it.mapToItem() }
         guessingItems = learningWords.map { GuessingItem(it.id, false) }
         _state.value = GameUiState.Countdown
     }

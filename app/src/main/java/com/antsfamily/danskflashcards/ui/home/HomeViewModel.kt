@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.antsfamily.danskflashcards.core.model.CurrentUserItem
 import com.antsfamily.danskflashcards.core.model.mapToErrorType
 import com.antsfamily.danskflashcards.core.util.orZero
-import com.antsfamily.danskflashcards.domain.GetUsersUseCase
-import com.antsfamily.danskflashcards.domain.UserUpdateFLowUseCase
+import com.antsfamily.danskflashcards.domain.usecase.GetUsersUseCase
+import com.antsfamily.danskflashcards.domain.usecase.UserUpdateFLowUseCase
 import com.antsfamily.danskflashcards.domain.model.UserDomain
 import com.antsfamily.danskflashcards.ui.home.model.LeaderItem
 import com.antsfamily.danskflashcards.ui.home.model.UserItem

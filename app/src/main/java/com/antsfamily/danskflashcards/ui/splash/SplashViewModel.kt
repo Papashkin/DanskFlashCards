@@ -3,11 +3,10 @@ package com.antsfamily.danskflashcards.ui.splash
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.antsfamily.danskflashcards.core.model.CurrentUserItem
-import com.antsfamily.danskflashcards.core.model.mapToItem
-import com.antsfamily.danskflashcards.domain.GetAppUpdateInfoUseCase
-import com.antsfamily.danskflashcards.domain.GetLoggedInUserUseCase
-import com.antsfamily.danskflashcards.domain.IsOnboardingPassedUseCase
-import com.antsfamily.danskflashcards.domain.StartAppUpdateUseCase
+import com.antsfamily.danskflashcards.domain.usecase.GetAppUpdateInfoUseCase
+import com.antsfamily.danskflashcards.domain.usecase.GetLoggedInUserUseCase
+import com.antsfamily.danskflashcards.domain.usecase.IsOnboardingPassedUseCase
+import com.antsfamily.danskflashcards.domain.usecase.StartAppUpdateUseCase
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
