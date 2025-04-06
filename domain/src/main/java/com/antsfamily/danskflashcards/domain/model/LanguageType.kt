@@ -7,5 +7,4 @@ enum class LanguageType {
     RU,
     ;
 
-    fun isEnglish(): Boolean = this == EN
 }

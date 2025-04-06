@@ -1,5 +1,6 @@
 package com.antsfamily.danskflashcards.data.source.remote
 
+import com.antsfamily.danskflashcards.data.SignInResult
 import com.antsfamily.danskflashcards.data.model.WordApiModel
 import com.google.android.gms.tasks.Task
 import com.google.android.play.core.appupdate.AppUpdateInfo
@@ -17,4 +18,8 @@ interface RemoteSource {
     suspend fun getUsers(): QuerySnapshot
     suspend fun getUsersFLow(): Flow<QuerySnapshot>
     suspend fun updateUser(id: String, data: HashMap<String, Any>)
+
+    suspend fun getGoogleSignInToken(clientId: String?): String?
+    suspend fun signInWithGoogle(token: String): SignInResult
+    suspend fun signOutFromGoogle()
 }

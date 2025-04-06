@@ -180,7 +180,6 @@ fun HomeScreenContentPreview1() {
                 surname = "Doesome",
                 isCurrentUser = true,
                 score = 0,
-                date = null,
                 avatar = Avatar.DEFAULT
             ),
             leaderboard = emptyList(),
@@ -200,7 +199,6 @@ fun HomeScreenContentPreview2() {
                 surname = "Doesome",
                 isCurrentUser = true,
                 score = 143,
-                date = "10.02.2024 11:22:33",
                 avatar = Avatar.CACTUS
             ),
             leaderboard = listOf(

@@ -1,6 +1,6 @@
-package com.antsfamily.danskflashcards.domain
+package com.antsfamily.danskflashcards.domain.usecase
 
-import com.antsfamily.danskflashcards.data.repository.DataRepository
+import com.antsfamily.danskflashcards.domain.repository.DataRepository
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import javax.inject.Inject
 

@@ -1,11 +1,13 @@
 package com.antsfamily.danskflashcards.data.di
 
-import com.antsfamily.danskflashcards.data.repository.DataRepository
+import com.antsfamily.danskflashcards.data.repository.AuthRepositoryImpl
 import com.antsfamily.danskflashcards.data.repository.DataRepositoryImpl
 import com.antsfamily.danskflashcards.data.source.local.LocalSource
 import com.antsfamily.danskflashcards.data.source.local.LocalSourceImpl
 import com.antsfamily.danskflashcards.data.source.remote.RemoteSource
 import com.antsfamily.danskflashcards.data.source.remote.RemoteSourceImpl
+import com.antsfamily.danskflashcards.domain.repository.AuthRepository
+import com.antsfamily.danskflashcards.domain.repository.DataRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -16,7 +18,10 @@ import dagger.hilt.components.SingletonComponent
 abstract class RepositoryModule {
 
     @Binds
-    abstract fun bindsDataRepository(dataRepositoryImpl: DataRepositoryImpl): DataRepository
+    abstract fun bindsAuthRepository(repositoryImpl: AuthRepositoryImpl): AuthRepository
+
+    @Binds
+    abstract fun bindsDataRepository(repositoryImpl: DataRepositoryImpl): DataRepository
 
     @Binds
     abstract fun bindsLocalSource(localSourceImpl: LocalSourceImpl): LocalSource

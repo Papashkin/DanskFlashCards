@@ -1,4 +1,4 @@
-package com.antsfamily.danskflashcards.domain
+package com.antsfamily.danskflashcards.domain.usecase
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow

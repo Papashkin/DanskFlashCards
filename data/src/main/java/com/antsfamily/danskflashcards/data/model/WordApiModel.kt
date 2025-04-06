@@ -1,5 +1,6 @@
 package com.antsfamily.danskflashcards.data.model
 
+import com.antsfamily.danskflashcards.domain.model.WordDomain
 import com.google.gson.annotations.SerializedName
 
 data class WordApiModel(
@@ -14,3 +15,15 @@ data class WordApiModel(
     @SerializedName("word_ru")
     val russian: String
 )
+
+fun List<WordApiModel>.mapToDomain(): List<WordDomain> {
+    return this.map { word ->
+        WordDomain(
+            id = word.id,
+            danish = word.danish,
+            german = word.german,
+            english = word.english,
+            russian = word.russian,
+        )
+    }
+}

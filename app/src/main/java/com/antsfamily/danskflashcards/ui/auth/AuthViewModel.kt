@@ -6,9 +6,9 @@ import com.antsfamily.danskflashcards.core.model.CurrentUserItem
 import com.antsfamily.danskflashcards.core.model.ErrorType
 import com.antsfamily.danskflashcards.core.model.mapToErrorType
 import com.antsfamily.danskflashcards.core.model.mapToItem
-import com.antsfamily.danskflashcards.data.model.SignInType
-import com.antsfamily.danskflashcards.domain.IsOnboardingPassedUseCase
-import com.antsfamily.danskflashcards.domain.SignInUseCase
+import com.antsfamily.danskflashcards.domain.model.SignInType
+import com.antsfamily.danskflashcards.domain.usecase.IsOnboardingPassedUseCase
+import com.antsfamily.danskflashcards.domain.usecase.SignInUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -2,9 +2,9 @@ package com.antsfamily.danskflashcards.ui.onboarding2
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.antsfamily.danskflashcards.domain.GetLearningLanguageUseCase
-import com.antsfamily.danskflashcards.domain.SetLanguageUseCase
-import com.antsfamily.danskflashcards.domain.SetOnboardingIsPassedUseCase
+import com.antsfamily.danskflashcards.domain.usecase.GetLearningLanguageUseCase
+import com.antsfamily.danskflashcards.domain.usecase.SetLanguageUseCase
+import com.antsfamily.danskflashcards.domain.usecase.SetOnboardingIsPassedUseCase
 import com.antsfamily.danskflashcards.domain.model.LanguageType
 import com.antsfamily.danskflashcards.ui.onboarding.model.LanguageItem
 import dagger.hilt.android.lifecycle.HiltViewModel

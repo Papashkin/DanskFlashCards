@@ -1,17 +1,17 @@
 package com.antsfamily.danskflashcards.domain.model
 
-import com.antsfamily.danskflashcards.data.model.WordApiModel
-
 data class WordDomain(
     val id: Int,
-    val type: LanguageType,
-    val value: String,
+    val danish : String,
+    val german : String,
+    val english : String,
+    val russian : String,
 )
 
-fun WordApiModel?.mapToDomain(type: LanguageType): WordDomain? {
+fun WordDomain?.toSpecificLanguage(type: LanguageType): SpecificLanguageWordDomain? {
     if (this == null) return null
 
-    return WordDomain(
+    return SpecificLanguageWordDomain(
         id = this.id,
         type = type,
         value = when (type) {

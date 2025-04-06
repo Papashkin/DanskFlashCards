@@ -1,5 +1,7 @@
 package com.antsfamily.danskflashcards.data.source.remote
 
+import com.antsfamily.danskflashcards.data.GoogleAuthUiClient
+import com.antsfamily.danskflashcards.data.SignInResult
 import com.antsfamily.danskflashcards.data.model.WordApiModel
 import com.google.android.gms.tasks.Task
 import com.google.android.play.core.appupdate.AppUpdateInfo
@@ -13,7 +15,8 @@ class RemoteSourceImpl @Inject constructor(
     private val firestoreHandler: FirestoreHandler,
     private val firebaseHandler: FirebaseHandler,
     private val updateManager: UpdateManager,
-    private val service: WordsApiService
+    private val service: WordsApiService,
+    private val client: GoogleAuthUiClient,
 ) : RemoteSource {
 
     override fun getCurrentUser(): FirebaseUser? {
@@ -46,5 +49,17 @@ class RemoteSourceImpl @Inject constructor(
 
     override suspend fun updateUser(id: String, data: HashMap<String, Any>) {
         return firestoreHandler.updateUser(id, data)
+    }
+
+    override suspend fun getGoogleSignInToken(clientId: String?): String? {
+        return client.getSignInToken(clientId)
+    }
+
+    override suspend fun signInWithGoogle(token: String): SignInResult {
+        return client.signInWithToken(token)
+    }
+
+    override suspend fun signOutFromGoogle() {
+        return client.signOut()
     }
 }

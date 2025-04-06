@@ -2,7 +2,7 @@ package com.antsfamily.danskflashcards.ui.onboarding
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.antsfamily.danskflashcards.domain.SetLanguageUseCase
+import com.antsfamily.danskflashcards.domain.usecase.SetLanguageUseCase
 import com.antsfamily.danskflashcards.domain.model.LanguageType
 import com.antsfamily.danskflashcards.ui.onboarding.model.LanguageItem
 import dagger.hilt.android.lifecycle.HiltViewModel

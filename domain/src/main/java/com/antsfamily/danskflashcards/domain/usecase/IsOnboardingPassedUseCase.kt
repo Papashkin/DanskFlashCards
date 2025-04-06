@@ -1,6 +1,6 @@
-package com.antsfamily.danskflashcards.domain
+package com.antsfamily.danskflashcards.domain.usecase
 
-import com.antsfamily.danskflashcards.data.repository.DataRepository
+import com.antsfamily.danskflashcards.domain.repository.DataRepository
 import javax.inject.Inject
 
 class IsOnboardingPassedUseCase @Inject constructor(

@@ -35,15 +35,9 @@ android {
 }
 
 dependencies {
-    implementation(project(":data"))
     implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
-
-    implementation(libs.firebase.auth)
-    implementation(libs.google.play.service.auth)
     implementation(libs.inAppUpdate)
-    implementation(libs.firebase.firestore)
-    implementation(libs.gson)
+    ksp(libs.hilt.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

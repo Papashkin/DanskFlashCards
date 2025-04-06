@@ -6,7 +6,6 @@ import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
 import androidx.credentials.exceptions.GetCredentialCancellationException
-import com.antsfamily.danskflashcards.data.model.SignInType
 import com.antsfamily.danskflashcards.data.source.remote.FirebaseHandler
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
@@ -26,9 +25,9 @@ class GoogleAuthUiClient(
             "com.google.android.libraries.identity.googleid.BUNDLE_KEY_ID_TOKEN"
     }
 
-    suspend fun getSignInToken(type: SignInType, clientId: String?): String? {
+    suspend fun getSignInToken(clientId: String?): String? {
         val result = try {
-            getTokenId(type, clientId ?: return null)
+            getTokenId(clientId ?: return null)
         } catch (e: Exception) {
             e.printStackTrace()
             throw e
@@ -71,18 +70,13 @@ class GoogleAuthUiClient(
         }
     }
 
-    private suspend fun getTokenId(type: SignInType, clientId: String): String? {
-        val request = when (type) {
-            SignInType.GOOGLE -> GetCredentialRequest.Builder()
-                .addCredentialOption(getGoogleIdOption(clientId))
-                .build()
-
-            SignInType.FACEBOOK -> null //TODO should be implemented later and separately
-        }
+    private suspend fun getTokenId(clientId: String): String? {
+        val request = GetCredentialRequest.Builder()
+            .addCredentialOption(getGoogleIdOption(clientId))
+            .build()
 
         try {
-            val response: GetCredentialResponse =
-                credentialManager.getCredential(context, request ?: return null)
+            val response: GetCredentialResponse = credentialManager.getCredential(context, request)
             val googleIdCredential = response.credential
             val idToken = googleIdCredential.data.getString(KEY_ID_TOKEN)
             return idToken
