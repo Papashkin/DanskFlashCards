@@ -27,7 +27,8 @@ class SplashViewModel @Inject constructor(
     val navigationToHomeFlow: SharedFlow<CurrentUserItem> = _navigationToHomeFlow.asSharedFlow()
 
     private val _navigationToOnboardingFlow = MutableSharedFlow<CurrentUserItem>()
-    val navigationToOnboardingFlow: SharedFlow<CurrentUserItem> = _navigationToOnboardingFlow.asSharedFlow()
+    val navigationToOnboardingFlow: SharedFlow<CurrentUserItem> =
+        _navigationToOnboardingFlow.asSharedFlow()
 
     private val _navigationToAuthFlow = MutableSharedFlow<Unit>()
     val navigationToAuthFlow: SharedFlow<Unit> = _navigationToAuthFlow.asSharedFlow()
@@ -56,11 +57,10 @@ class SplashViewModel @Inject constructor(
     }
 
     private suspend fun checkForUpdates() {
-        val updateInfo = getAppUpdateInfoUseCase()
-        updateInfo?.let {
-            this.updateInfo = it
+        try {
+            updateInfo = getAppUpdateInfoUseCase()
             _updateAvailabilityFlow.emit(true)
-        } ?: run {
+        } catch (e: Exception) {
             checkIsUserLoggedIn()
         }
     }
