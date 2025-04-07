@@ -1,8 +1,6 @@
-package com.antsfamily.danskflashcards.data.di
+package com.antsfamily.danskflashcards.core.di
 
 import android.content.Context
-import com.antsfamily.danskflashcards.data.source.remote.UpdateManager
-import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import dagger.Module
 import dagger.Provides
@@ -19,11 +17,4 @@ object UpdateModule {
     @Provides
     fun provideAppUpdateManager(@ApplicationContext context: Context) =
         AppUpdateManagerFactory.create(context)
-
-    @Singleton
-    @Provides
-    fun provideUpdateManager(
-        @ApplicationContext context: Context,
-        manager: AppUpdateManager
-    ) = UpdateManager(context, manager)
 }

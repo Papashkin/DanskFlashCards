@@ -10,8 +10,6 @@ import com.antsfamily.danskflashcards.data.util.mapToDomain
 import com.antsfamily.danskflashcards.domain.model.UserDomain
 import com.antsfamily.danskflashcards.domain.model.WordDomain
 import com.antsfamily.danskflashcards.domain.repository.DataRepository
-import com.google.android.gms.tasks.Task
-import com.google.android.play.core.appupdate.AppUpdateInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -25,18 +23,6 @@ class DataRepositoryImpl @Inject constructor(
         return remoteSource.getCurrentUser()?.let { user ->
             remoteSource.getUserByID(user.uid).mapToDomain(user.uid)
         }
-    }
-
-    override fun getAppUpdateInfo(): Task<AppUpdateInfo> {
-        return remoteSource.getAppUpdateInfo()
-    }
-
-    override fun startAppUpdate(updateInfo: AppUpdateInfo) {
-        return remoteSource.startAppUpdate(updateInfo)
-    }
-
-    override suspend fun getUserByID(id: String): UserDomain? {
-        return remoteSource.getUserByID(id).mapToDomain(id)
     }
 
     override suspend fun getWords(): List<WordDomain> {

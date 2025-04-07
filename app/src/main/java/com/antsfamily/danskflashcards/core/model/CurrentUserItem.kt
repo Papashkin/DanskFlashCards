@@ -16,7 +16,7 @@ data class CurrentUserItem(
         return UserItem(
             id = userId,
             name = username.first(),
-            surname = username.last(),
+            surname = if (username.size > 1) username.last() else null,
             isCurrentUser = true,
             score = 0,
             avatar = Avatar.DEFAULT

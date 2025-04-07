@@ -9,53 +9,44 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 class FirestoreHandler @Inject constructor() {
 
     private val firestore: FirebaseFirestore = Firebase.firestore
 
-    suspend fun getUserByID(id: String): DocumentSnapshot? = suspendCancellableCoroutine {
-        firestore
-            .collection(COLLECTION_USERS)
-            .document(id)
-            .get()
-            .addOnSuccessListener { snapshot ->
-                it.resume(snapshot)
-            }
-            .addOnFailureListener { exception ->
-                it.resumeWithException(exception)
-            }
+    suspend fun getUserByID(id: String): DocumentSnapshot? {
+        try {
+            val data = firestore.collection(COLLECTION_USERS).document(id).get().await()
+            return data
+        } catch (e: Exception) {
+            throw e
+        }
     }
 
-    suspend fun getUsers(): QuerySnapshot = suspendCancellableCoroutine {
-        firestore
-            .collection(COLLECTION_USERS)
-            .get()
-            .addOnSuccessListener { snapshot ->
-                it.resume(snapshot)
-            }
-            .addOnFailureListener { exception ->
-                it.resumeWithException(exception)
-            }
+    suspend fun getUsers(): QuerySnapshot {
+        try {
+            val data = firestore.collection(COLLECTION_USERS).get().await()
+            return data
+        } catch (e: Exception) {
+            throw e
+        }
     }
 
-    suspend fun updateUser(id: String, data: HashMap<String, Any>): Unit = suspendCancellableCoroutine {
-        firestore
-            .collection(COLLECTION_USERS)
-            .document(id)
-            .set(data, SetOptions.merge())
-            .addOnSuccessListener { _ ->
-                it.resume(Unit)
-            }
-            .addOnFailureListener { exception ->
-                it.resumeWithException(exception)
-            }
+    suspend fun updateUser(id: String, data: HashMap<String, Any>) {
+        try {
+            firestore
+                .collection(COLLECTION_USERS)
+                .document(id)
+                .set(data, SetOptions.merge())
+                .await()
+        } catch (e: Exception) {
+            throw e
+        }
     }
 
+    //TODO add cancellation for that flow in Logout case
     fun getUsersFlow() = callbackFlow {
         val documentRef = firestore
             .collection(COLLECTION_USERS)

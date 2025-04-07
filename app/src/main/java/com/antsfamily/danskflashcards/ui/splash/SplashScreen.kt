@@ -14,11 +14,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.antsfamily.danskflashcards.MainActivity
 import com.antsfamily.danskflashcards.R
 import com.antsfamily.danskflashcards.core.model.CurrentUserItem
 
@@ -29,6 +31,7 @@ fun SplashScreen(
     navigateToHome: (CurrentUserItem) -> Unit,
     navigateToOnboarding: (CurrentUserItem) -> Unit,
 ) {
+    val activity = LocalContext.current as? MainActivity
     val isUpdateAvailable: Boolean by viewModel.updateAvailabilityFlow.collectAsState(false)
 
     LaunchedEffect(Unit) {
@@ -44,6 +47,11 @@ fun SplashScreen(
     LaunchedEffect(Unit) {
         viewModel.navigationToOnboardingFlow.collect {
             navigateToOnboarding(it)
+        }
+    }
+    LaunchedEffect(Unit) {
+        viewModel.startAppUpdateFlow.collect {
+            activity?.startAppUpdate(it)
         }
     }
 
