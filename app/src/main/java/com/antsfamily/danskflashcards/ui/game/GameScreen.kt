@@ -1,9 +1,11 @@
 package com.antsfamily.danskflashcards.ui.game
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -14,9 +16,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.antsfamily.danskflashcards.core.presentation.ErrorViewWithRetry
 import com.antsfamily.danskflashcards.core.presentation.FullScreenLoading
+import com.antsfamily.danskflashcards.core.presentation.TopBar
 import com.antsfamily.danskflashcards.ui.game.model.GameOverItem
 import com.antsfamily.danskflashcards.ui.game.model.GameStatus
 import com.antsfamily.danskflashcards.ui.game.model.TimerItem
@@ -86,7 +90,8 @@ fun GameScreen(
             isTimeUpAnimationVisible = isTimeUpAnimationVisible,
             onAnimationEnd = { setIsTimeUpAnimationVisible(false) },
             onLearningWordClick = { viewModel.onLearningWordClick(it) },
-            onPrimaryWordClick = { viewModel.onPrimaryWordClick(it) }
+            onPrimaryWordClick = { viewModel.onPrimaryWordClick(it) },
+            onNavigateBack = { navigateBack() }
         )
 
         is GameUiState.Error -> ErrorViewWithRetry(errorType = stateValue.type) {
@@ -100,7 +105,7 @@ fun GameScreen(
             onExitClick = {
                 viewModel.onGameOverDialogClose()
                 setIsGameOverDialogVisible(false)
-                          },
+            },
             onPlayAgainClick = { viewModel.onPlayAgainClick() }
         )
     }
@@ -113,36 +118,37 @@ fun GameContent(
     onAnimationEnd: () -> Unit,
     onLearningWordClick: (WordItem) -> Unit,
     onPrimaryWordClick: (WordItem) -> Unit,
+    onNavigateBack: () -> Unit,
 ) {
     Column(
         modifier = Modifier
-            .padding(Padding.small)
-            .fillMaxSize(),
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .padding(horizontal = Padding.small),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceEvenly
+        verticalArrangement = Arrangement.SpaceAround
     ) {
-        with(content) {
-            if (status == GameStatus.STARTED) {
-                GameTimer(
-                    content.timerItem,
-                    isAnimationVisible = isTimeUpAnimationVisible,
-                ) {
-                    onAnimationEnd()
-                }
-                GameScreenContent(content, onLearningWordClick, onPrimaryWordClick)
+        if (content.status == GameStatus.STARTED) {
+            TopBar(
+                modifier = Modifier.padding(end = Padding.small, top = Padding.small),
+                onNavigationBack = { onNavigateBack() },
+            )
+            GameTimer(
+                modifier = Modifier.offset(y = (-32).dp),
+                timer = content.timerItem,
+                isAnimationVisible = isTimeUpAnimationVisible,
+                currentScore = content.currentScore,
+                personalBest = content.personalBest,
+            ) {
+                onAnimationEnd()
             }
+            GameScreenContent(
+                learningWords = content.learningWords,
+                primaryWords = content.primaryWords,
+                onLearningWordClick = { onLearningWordClick(it) },
+                onPrimaryWordClick = { onPrimaryWordClick(it) }
+            )
         }
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun GameScreenLoadingPreview() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        StartAnimationPreloader { }
     }
 }
 
@@ -155,7 +161,6 @@ fun GameScreenContentPreview() {
         WordItem(value = "vælg", id = 988, isGuessed = true, isSelected = true, isWrong = false),
         WordItem(value = "forkert", id = 989, isGuessed = false, isSelected = false, isWrong = false),
         WordItem(value = "grå", id = 990, isGuessed = false, isSelected = false, isWrong = true),
-        WordItem(value = "grå", id = 990, isGuessed = false, isSelected = false, isWrong = true)
     )
 
     val WORD_CARDS_ENGLISH = listOf(
@@ -163,7 +168,6 @@ fun GameScreenContentPreview() {
         WordItem(value = "molecule", id = 992, isGuessed = true, isSelected = false, isWrong = false),
         WordItem(value = "select", id = 993, isGuessed = false, isSelected = false, isWrong = false),
         WordItem(value = "wrong", id = 994, isGuessed = false, isSelected = true, isWrong = false),
-        WordItem(value = "gray", id = 996, isGuessed = false, isSelected = false, isWrong = false),
         WordItem(value = "gray", id = 996, isGuessed = false, isSelected = false, isWrong = false),
     )
 
@@ -173,8 +177,11 @@ fun GameScreenContentPreview() {
             primaryWords = WORD_CARDS_ENGLISH,
             timerItem = TimerItem(),
             status = GameStatus.STARTED,
+            personalBest = 1554,
+            currentScore = 30
         ),
         false,
+        {},
         {},
         {},
         {}

@@ -149,6 +149,9 @@ fun Navigator() {
                         )
                     },
                 ) { entry ->
+                    BackHandler(true) {
+                        //no-op
+                    }
                     val data = entry.toRoute<Game>()
                     GameScreen(
                         userId = data.id,

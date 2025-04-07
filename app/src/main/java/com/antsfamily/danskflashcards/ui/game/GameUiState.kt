@@ -13,6 +13,8 @@ sealed class GameUiState {
         val primaryWords: List<WordItem> = emptyList(),
         val timerItem: TimerItem = TimerItem(),
         val status: GameStatus = GameStatus.READY,
+        val currentScore: Int = 0,
+        val personalBest: Int = 0
     ): GameUiState()
     data class Error(val type: ErrorType): GameUiState()
 }
