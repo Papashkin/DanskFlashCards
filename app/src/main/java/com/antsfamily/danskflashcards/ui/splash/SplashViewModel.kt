@@ -10,6 +10,7 @@ import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.install.model.AppUpdateType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -37,30 +38,10 @@ class SplashViewModel @Inject constructor(
     private val _navigationToAuthFlow = MutableSharedFlow<Unit>()
     val navigationToAuthFlow: SharedFlow<Unit> = _navigationToAuthFlow.asSharedFlow()
 
-    private val _updateAvailabilityFlow = MutableSharedFlow<Boolean>()
-    val updateAvailabilityFlow: SharedFlow<Boolean> = _updateAvailabilityFlow.asSharedFlow()
-
     init {
         viewModelScope.launch {
+            delay(500)
             checkForUpdates()
-        }
-    }
-
-    fun onDismissClick() = viewModelScope.launch {
-        checkIsUserLoggedIn()
-    }
-
-    fun onUpdateClick() = viewModelScope.launch {
-        startUpdate()
-    }
-
-    private suspend fun startUpdate() {
-        try {
-            val data = appUpdateManager.appUpdateInfo.await()
-            _startAppUpdateFlow.emit(data)
-        } catch (e: Exception) {
-            logError(e)
-            checkIsUserLoggedIn()
         }
     }
 
@@ -68,12 +49,12 @@ class SplashViewModel @Inject constructor(
         try {
             val updateInfo = appUpdateManager.appUpdateInfo.await()
             if (updateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
-                _updateAvailabilityFlow.emit(true)
+                _startAppUpdateFlow.emit(updateInfo)
+            } else {
+                checkIsUserLoggedIn()
             }
         } catch (e: Exception) {
             logError(e)
-        } finally {
-            checkIsUserLoggedIn()
         }
     }
 
