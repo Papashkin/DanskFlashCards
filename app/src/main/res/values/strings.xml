@@ -60,5 +60,7 @@
     <string name="logout_dialog_title">Are you sure you want to quit?</string>
     <string name="logout_dialog_confirm">Yes</string>
     <string name="logout_dialog_cancel">Cancel</string>
+    <string name="score_card_title_score">Score</string>
+    <string name="score_card_title_record">Record</string>
 
 </resources>

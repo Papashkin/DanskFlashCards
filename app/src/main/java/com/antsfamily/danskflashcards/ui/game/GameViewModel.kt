@@ -205,7 +205,9 @@ class GameViewModel @AssistedInject constructor(
             learningWords = getPackOfLearningWords(packIds),
             primaryWords = getPackOfPrimaryWords(packIds),
             timerItem = timerItem,
-            status = content?.status ?: GameStatus.STARTED
+            status = content?.status ?: GameStatus.STARTED,
+            currentScore = pairsCounter,
+            personalBest = score
         )
     }
 
@@ -253,7 +255,7 @@ class GameViewModel @AssistedInject constructor(
             resetScreenContent()
             invalidateGuessingItems()
             if (pairsCounter > score) {
-                saveBestResult(pairsCounter)
+                setPersonalBest(pairsCounter)
             }
             showFinalDialog(score, pairsCounter)
         }
@@ -304,7 +306,8 @@ class GameViewModel @AssistedInject constructor(
                 },
                 primaryWords = content.primaryWords.map {
                     if (it.id == id) it.copy(isSelected = false, isGuessed = true) else it
-                }
+                },
+                currentScore = pairsCounter
             )
         }
         when {
@@ -392,7 +395,7 @@ class GameViewModel @AssistedInject constructor(
         }
     }
 
-    private fun saveBestResult(result: Int) = viewModelScope.launch(Dispatchers.IO) {
+    private fun setPersonalBest(result: Int) = viewModelScope.launch(Dispatchers.IO) {
         try {
             setPersonalBestUseCase(id = userId, name = username, score = result)
         } catch (e: Exception) {
