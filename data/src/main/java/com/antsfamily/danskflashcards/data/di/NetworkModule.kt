@@ -2,7 +2,7 @@ package com.antsfamily.danskflashcards.data.di
 
 import android.content.Context
 import com.antsfamily.danskflashcards.data.source.remote.CacheInterceptor
-import com.antsfamily.danskflashcards.data.source.remote.FirebaseAuthInterceptor
+import com.antsfamily.danskflashcards.data.FirebaseAuthInterceptor
 import com.antsfamily.danskflashcards.data.source.remote.FirebaseHandler
 import com.antsfamily.danskflashcards.data.source.remote.WordsApiService
 import com.google.gson.Gson

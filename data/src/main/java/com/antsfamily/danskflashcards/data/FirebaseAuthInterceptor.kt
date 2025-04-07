@@ -1,5 +1,6 @@
-package com.antsfamily.danskflashcards.data.source.remote
+package com.antsfamily.danskflashcards.data
 
+import com.antsfamily.danskflashcards.data.source.remote.FirebaseHandler
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Request

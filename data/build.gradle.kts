@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.antsfamily.danskflashcards.data"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24
@@ -42,7 +42,6 @@ dependencies {
 
     implementation(libs.androidx.datastore)
     implementation(libs.google.play.service.auth)
-    implementation(libs.inAppUpdate)
     implementation(libs.credentials)
     implementation(libs.googleId)
     implementation(libs.crypto)

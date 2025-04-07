@@ -6,7 +6,7 @@ import com.antsfamily.danskflashcards.domain.model.UserDomain
 data class UserItem(
     val id: String,
     val name: String,
-    val surname: String,
+    val surname: String?,
     val isCurrentUser: Boolean,
     val score: Int,
     val avatar: Avatar,
@@ -20,7 +20,7 @@ fun UserDomain.toItem(currentUserId: String): UserItem {
     return UserItem(
         id = id,
         name = username.first(),
-        surname = username.last(),
+        surname = if (username.size >1) username.last() else null,
         score = score,
         isCurrentUser = id == currentUserId,
         avatar = avatarId?.let { Avatar.entries.toTypedArray()[it] } ?: Avatar.DEFAULT
