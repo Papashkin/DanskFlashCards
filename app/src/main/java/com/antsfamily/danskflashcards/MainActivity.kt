@@ -49,10 +49,8 @@ class MainActivity : ComponentActivity() {
     }
 
     fun startAppUpdate(info: AppUpdateInfo) {
-        appUpdateManager.startUpdateFlowForResult(
-            info,
-            activityResultLauncher,
-            AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE).build()
-        )
+        val updateOptions = AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE).build()
+
+        appUpdateManager.startUpdateFlowForResult(info, activityResultLauncher, updateOptions)
     }
 }

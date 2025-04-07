@@ -10,8 +10,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -32,7 +30,6 @@ fun SplashScreen(
     navigateToOnboarding: (CurrentUserItem) -> Unit,
 ) {
     val activity = LocalContext.current as? MainActivity
-    val isUpdateAvailable: Boolean by viewModel.updateAvailabilityFlow.collectAsState(false)
 
     LaunchedEffect(Unit) {
         viewModel.navigationToAuthFlow.collect {
@@ -55,12 +52,6 @@ fun SplashScreen(
         }
     }
 
-    if (isUpdateAvailable) {
-        UpdateDialog(
-            onDismiss = { viewModel.onDismissClick() },
-            onUpdateClick = { viewModel.onUpdateClick() }
-        )
-    }
     SplashViewWithIcon()
 }
 
@@ -83,44 +74,8 @@ fun SplashViewWithIcon() {
     }
 }
 
-@Composable
-fun UpdateDialog(
-    onUpdateClick: () -> Unit,
-    onDismiss: () -> Unit
-) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        AlertDialog(
-            onDismissRequest = { onDismiss() },
-            title = { Text(stringResource(R.string.dialog_update_title)) },
-            text = { Text(stringResource(R.string.dialog_update_subtitle)) },
-            confirmButton = {
-                Button(onClick = { onUpdateClick() }) {
-                    Text(stringResource(R.string.dialog_update_button_update))
-                }
-            },
-            dismissButton = {
-                Button(onClick = { onDismiss() }) {
-                    Text(stringResource(R.string.dialog_update_button_cancel))
-                }
-            }
-        )
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
 private fun SplashViewWithIconPreview() {
     SplashViewWithIcon()
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-private fun UpdateDialogPreview() {
-    UpdateDialog(
-        onDismiss = {},
-        onUpdateClick = {}
-    )
 }
