@@ -77,6 +77,9 @@ class GameViewModel @AssistedInject constructor(
     private val _closeGameOverDialogFlow = MutableSharedFlow<Unit>()
     val closeGameOverDialogFlow = _closeGameOverDialogFlow.asSharedFlow()
 
+    private val _showExitGameDialogFlow = MutableSharedFlow<Boolean>()
+    val showExitGameDialogFlow = _showExitGameDialogFlow.asSharedFlow()
+
     init {
         getWords()
     }
@@ -126,7 +129,7 @@ class GameViewModel @AssistedInject constructor(
     }
 
     fun onGameOverDialogClose() = viewModelScope.launch {
-        pairsCounter = 0
+        invalidateGameData()
         _navigateBackFlow.emit(Unit)
         _closeGameOverDialogFlow.emit(Unit)
     }
@@ -135,6 +138,27 @@ class GameViewModel @AssistedInject constructor(
         invalidateGameData()
         _closeGameOverDialogFlow.emit(Unit)
         _state.value = GameUiState.Countdown
+    }
+
+    fun onExitGameClick() = viewModelScope.launch {
+        getContentOrNull()?.let { content ->
+            _state.value = content.copy(status = GameStatus.PAUSED)
+            _showExitGameDialogFlow.emit(true)
+        }
+    }
+
+    fun onStayClick() = viewModelScope.launch {
+        getContentOrNull()?.let { content ->
+            _showExitGameDialogFlow.emit(false)
+            _state.value = content.copy(status = GameStatus.STARTED)
+        }
+    }
+
+    fun onExitConfirm() = viewModelScope.launch {
+        invalidateGameData()
+        stopTimer()
+        _showExitGameDialogFlow.emit(false)
+        _navigateBackFlow.emit(Unit)
     }
 
     private fun invalidateGameData() {
@@ -232,8 +256,14 @@ class GameViewModel @AssistedInject constructor(
         timerFlow.run(COUNTDOWN_STEP)
             .cancellable()
             .collect {
-                handleTimerChange()
+                if (!isGamePaused()) {
+                    handleTimerChange()
+                }
             }
+    }
+
+    private fun isGamePaused(): Boolean {
+        return getContentOrNull()?.status == GameStatus.PAUSED
     }
 
     private fun handleTimerChange() {
