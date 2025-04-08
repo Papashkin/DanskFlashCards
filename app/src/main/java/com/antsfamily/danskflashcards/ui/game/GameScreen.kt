@@ -28,6 +28,7 @@ import com.antsfamily.danskflashcards.ui.game.model.WordItem
 import com.antsfamily.danskflashcards.ui.game.view.GameOverDialog
 import com.antsfamily.danskflashcards.ui.game.view.GameScreenContent
 import com.antsfamily.danskflashcards.ui.game.view.GameTimer
+import com.antsfamily.danskflashcards.ui.game.view.QuitGameDialog
 import com.antsfamily.danskflashcards.ui.game.view.StartAnimationPreloader
 import com.antsfamily.danskflashcards.ui.theme.Padding
 import com.antsfamily.danskflashcards.ui.theme.SetSystemBarColors
@@ -48,6 +49,7 @@ fun GameScreen(
         mutableStateOf(false)
     }
     val (isGameOverDialogVisible, setIsGameOverDialogVisible) = remember { mutableStateOf(false) }
+    val (isQuitGameDialogVisible, setIsQuitGameDialogVisible) = remember { mutableStateOf(false) }
     val (gameOverItem, setGameOverItem) = remember { mutableStateOf(GameOverItem()) }
 
     val state = viewModel.state.collectAsState()
@@ -74,6 +76,11 @@ fun GameScreen(
             setGameOverItem(GameOverItem())
         }
     }
+    LaunchedEffect(Unit) {
+        viewModel.showExitGameDialogFlow.collect {
+            setIsQuitGameDialogVisible(it)
+        }
+    }
 
     when (val stateValue = state.value) {
         is GameUiState.Countdown ->
@@ -91,7 +98,7 @@ fun GameScreen(
             onAnimationEnd = { setIsTimeUpAnimationVisible(false) },
             onLearningWordClick = { viewModel.onLearningWordClick(it) },
             onPrimaryWordClick = { viewModel.onPrimaryWordClick(it) },
-            onNavigateBack = { navigateBack() }
+            onExitClick = { viewModel.onExitGameClick() }
         )
 
         is GameUiState.Error -> ErrorViewWithRetry(errorType = stateValue.type) {
@@ -106,7 +113,16 @@ fun GameScreen(
                 viewModel.onGameOverDialogClose()
                 setIsGameOverDialogVisible(false)
             },
-            onPlayAgainClick = { viewModel.onPlayAgainClick() }
+            onPlayAgainClick = {
+                viewModel.onPlayAgainClick()
+                setIsGameOverDialogVisible(false)
+            }
+        )
+    }
+    if (isQuitGameDialogVisible) {
+        QuitGameDialog(
+            onStayClick = { viewModel.onStayClick() },
+            onExitConfirm = { viewModel.onExitConfirm() }
         )
     }
 }
@@ -118,7 +134,7 @@ fun GameContent(
     onAnimationEnd: () -> Unit,
     onLearningWordClick: (WordItem) -> Unit,
     onPrimaryWordClick: (WordItem) -> Unit,
-    onNavigateBack: () -> Unit,
+    onExitClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -131,7 +147,7 @@ fun GameContent(
         if (content.status == GameStatus.STARTED) {
             TopBar(
                 modifier = Modifier.padding(end = Padding.small, top = Padding.small),
-                onNavigationBack = { onNavigateBack() },
+                onNavigationBack = { onExitClick() },
             )
             GameTimer(
                 modifier = Modifier.offset(y = (-32).dp),
@@ -156,17 +172,47 @@ fun GameContent(
 @Composable
 fun GameScreenContentPreview() {
     val WORD_CARDS_DANISH = listOf(
-        WordItem(value = "kolonne", id = 986, isGuessed = false, isSelected = false, isWrong = false),
-        WordItem(value = "molekyle", id = 987, isGuessed = false, isSelected = true, isWrong = false),
+        WordItem(
+            value = "kolonne",
+            id = 986,
+            isGuessed = false,
+            isSelected = false,
+            isWrong = false
+        ),
+        WordItem(
+            value = "molekyle",
+            id = 987,
+            isGuessed = false,
+            isSelected = true,
+            isWrong = false
+        ),
         WordItem(value = "vælg", id = 988, isGuessed = true, isSelected = true, isWrong = false),
-        WordItem(value = "forkert", id = 989, isGuessed = false, isSelected = false, isWrong = false),
+        WordItem(
+            value = "forkert",
+            id = 989,
+            isGuessed = false,
+            isSelected = false,
+            isWrong = false
+        ),
         WordItem(value = "grå", id = 990, isGuessed = false, isSelected = false, isWrong = true),
     )
 
     val WORD_CARDS_ENGLISH = listOf(
         WordItem(value = "column", id = 991, isGuessed = false, isSelected = true, isWrong = false),
-        WordItem(value = "molecule", id = 992, isGuessed = true, isSelected = false, isWrong = false),
-        WordItem(value = "select", id = 993, isGuessed = false, isSelected = false, isWrong = false),
+        WordItem(
+            value = "molecule",
+            id = 992,
+            isGuessed = true,
+            isSelected = false,
+            isWrong = false
+        ),
+        WordItem(
+            value = "select",
+            id = 993,
+            isGuessed = false,
+            isSelected = false,
+            isWrong = false
+        ),
         WordItem(value = "wrong", id = 994, isGuessed = false, isSelected = true, isWrong = false),
         WordItem(value = "gray", id = 996, isGuessed = false, isSelected = false, isWrong = false),
     )

@@ -62,5 +62,9 @@
     <string name="logout_dialog_cancel">Cancel</string>
     <string name="score_card_title_score">Score</string>
     <string name="score_card_title_record">Record</string>
+    <string name="quit_game_dialog_title">Take a Break?</string>
+    <string name="quit_game_dialog_subtitle">We\'ll miss you! Progress will be lost.</string>
+    <string name="quit_game_dialog_button_exit">Exit</string>
+    <string name="quit_game_dialog_button_stay">Not Yet</string>
 
 </resources>
