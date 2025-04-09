@@ -36,8 +36,7 @@ import com.antsfamily.danskflashcards.core.presentation.AvatarIcon
 import com.antsfamily.danskflashcards.core.presentation.ErrorViewWithRetry
 import com.antsfamily.danskflashcards.core.presentation.FullScreenLoading
 import com.antsfamily.danskflashcards.core.presentation.TopBar
-import com.antsfamily.danskflashcards.ui.home.model.LeaderItem
-import com.antsfamily.danskflashcards.ui.home.model.UserItem
+import com.antsfamily.danskflashcards.core.model.UserItem
 import com.antsfamily.danskflashcards.ui.home.view.CurrentUserCard
 import com.antsfamily.danskflashcards.ui.home.view.HomeTitle
 import com.antsfamily.danskflashcards.ui.home.view.LeaderboardView
@@ -131,7 +130,7 @@ fun HomeScreenContent(
                     }
                 }
                 HomeTitle(
-                    username = content.user.name,
+                    username = content.user.username,
                     color = wistful_0,
                     isFirstTime = content.user.isFirstTime()
                 )
@@ -142,7 +141,7 @@ fun HomeScreenContent(
                 CurrentUserCard(
                     modifier = Modifier.padding(horizontal = Padding.huge),
                     score = content.user.score,
-                    place = content.userPlace
+                    place = content.user.place
                 )
             }
             Spacer(modifier = Modifier.height(48.dp))
@@ -181,14 +180,13 @@ fun HomeScreenContentPreview1() {
         HomeUiState.Content(
             user = UserItem(
                 id = "johndoe123",
-                name = "Johnny",
-                surname = "Doesome",
+                username = "JohnnyDoesome",
                 isCurrentUser = true,
                 score = 0,
-                avatar = Avatar.DEFAULT
+                avatar = Avatar.DEFAULT,
+                index = null
             ),
             leaderboard = emptyList(),
-            userPlace = null
         ), {}, {}, {}
     )
 }
@@ -200,30 +198,29 @@ fun HomeScreenContentPreview2() {
         HomeUiState.Content(
             user = UserItem(
                 id = "johndoe123",
-                name = "Johnny",
-                surname = "Doesome",
+                username = "JohnnyDoesome",
                 isCurrentUser = true,
                 score = 143,
-                avatar = Avatar.CACTUS
+                avatar = Avatar.CACTUS,
+                index = 3
             ),
             leaderboard = listOf(
-                LeaderItem(
-                    username = "JohnDoe", score = 44, index = 0, isUser = false, avatar = Avatar.ARAGOG
+                UserItem(
+                    id = "MockId1", username = "JohnDoe", score = 44, index = 0, isCurrentUser = false, avatar = Avatar.ARAGOG
                 ),
-                LeaderItem(
-                    username = "PaoloScoba", score = 32, index = 1, isUser = false, avatar = Avatar.ARAGOG
+                UserItem(
+                    id = "MockId1", username = "PaoloScoba", score = 32, index = 1, isCurrentUser = false, avatar = Avatar.ARAGOG
                 ),
-                LeaderItem(
-                    username = "AndreaCorti", score = 29, index = 2, isUser = false, avatar = Avatar.ARAGOG
+                UserItem(
+                    id = "MockId1", username = "AndreaCorti", score = 29, index = 2, isCurrentUser = false, avatar = Avatar.ARAGOG
                 ),
-                LeaderItem(
-                    username = "EthanCaldwell", score = 29, index = 3, isUser = true, avatar = Avatar.ARAGOG
+                UserItem(
+                    id = "MockId1", username = "EthanCaldwell", score = 29, index = 3, isCurrentUser = true, avatar = Avatar.ARAGOG
                 ),
-                LeaderItem(
-                    username = "IsabellaVaughn", score = 29, index = 4, isUser = false, avatar = Avatar.ARAGOG
+                UserItem(
+                    id = "MockId1", username = "IsabellaVaughn", score = 29, index = 4, isCurrentUser = false, avatar = Avatar.ARAGOG
                 ),
             ),
-            userPlace = 3
         ), {}, {}, {}
     )
 }

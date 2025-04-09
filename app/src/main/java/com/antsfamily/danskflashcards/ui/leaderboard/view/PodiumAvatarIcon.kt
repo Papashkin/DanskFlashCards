@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.antsfamily.danskflashcards.core.model.Avatar
 import com.antsfamily.danskflashcards.core.model.toIconRes
 import com.antsfamily.danskflashcards.core.util.mapToColor
-import com.antsfamily.danskflashcards.ui.home.model.LeaderItem
+import com.antsfamily.danskflashcards.core.model.UserItem
 import com.antsfamily.danskflashcards.ui.theme.Padding
 import com.antsfamily.danskflashcards.ui.theme.wistful_100
 import com.antsfamily.danskflashcards.ui.theme.wistful_700
@@ -32,7 +32,7 @@ import com.antsfamily.danskflashcards.ui.theme.wistful_700
 @Composable
 fun PodiumAvatarIcon(
     modifier: Modifier = Modifier,
-    item: LeaderItem
+    item: UserItem
 ) {
     Box(
         modifier = modifier.size(100.dp)
@@ -55,7 +55,9 @@ fun PodiumAvatarIcon(
             Image(
                 ImageVector.vectorResource(item.avatar.toIconRes()),
                 contentDescription = null,
-                modifier = Modifier.fillMaxSize().border(4.dp, item.mapToColor(), CircleShape),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .border(4.dp, item.mapToColor(), CircleShape),
                 contentScale = ContentScale.Crop
             )
         }
@@ -83,8 +85,13 @@ fun PodiumAvatarIcon(
 @Composable
 private fun PodiumAvatarIcon1Preview() {
     PodiumAvatarIcon(
-        item = LeaderItem(
-            username = "John", score = 44, index = 0, isUser = false, avatar = Avatar.CACTUS
+        item = UserItem(
+            id = "MockId1",
+            username = "John",
+            score = 44,
+            index = 0,
+            isCurrentUser = false,
+            avatar = Avatar.CACTUS
         )
     )
 }
@@ -93,8 +100,13 @@ private fun PodiumAvatarIcon1Preview() {
 @Composable
 private fun PodiumAvatarIcon2Preview() {
     PodiumAvatarIcon(
-        item = LeaderItem(
-            username = "John", score = 44, index = 1, isUser = false, avatar = Avatar.DEFAULT
+        item = UserItem(
+            id = "MockId2",
+            username = "John",
+            score = 44,
+            index = 1,
+            isCurrentUser = false,
+            avatar = Avatar.DEFAULT
         )
     )
 }
@@ -103,8 +115,13 @@ private fun PodiumAvatarIcon2Preview() {
 @Composable
 private fun PodiumAvatarIcon3Preview() {
     PodiumAvatarIcon(
-        item = LeaderItem(
-            username = "John", score = 44, index = 2, isUser = false, avatar = Avatar.SLOTH
+        item = UserItem(
+            id = "MockId3",
+            username = "John",
+            score = 44,
+            index = 2,
+            isCurrentUser = false,
+            avatar = Avatar.SLOTH
         )
     )
 }

@@ -1,8 +1,8 @@
 package com.antsfamily.danskflashcards.core.model
 
+import com.antsfamily.danskflashcards.core.util.SEPARATOR_SPACE
+import com.antsfamily.danskflashcards.core.util.DOT
 import com.antsfamily.danskflashcards.domain.model.UserDomain
-import com.antsfamily.danskflashcards.ui.home.model.SEPARATOR_SPACE
-import com.antsfamily.danskflashcards.ui.home.model.UserItem
 
 data class CurrentUserItem(
     val userId: String,
@@ -12,14 +12,20 @@ data class CurrentUserItem(
     fun isValid(): Boolean = username.isNotBlank() && userId.isNotBlank()
 
     fun mapToUserItem(): UserItem {
-        val username = username.split(SEPARATOR_SPACE)
+        val name = this.username.trim().split(SEPARATOR_SPACE)
+        val username = if (name.size <= 1) {
+            name.first()
+        } else {
+            listOf(name.first(), name.last().take(1).plus(DOT))
+                .joinToString(separator = SEPARATOR_SPACE)
+        }
         return UserItem(
             id = userId,
-            name = username.first(),
-            surname = if (username.size > 1) username.last() else null,
+            username = username,
             isCurrentUser = true,
             score = 0,
-            avatar = Avatar.DEFAULT
+            avatar = Avatar.DEFAULT,
+            index = null
         )
     }
 }

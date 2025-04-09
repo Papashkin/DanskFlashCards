@@ -24,14 +24,14 @@ import com.antsfamily.danskflashcards.core.model.Avatar
 import com.antsfamily.danskflashcards.core.model.toIconRes
 import com.antsfamily.danskflashcards.core.util.mapToColor
 import com.antsfamily.danskflashcards.core.util.mapToTextColor
-import com.antsfamily.danskflashcards.ui.home.model.LeaderItem
+import com.antsfamily.danskflashcards.core.model.UserItem
 import com.antsfamily.danskflashcards.ui.theme.Padding
 import com.antsfamily.danskflashcards.ui.theme.light_accent
 
 @Composable
 fun LeaderboardCard(
     modifier: Modifier = Modifier,
-    item: LeaderItem,
+    item: UserItem,
 ) {
     Box(modifier = modifier.fillMaxWidth()) {
         Column(
@@ -66,7 +66,7 @@ fun LeaderboardCard(
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Medium,
                         textAlign = TextAlign.Start,
-                        color = if (item.isUser) light_accent else item.mapToTextColor()
+                        color = if (item.isCurrentUser) light_accent else item.mapToTextColor()
                     )
                     Text(
                         modifier = modifier.weight(1f),
@@ -74,7 +74,7 @@ fun LeaderboardCard(
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Medium,
                         textAlign = TextAlign.Center,
-                        color = if (item.isUser) light_accent else item.mapToTextColor()
+                        color = if (item.isCurrentUser) light_accent else item.mapToTextColor()
                     )
                 }
             }
@@ -90,30 +90,33 @@ fun LeaderboardCard(
 fun LeaderboardItemPreview(modifier: Modifier = Modifier) {
     Column(modifier) {
         LeaderboardCard(
-            item = LeaderItem(
+            item = UserItem(
+                id = "MockId1",
                 username = "John",
                 score = 25,
                 index = 1,
-                isUser = false,
-                avatar = Avatar.PEN
+                isCurrentUser = false,
+                avatar = Avatar.HEISENBERG
             )
         )
         LeaderboardCard(
-            item = LeaderItem(
+            item = UserItem(
+                id = "MockId2",
                 username = "John",
                 score = 25,
                 index = 777,
-                isUser = false,
+                isCurrentUser = false,
                 avatar = Avatar.PEN
             )
         )
         LeaderboardCard(
-            item = LeaderItem(
+            item = UserItem(
+                id = "MockId3",
                 username = "John",
                 score = 999,
                 index = 7,
-                isUser = true,
-                avatar = Avatar.PEN
+                isCurrentUser = true,
+                avatar = Avatar.BEAR
             )
         )
     }

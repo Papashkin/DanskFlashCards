@@ -8,10 +8,8 @@ import com.antsfamily.danskflashcards.core.util.orZero
 import com.antsfamily.danskflashcards.domain.usecase.GetUsersUseCase
 import com.antsfamily.danskflashcards.domain.usecase.UserUpdateFLowUseCase
 import com.antsfamily.danskflashcards.domain.model.UserDomain
-import com.antsfamily.danskflashcards.ui.home.model.LeaderItem
-import com.antsfamily.danskflashcards.ui.home.model.UserItem
-import com.antsfamily.danskflashcards.ui.home.model.toItem
-import com.antsfamily.danskflashcards.ui.home.model.toLeaderItem
+import com.antsfamily.danskflashcards.core.model.UserItem
+import com.antsfamily.danskflashcards.core.model.toItem
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -84,26 +82,28 @@ class HomeViewModel @AssistedInject constructor(
     }
 
     private fun onGetUsersSuccessResult(data: List<UserDomain>) {
-        val users = data.map { it.toItem(user.userId) }
+        val users = data
+            .sortedByDescending { it.score }
+            .mapIndexed { index, domainItem -> domainItem.toItem(index) }
         currentUser = users.firstOrNull { it.isCurrentUser }
         updateState(users, currentUser ?: user.mapToUserItem())
     }
 
     private fun updateState(users: List<UserItem>, user: UserItem) {
-        val leaderboardItems = getLeaderboard(users)
+//        val leaderboardItems = getLeaderboard(users)
         _state.value = HomeUiState.Content(
             user = user,
-            leaderboard = leaderboardItems.take(LEADERBOARD_SIZE),
-            userPlace = leaderboardItems.firstOrNull { it.isUser }?.place
+            leaderboard = users.take(LEADERBOARD_SIZE),
+//            userPlace = users.firstOrNull { it.isCurrentUser }?.place
         )
     }
 
-    private fun getLeaderboard(users: List<UserItem>): List<LeaderItem> {
-        val leaderItems = users
-            .sortedByDescending { it.score }
-            .mapIndexed { index, sortedUser -> sortedUser.toLeaderItem(index) }
-        return leaderItems
-    }
+//    private fun getLeaderboard(users: List<UserItem>): List<LeaderItem> {
+//        val leaderItems = users
+//            .sortedByDescending { it.score }
+//            .mapIndexed { index, sortedUser -> sortedUser.toLeaderItem(index) }
+//        return leaderItems
+//    }
 
     private fun onGetUsersErrorResult(e: Exception) = viewModelScope.launch {
         _state.value = HomeUiState.Error(e.mapToErrorType())

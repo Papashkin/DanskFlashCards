@@ -10,11 +10,17 @@
     <string name="game_over_dialog_description">You guessed %1$s pairs.\n%2$s</string>
     <string name="game_button_exit">Exit</string>
     <string name="game_button_try_again">Try again</string>
+    <string name="quit_game_dialog_title">Take a Break?</string>
+    <string name="quit_game_dialog_subtitle">We\'ll miss you! Progress will be lost.</string>
+    <string name="quit_game_dialog_button_exit">Exit</string>
+    <string name="quit_game_dialog_button_stay">Not Yet</string>
     <string name="sign_up_google">Sign up with Google</string>
 
     <string name="home_start">Start</string>
     <string name="home_title_welcome">Welcome,\n%1$s</string>
     <string name="home_title_welcome_back">Welcome back,\n%1$s</string>
+    <string name="home_current_user_card_my_result">My result</string>
+    <string name="home_current_user_card_place">Place</string>
     <string name="home_leaderboard_title">Leaderboard</string>
     <string name="home_leaderboard_is_empty">Leaderboard is empty</string>
     <string name="home_leaderboard_button_text">Show all</string>
@@ -63,10 +69,7 @@
     <string name="logout_dialog_cancel">Cancel</string>
     <string name="score_card_title_score">Score</string>
     <string name="score_card_title_record">Record</string>
-    <string name="quit_game_dialog_title">Take a Break?</string>
-    <string name="quit_game_dialog_subtitle">We\'ll miss you! Progress will be lost.</string>
-    <string name="quit_game_dialog_button_exit">Exit</string>
-    <string name="quit_game_dialog_button_stay">Not Yet</string>
+
     <string name="leaderboard_title">Leaderboard</string>
 
 </resources>

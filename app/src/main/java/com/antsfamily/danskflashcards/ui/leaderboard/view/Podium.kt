@@ -17,15 +17,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.antsfamily.danskflashcards.core.model.Avatar
-import com.antsfamily.danskflashcards.ui.home.model.LeaderItem
+import com.antsfamily.danskflashcards.core.model.UserItem
 import com.antsfamily.danskflashcards.ui.theme.Padding
 
 @Composable
 fun Podium(
     modifier: Modifier = Modifier,
-    first: LeaderItem,
-    second: LeaderItem,
-    third: LeaderItem
+    first: UserItem,
+    second: UserItem,
+    third: UserItem
 ) {
     Box(
         modifier
@@ -35,7 +35,7 @@ fun Podium(
         Column(
             modifier = Modifier
                 .align(Alignment.CenterStart)
-                .offset(y = (20).dp),
+                .offset(y = (15).dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -75,7 +75,7 @@ fun Podium(
         Column(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
-                .offset(y = (20).dp),
+                .offset(y = (25).dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -101,25 +101,28 @@ fun Podium(
 @Composable
 private fun PodiumPreview() {
     Podium(
-        first = LeaderItem(
+        first = UserItem(
+            id = "MockId1",
             username = "GorillaZ",
             score = 44,
             index = 0,
-            isUser = false,
+            isCurrentUser = false,
             avatar = Avatar.DOLLY
         ),
-        second = LeaderItem(
+        second = UserItem(
+            id = "MockId1",
             username = "Tanz9064",
             score = 32,
             index = 1,
-            isUser = false,
+            isCurrentUser = false,
             avatar = Avatar.BEAR
         ),
-        third = LeaderItem(
+        third = UserItem(
+            id = "MockId1",
             username = "CptMarvel",
             score = 29,
             index = 2,
-            isUser = true,
+            isCurrentUser = true,
             avatar = Avatar.SPIRIT
         )
     )
