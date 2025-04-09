@@ -90,20 +90,11 @@ class HomeViewModel @AssistedInject constructor(
     }
 
     private fun updateState(users: List<UserItem>, user: UserItem) {
-//        val leaderboardItems = getLeaderboard(users)
         _state.value = HomeUiState.Content(
             user = user,
             leaderboard = users.take(LEADERBOARD_SIZE),
-//            userPlace = users.firstOrNull { it.isCurrentUser }?.place
         )
     }
-
-//    private fun getLeaderboard(users: List<UserItem>): List<LeaderItem> {
-//        val leaderItems = users
-//            .sortedByDescending { it.score }
-//            .mapIndexed { index, sortedUser -> sortedUser.toLeaderItem(index) }
-//        return leaderItems
-//    }
 
     private fun onGetUsersErrorResult(e: Exception) = viewModelScope.launch {
         _state.value = HomeUiState.Error(e.mapToErrorType())
