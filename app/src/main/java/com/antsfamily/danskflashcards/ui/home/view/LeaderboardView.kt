@@ -27,14 +27,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.antsfamily.danskflashcards.R
 import com.antsfamily.danskflashcards.core.model.Avatar
-import com.antsfamily.danskflashcards.ui.home.model.LeaderItem
+import com.antsfamily.danskflashcards.core.model.UserItem
 import com.antsfamily.danskflashcards.ui.theme.Padding
 import com.antsfamily.danskflashcards.ui.theme.grey_500
 
 @Composable
 fun LeaderboardView(
     modifier: Modifier = Modifier,
-    items: List<LeaderItem>,
+    items: List<UserItem>,
     onShowAllClick: () -> Unit
 ) {
     Column(modifier) {
@@ -77,7 +77,7 @@ fun LeaderboardView(
 }
 
 @Composable
-fun LeaderboardContent(items: List<LeaderItem>) {
+fun LeaderboardContent(items: List<UserItem>) {
     LazyColumn {
         items(items) { item ->
             LeaderboardCard(item = item)
@@ -120,9 +120,9 @@ fun LeaderboardViewPreview0(modifier: Modifier = Modifier) {
 fun LeaderboardViewPreview1(modifier: Modifier = Modifier) {
     LeaderboardView(
         items = listOf(
-            LeaderItem(username = "JohnDoe", score = 44, index = 0, isUser = false, avatar = Avatar.DEFAULT),
-            LeaderItem(username = "PabloEscobar", score = 32, index = 1, isUser = false, avatar = Avatar.DEFAULT),
-            LeaderItem(username = "AndreaCorti", score = 29, index = 2, isUser = true, avatar = Avatar.DEFAULT)
+            UserItem(id = "MockId1", username = "JohnDoe", score = 44, index = 0, isCurrentUser = false, avatar = Avatar.DEFAULT),
+            UserItem(id = "MockId1", username = "PabloEscobar", score = 32, index = 1, isCurrentUser = false, avatar = Avatar.DEFAULT),
+            UserItem(id = "MockId1", username = "AndreaCorti", score = 29, index = 2, isCurrentUser = true, avatar = Avatar.DEFAULT)
         )
     ) {}
 }

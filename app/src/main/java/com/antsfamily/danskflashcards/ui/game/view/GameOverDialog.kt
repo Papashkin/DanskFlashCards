@@ -65,7 +65,9 @@ fun GameOverDialog(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.ic_finish),
+                        imageVector = ImageVector.vectorResource(
+                            if (item.isNewRecord) R.drawable.ic_finish else R.drawable.ic_sad_face
+                        ),
                         contentDescription = null,
                         tint = grey_500,
                         modifier = Modifier.size(24.dp)
@@ -124,5 +126,11 @@ fun GameOverDialog(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun GameOverDialogPreview(modifier: Modifier = Modifier) {
-    GameOverDialog(GameOverItem(), {}, {})
+    GameOverDialog(GameOverItem(10,20), {}, {})
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun GameOverDialogPreview1(modifier: Modifier = Modifier) {
+    GameOverDialog(GameOverItem(22,20), {}, {})
 }

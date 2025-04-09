@@ -1,15 +1,15 @@
 package com.antsfamily.danskflashcards.ui.leaderboard
 
 import com.antsfamily.danskflashcards.core.model.ErrorType
-import com.antsfamily.danskflashcards.ui.home.model.LeaderItem
+import com.antsfamily.danskflashcards.core.model.UserItem
 
 sealed class LeaderboardUiState {
     data object Loading: LeaderboardUiState()
     data class Content(
-        val first: LeaderItem,
-        val second: LeaderItem,
-        val third: LeaderItem,
-        val others: List<LeaderItem>
+        val first: UserItem,
+        val second: UserItem,
+        val third: UserItem,
+        val others: List<UserItem>
     ): LeaderboardUiState()
     data class Error(val type: ErrorType): LeaderboardUiState()
 }

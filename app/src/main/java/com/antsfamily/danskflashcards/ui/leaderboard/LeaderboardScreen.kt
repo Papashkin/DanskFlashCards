@@ -26,7 +26,7 @@ import com.antsfamily.danskflashcards.core.model.Avatar
 import com.antsfamily.danskflashcards.core.presentation.ErrorViewWithRetry
 import com.antsfamily.danskflashcards.core.presentation.FullScreenLoading
 import com.antsfamily.danskflashcards.core.presentation.TopBar
-import com.antsfamily.danskflashcards.ui.home.model.LeaderItem
+import com.antsfamily.danskflashcards.core.model.UserItem
 import com.antsfamily.danskflashcards.ui.home.view.LeaderboardCard
 import com.antsfamily.danskflashcards.ui.leaderboard.view.Podium
 import com.antsfamily.danskflashcards.ui.theme.Padding
@@ -69,10 +69,10 @@ fun LeaderboardScreen(
 
 @Composable
 fun LeaderboardContent(
-    first: LeaderItem,
-    second: LeaderItem,
-    third: LeaderItem,
-    others: List<LeaderItem>,
+    first: UserItem,
+    second: UserItem,
+    third: UserItem,
+    others: List<UserItem>,
     navigateBack: () -> Unit,
 ) {
     Column(
@@ -86,13 +86,14 @@ fun LeaderboardContent(
             onNavigationBack = { navigateBack() },
             title = stringResource(R.string.leaderboard_title),
         )
+        Spacer(modifier = Modifier.height(24.dp))
         Podium(
             modifier = Modifier.padding(horizontal = Padding.medium),
             first = first,
             second = second,
             third = third,
         )
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(36.dp))
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -113,36 +114,36 @@ fun LeaderboardContent(
 @Composable
 private fun LeaderboardContentPreview() {
     LeaderboardContent(
-        first = LeaderItem(
-            username = "John", score = 44, index = 0, isUser = false, avatar = Avatar.CACTUS
+        first = UserItem(
+            id = "MockId1", username = "John", score = 44, index = 0, isCurrentUser = false, avatar = Avatar.CACTUS
         ),
-        second = LeaderItem(
-            username = "Michael", score = 32, index = 1, isUser = false, avatar = Avatar.BEAR
+        second = UserItem(
+            id = "MockId2", username = "Michael", score = 32, index = 1, isCurrentUser = false, avatar = Avatar.BEAR
         ),
-        third = LeaderItem(
-            username = "Andrea", score = 29, index = 2, isUser = false, avatar = Avatar.SLOTH
+        third = UserItem(
+            id = "MockId3", username = "Andrea", score = 29, index = 2, isCurrentUser = false, avatar = Avatar.SLOTH
         ),
         others = listOf(
-            LeaderItem(
-                username = "Sophia", score = 32, index = 3, isUser = false, avatar = Avatar.DEFAULT
+            UserItem(
+                id = "MockId1", username = "Sophia", score = 32, index = 3, isCurrentUser = false, avatar = Avatar.DEFAULT
             ),
-            LeaderItem(
-                username = "Noah", score = 29, index = 4, isUser = false, avatar = Avatar.DEFAULT
+            UserItem(
+                id = "MockId1", username = "Noah", score = 29, index = 4, isCurrentUser = false, avatar = Avatar.DEFAULT
             ),
-            LeaderItem(
-                username = "James", score = 26, index = 5, isUser = false, avatar = Avatar.DEFAULT
+            UserItem(
+                id = "MockId1", username = "James", score = 26, index = 5, isCurrentUser = false, avatar = Avatar.DEFAULT
             ),
-            LeaderItem(
-                username = "Sidney", score = 23, index = 6, isUser = true, avatar = Avatar.DEFAULT
+            UserItem(
+                id = "MockId1", username = "Sidney", score = 23, index = 6, isCurrentUser = true, avatar = Avatar.DEFAULT
             ),
-            LeaderItem(
-                username = "Anna", score = 19, index = 7, isUser = false, avatar = Avatar.DEFAULT
+            UserItem(
+                id = "MockId1", username = "Anna", score = 19, index = 7, isCurrentUser = false, avatar = Avatar.DEFAULT
             ),
-            LeaderItem(
-                username = "Nicolay", score = 15, index = 8, isUser = false, avatar = Avatar.DEFAULT
+            UserItem(
+                id = "MockId1", username = "Nicolay", score = 15, index = 8, isCurrentUser = false, avatar = Avatar.DEFAULT
             ),
-            LeaderItem(
-                username = "Alex", score = 13, index = 9, isUser = false, avatar = Avatar.DEFAULT
+            UserItem(
+                id = "MockId1", username = "Alex", score = 13, index = 9, isCurrentUser = false, avatar = Avatar.DEFAULT
             )
         ), {}
     )

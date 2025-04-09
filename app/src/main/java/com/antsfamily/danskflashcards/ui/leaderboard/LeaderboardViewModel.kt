@@ -8,7 +8,7 @@ import com.antsfamily.danskflashcards.core.navigation.NAVIGATION_ANIMATION_DURAT
 import com.antsfamily.danskflashcards.domain.model.UserDomain
 import com.antsfamily.danskflashcards.domain.usecase.GetLoggedInUserUseCase
 import com.antsfamily.danskflashcards.domain.usecase.GetUsersUseCase
-import com.antsfamily.danskflashcards.ui.home.model.toLeaderItem
+import com.antsfamily.danskflashcards.core.model.toItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -54,7 +54,7 @@ class LeaderboardViewModel @Inject constructor(
     private fun handleSuccessResult(data: List<UserDomain>) {
         val leaderItems = data
             .sortedByDescending { it.score }
-            .mapIndexed { index, sortedUser -> sortedUser.toLeaderItem(index) }
+            .mapIndexed { index, sortedUser -> sortedUser.toItem(index) }
 
         _state.value = LeaderboardUiState.Content(
             first = leaderItems.first(),

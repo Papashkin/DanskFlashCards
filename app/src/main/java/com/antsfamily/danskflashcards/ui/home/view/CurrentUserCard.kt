@@ -15,9 +15,11 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.antsfamily.danskflashcards.R
 import com.antsfamily.danskflashcards.core.util.toOrdinal
 import com.antsfamily.danskflashcards.ui.theme.FontSize
 import com.antsfamily.danskflashcards.ui.theme.Padding
@@ -60,14 +62,16 @@ fun CurrentUserCard(
                 }
                 Text(
                     modifier = Modifier.padding(top = Padding.small),
-                    text = "My result",
+                    text = stringResource(R.string.home_current_user_card_my_result),
                     color = wistful_700,
                     fontSize = FontSize.Body2,
                     textAlign = TextAlign.Center,
                 )
             }
             VerticalDivider(
-                modifier = Modifier.width(1.dp).padding(vertical = Padding.small),
+                modifier = Modifier
+                    .width(1.dp)
+                    .padding(vertical = Padding.small),
                 color = wistful_300
             )
             Column(
@@ -87,7 +91,7 @@ fun CurrentUserCard(
                 }
                 Text(
                     modifier = Modifier.padding(top = Padding.small),
-                    text = "place",
+                    text = stringResource(R.string.home_current_user_card_place),
                     color = wistful_700,
                     fontSize = FontSize.Body2,
                     textAlign = TextAlign.Center,
