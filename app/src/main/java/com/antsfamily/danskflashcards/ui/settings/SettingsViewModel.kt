@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.antsfamily.danskflashcards.core.model.Avatar
 import com.antsfamily.danskflashcards.core.model.mapToErrorType
+import com.antsfamily.danskflashcards.core.navigation.NAVIGATION_ANIMATION_DURATION
 import com.antsfamily.danskflashcards.domain.usecase.GetAppVersionUseCase
 import com.antsfamily.danskflashcards.domain.usecase.GetLearningLanguageUseCase
 import com.antsfamily.danskflashcards.domain.usecase.GetLoggedInUserUseCase
@@ -15,6 +16,7 @@ import com.antsfamily.danskflashcards.domain.usecase.SignOutWithGoogleUseCase
 import com.antsfamily.danskflashcards.domain.model.LanguageType
 import com.antsfamily.danskflashcards.ui.onboarding.model.LanguageItem
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -140,6 +142,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     private fun getUserData() = viewModelScope.launch {
+        delay(NAVIGATION_ANIMATION_DURATION.toLong())
         val user = getLoggedInUserUseCase()
         user?.let {
             userId = it.id

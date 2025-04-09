@@ -17,6 +17,7 @@
     <string name="home_title_welcome_back">Welcome back,\n%1$s</string>
     <string name="home_leaderboard_title">Leaderboard</string>
     <string name="home_leaderboard_is_empty">Leaderboard is empty</string>
+    <string name="home_leaderboard_button_text">Show all</string>
 
     <string name="error_text_network">No internet connection.\nPlease check your connection</string>
     <string name="error_text_server">Seems it\'s a problem on our side.\nPlease try later</string>
@@ -66,5 +67,6 @@
     <string name="quit_game_dialog_subtitle">We\'ll miss you! Progress will be lost.</string>
     <string name="quit_game_dialog_button_exit">Exit</string>
     <string name="quit_game_dialog_button_stay">Not Yet</string>
+    <string name="leaderboard_title">Leaderboard</string>
 
 </resources>
