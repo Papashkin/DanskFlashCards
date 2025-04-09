@@ -56,15 +56,17 @@ fun HomeScreen(
         it.create(user = user)
     },
     navigateToGame: (Int) -> Unit,
-    navigateToSettings: () -> Unit
+    navigateToSettings: () -> Unit,
+    navigateToLeaderboard: () -> Unit
 ) {
     val state = viewModel.state.collectAsState()
     when (val stateValue = state.value) {
         is HomeUiState.Loading -> FullScreenLoading()
         is HomeUiState.Content -> HomeScreenContent(
             content = stateValue,
-            onStartClick = viewModel::onStartClick,
-            onSettingsClick = { navigateToSettings() }
+            onStartClick = { viewModel.onStartClick() },
+            onSettingsClick = { navigateToSettings() },
+            onLeaderboardShowAllClick = { navigateToLeaderboard() }
         )
 
         is HomeUiState.Error -> {
@@ -86,6 +88,7 @@ fun HomeScreenContent(
     content: HomeUiState.Content,
     onStartClick: () -> Unit,
     onSettingsClick: () -> Unit,
+    onLeaderboardShowAllClick: () -> Unit,
 ) {
     SetSystemBarColors(wistful_700, true)
 
@@ -142,8 +145,10 @@ fun HomeScreenContent(
                     place = content.userPlace
                 )
             }
-            Spacer(modifier = Modifier.height(24.dp))
-            LeaderboardView(items = content.leaderboard)
+            Spacer(modifier = Modifier.height(48.dp))
+            LeaderboardView(items = content.leaderboard) {
+                onLeaderboardShowAllClick()
+            }
             Spacer(modifier = Modifier
                 .height(24.dp)
                 .weight(1f))
@@ -184,7 +189,7 @@ fun HomeScreenContentPreview1() {
             ),
             leaderboard = emptyList(),
             userPlace = null
-        ), {}, {}
+        ), {}, {}, {}
     )
 }
 
@@ -203,22 +208,22 @@ fun HomeScreenContentPreview2() {
             ),
             leaderboard = listOf(
                 LeaderItem(
-                    name = "John", surname = "Doe", score = 44, index = 0, isUser = false
+                    username = "JohnDoe", score = 44, index = 0, isUser = false, avatar = Avatar.ARAGOG
                 ),
                 LeaderItem(
-                    name = "Paolo", surname = "Scoba", score = 32, index = 1, isUser = false
+                    username = "PaoloScoba", score = 32, index = 1, isUser = false, avatar = Avatar.ARAGOG
                 ),
                 LeaderItem(
-                    name = "Andrea", surname = "Corti", score = 29, index = 2, isUser = false
+                    username = "AndreaCorti", score = 29, index = 2, isUser = false, avatar = Avatar.ARAGOG
                 ),
                 LeaderItem(
-                    name = "Ethan", surname = "Caldwell", score = 29, index = 3, isUser = true
+                    username = "EthanCaldwell", score = 29, index = 3, isUser = true, avatar = Avatar.ARAGOG
                 ),
                 LeaderItem(
-                    name = "Isabella", surname = "Vaughn", score = 29, index = 4, isUser = false
+                    username = "IsabellaVaughn", score = 29, index = 4, isUser = false, avatar = Avatar.ARAGOG
                 ),
             ),
             userPlace = 3
-        ), {}, {}
+        ), {}, {}, {}
     )
 }

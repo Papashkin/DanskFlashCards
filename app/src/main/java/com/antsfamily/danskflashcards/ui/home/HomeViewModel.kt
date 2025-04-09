@@ -11,6 +11,7 @@ import com.antsfamily.danskflashcards.domain.model.UserDomain
 import com.antsfamily.danskflashcards.ui.home.model.LeaderItem
 import com.antsfamily.danskflashcards.ui.home.model.UserItem
 import com.antsfamily.danskflashcards.ui.home.model.toItem
+import com.antsfamily.danskflashcards.ui.home.model.toLeaderItem
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -37,7 +38,7 @@ class HomeViewModel @AssistedInject constructor(
     }
 
     companion object {
-        private const val LEADERBOARD_SIZE = 5
+        private const val LEADERBOARD_SIZE = 3
     }
 
     private var currentUser: UserItem? = null
@@ -98,17 +99,9 @@ class HomeViewModel @AssistedInject constructor(
     }
 
     private fun getLeaderboard(users: List<UserItem>): List<LeaderItem> {
-        val sortedUsers = users.sortedByDescending { it.score }
-        val leaderItems = sortedUsers
-            .mapIndexed { index, sortedUser ->
-                LeaderItem(
-                    name = sortedUser.name,
-                    surname = sortedUser.surname,
-                    index = index,
-                    score = sortedUser.score,
-                    isUser = sortedUser.isCurrentUser
-                )
-            }
+        val leaderItems = users
+            .sortedByDescending { it.score }
+            .mapIndexed { index, sortedUser -> sortedUser.toLeaderItem(index) }
         return leaderItems
     }
 

@@ -20,6 +20,7 @@ import com.antsfamily.danskflashcards.core.util.toModel
 import com.antsfamily.danskflashcards.ui.auth.AuthScreen
 import com.antsfamily.danskflashcards.ui.game.GameScreen
 import com.antsfamily.danskflashcards.ui.home.HomeScreen
+import com.antsfamily.danskflashcards.ui.leaderboard.LeaderboardScreen
 import com.antsfamily.danskflashcards.ui.onboarding.OnboardingScreen
 import com.antsfamily.danskflashcards.ui.onboarding2.Onboarding2Screen
 import com.antsfamily.danskflashcards.ui.settings.SettingsScreen
@@ -64,12 +65,12 @@ fun Navigator() {
                 composable<Onboarding1>(
                     enterTransition = {
                         slideIntoContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Left, tween(500)
+                            AnimatedContentTransitionScope.SlideDirection.Left, tween(NAVIGATION_ANIMATION_DURATION)
                         )
                     },
                     exitTransition = {
                         slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Left, tween(500)
+                            AnimatedContentTransitionScope.SlideDirection.Left, tween(NAVIGATION_ANIMATION_DURATION)
                         )
                     },
                 ) { entry ->
@@ -84,12 +85,12 @@ fun Navigator() {
                 composable<Onboarding2>(
                     enterTransition = {
                         slideIntoContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Left, tween(500)
+                            AnimatedContentTransitionScope.SlideDirection.Left, tween(NAVIGATION_ANIMATION_DURATION)
                         )
                     },
                     exitTransition = {
                         slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Left, tween(500)
+                            AnimatedContentTransitionScope.SlideDirection.Left, tween(NAVIGATION_ANIMATION_DURATION)
                         )
                     },
                 ) { entry ->
@@ -102,8 +103,8 @@ fun Navigator() {
                     }
                 }
                 composable<Home>(
-                    enterTransition = { scaleIn(tween(300)) },
-                    exitTransition = { scaleOut(tween(300)) },
+                    enterTransition = { scaleIn(tween(NAVIGATION_ANIMATION_DURATION)) },
+                    exitTransition = { scaleOut(tween(NAVIGATION_ANIMATION_DURATION)) },
                 ) { entry ->
                     BackHandler(true) {
                         //no-op
@@ -116,19 +117,20 @@ fun Navigator() {
                             navController.navigate(
                                 Game(id = data.id, name = data.name, score = score)
                             )
-                        }
+                        },
+                        navigateToLeaderboard = { navController.navigate(Leaderboard) }
                     )
                 }
 
                 composable<Settings>(
                     enterTransition = {
                         slideIntoContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Up, tween(500)
+                            AnimatedContentTransitionScope.SlideDirection.Up, tween(NAVIGATION_ANIMATION_DURATION)
                         )
                     },
                     exitTransition = {
                         slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Down, tween(500)
+                            AnimatedContentTransitionScope.SlideDirection.Down, tween(NAVIGATION_ANIMATION_DURATION)
                         )
                     },
                 ) {
@@ -140,12 +142,12 @@ fun Navigator() {
                 composable<Game>(
                     enterTransition = {
                         slideIntoContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Up, tween(500)
+                            AnimatedContentTransitionScope.SlideDirection.Up, tween(NAVIGATION_ANIMATION_DURATION)
                         )
                     },
                     exitTransition = {
                         slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Down, tween(500)
+                            AnimatedContentTransitionScope.SlideDirection.Down, tween(NAVIGATION_ANIMATION_DURATION)
                         )
                     },
                 ) { entry ->
@@ -158,6 +160,22 @@ fun Navigator() {
                         username = data.name,
                         score = data.score
                     ) {
+                        navController.popBackStack()
+                    }
+                }
+                composable<Leaderboard>(
+                    enterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Up, tween(NAVIGATION_ANIMATION_DURATION)
+                        )
+                    },
+                    exitTransition = {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Down, tween(NAVIGATION_ANIMATION_DURATION)
+                        )
+                    },
+                ) {
+                    LeaderboardScreen {
                         navController.popBackStack()
                     }
                 }
@@ -175,3 +193,5 @@ fun NavOptionsBuilder.popUpToTop(navController: NavController) {
 fun <T : Any> NavOptionsBuilder.popUpToRoute(route: T) {
     popUpTo(route) { inclusive = true }
 }
+
+const val NAVIGATION_ANIMATION_DURATION = 500
