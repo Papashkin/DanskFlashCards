@@ -10,6 +10,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavController
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.NavHost
@@ -25,10 +26,12 @@ import com.antsfamily.danskflashcards.ui.onboarding.OnboardingScreen
 import com.antsfamily.danskflashcards.ui.onboarding2.Onboarding2Screen
 import com.antsfamily.danskflashcards.ui.settings.SettingsScreen
 import com.antsfamily.danskflashcards.ui.splash.SplashScreen
+import kotlinx.coroutines.launch
 
 @Composable
 fun Navigator() {
     val navController = rememberNavController()
+    val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
@@ -134,7 +137,12 @@ fun Navigator() {
                 ) {
                     SettingsScreen(
                         onLogOut = { navController.navigate(Auth) { popUpToRoute(Splash) } },
-                        navigateBack = { navController.popBackStack() }
+                        navigateBack = { navController.popBackStack() },
+                        onErrorSnackbarShow = { errorMessage ->
+                            scope.launch {
+                                snackbarHostState.showSnackbar(errorMessage, withDismissAction = true)
+                            }
+                        }
                     )
                 }
                 composable<Game>(
