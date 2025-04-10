@@ -36,10 +36,9 @@ import com.antsfamily.danskflashcards.ui.theme.SetSystemBarColors
 @Composable
 fun GameScreen(
     userId: String,
-    username: String,
     score: Int,
     viewModel: GameViewModel = hiltViewModel<GameViewModel, GameViewModel.Factory> {
-        it.create(userId = userId, username = username, score = score)
+        it.create(userId = userId, score = score)
     },
     navigateBack: () -> Unit,
 ) {

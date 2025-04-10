@@ -7,9 +7,9 @@ class SetPersonalBestUseCase @Inject constructor(
     private val repository: DataRepository,
 ) {
 
-    suspend operator fun invoke(id: String, name: String, score: Int) {
+    suspend operator fun invoke(id: String, score: Int) {
         try {
-            return repository.updateUserScore(id, name, score)
+            return repository.updateUserScore(id, score)
         } catch (e: Exception) {
             throw e
         }

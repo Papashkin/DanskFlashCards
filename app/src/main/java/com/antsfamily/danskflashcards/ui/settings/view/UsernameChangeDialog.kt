@@ -43,6 +43,7 @@ import com.antsfamily.danskflashcards.ui.theme.wistful_100
 import com.antsfamily.danskflashcards.ui.theme.wistful_400
 import com.antsfamily.danskflashcards.ui.theme.wistful_900
 
+private const val USERNAME_LENGTH_LIMIT = 15
 @Composable
 fun UsernameChangeDialog(
     value: String,
@@ -67,7 +68,6 @@ fun UsernameChangeDialog(
             ) {
                 Box(
                     modifier = Modifier
-                        .size(80.dp)
                         .padding(Padding.large)
                         .background(
                             color = wistful_100,
@@ -89,9 +89,7 @@ fun UsernameChangeDialog(
                 )
 
                 TextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(60.dp),
+                    modifier = Modifier.fillMaxWidth(),
                     value = username,
                     textStyle = MaterialTheme.typography.bodyLarge,
                     onValueChange = {
@@ -100,7 +98,7 @@ fun UsernameChangeDialog(
                     label = {
                         Text(stringResource(R.string.username_change_label))
                     },
-                    isError = username.isBlank(),
+                    isError = username.isBlank() || username.length > USERNAME_LENGTH_LIMIT,
                     trailingIcon = {
                         Icon(
                             modifier = Modifier.clickable { setUsername("") },
@@ -123,6 +121,9 @@ fun UsernameChangeDialog(
                     ),
                     shape = RoundedCornerShape(16.dp),
                     singleLine = true,
+                    supportingText = {
+                        Text("${username.length}/$USERNAME_LENGTH_LIMIT")
+                    }
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -140,7 +141,7 @@ fun UsernameChangeDialog(
                     }
                     TextButton(
                         onClick = { onConfirmClick(username) },
-                        enabled = username.isNotBlank(),
+                        enabled = username.isNotBlank() && username.length <= USERNAME_LENGTH_LIMIT,
                         modifier = Modifier.padding(Padding.small),
                     ) {
                         Text(
@@ -158,5 +159,5 @@ fun UsernameChangeDialog(
 @Preview
 @Composable
 private fun UsernameChangeDialogPreview() {
-    UsernameChangeDialog("John Doe", {}, {})
+    UsernameChangeDialog("John long-name Doe", {}, {})
 }

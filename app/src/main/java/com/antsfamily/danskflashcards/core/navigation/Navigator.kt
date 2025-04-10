@@ -114,9 +114,7 @@ fun Navigator() {
                         user = data.toModel(),
                         navigateToSettings = { navController.navigate(Settings) },
                         navigateToGame = { score ->
-                            navController.navigate(
-                                Game(id = data.id, name = data.name, score = score)
-                            )
+                            navController.navigate(Game(id = data.id, score = score))
                         },
                         navigateToLeaderboard = { navController.navigate(Leaderboard) }
                     )
@@ -157,7 +155,6 @@ fun Navigator() {
                     val data = entry.toRoute<Game>()
                     GameScreen(
                         userId = data.id,
-                        username = data.name,
                         score = data.score
                     ) {
                         navController.popBackStack()

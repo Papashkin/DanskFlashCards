@@ -10,7 +10,7 @@ interface DataRepository {
     suspend fun getWebClientId(): String?
     suspend fun getUsers(): List<UserDomain>
     suspend fun getUsersFLow(): Flow<List<UserDomain>>
-    suspend fun updateUserScore(id: String, name: String, score: Int)
+    suspend fun updateUserScore(id: String, score: Int)
     suspend fun updateUserName(id: String, name: String)
     suspend fun updateUserAvatar(id: String, avatarId: Int)
     fun getAppVersion(): String?
