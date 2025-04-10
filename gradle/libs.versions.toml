@@ -21,14 +21,11 @@ googlePlayService = "21.2.0"
 googleId = "1.0.0"
 credentials = "1.3.0"
 gson = "2.11.0"
-firebaseBom = "33.10.0"
-firebaseAuth = "23.0.0"
-firebaseAnalytics = "22.0.0"
-firebaseDatabase = "21.0.0"
-firebaseFirestore = "25.0.0"
+firebaseBom = "33.12.0"
 googleServices = "4.4.1"
 serialization = "1.8.0"
 kotlinSerialization = "2.1.10"
+firebaseCrashlytics = "3.0.3"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
@@ -56,15 +53,16 @@ hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 lottie = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie" }
-firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuth" }
-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx", version.ref = "firebaseAnalytics" }
-firebase-database = { group = "com.google.firebase", name = "firebase-database-ktx", version.ref = "firebaseDatabase" }
-firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
+firebase-database = { group = "com.google.firebase", name = "firebase-database-ktx" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 google-play-service-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "googlePlayService" }
 googleId = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleId"}
 credentials = { group = "androidx.credentials", name = "credentials", version.ref = "credentials" }
-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 crypto = { group = "androidx.security", name = "security-crypto", version.ref = "androidxCrypto" }
 inAppUpdate = { group = "com.google.android.play", name = "app-update", version.ref = "googleAppUpdate" }
@@ -89,3 +87,4 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-serialization = {id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinSerialization" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+firebase-crashlytics = {id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlytics" }
