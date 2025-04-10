@@ -23,7 +23,7 @@ data class Onboarding2(val id: String, val name: String): Screen()
 data class Home(val id: String, val name: String): Screen()
 
 @Serializable
-data class Game(val id: String, val name: String, val score: Int): Screen()
+data class Game(val id: String, val score: Int): Screen()
 
 @Serializable
 data object Leaderboard: Screen()

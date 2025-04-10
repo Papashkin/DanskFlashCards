@@ -42,7 +42,6 @@ class GameViewModel @AssistedInject constructor(
     private val setPersonalBestUseCase: SetPersonalBestUseCase,
     private val timerFlow: CountdownTimerFlow,
     @Assisted("userId") private val userId: String,
-    @Assisted("username") private val username: String,
     @Assisted("score") private val score: Int,
 ) : ViewModel() {
 
@@ -50,7 +49,6 @@ class GameViewModel @AssistedInject constructor(
     interface Factory {
         fun create(
             @Assisted("userId") userId: String,
-            @Assisted("username") username: String,
             @Assisted("score") score: Int,
         ): GameViewModel
     }
@@ -427,7 +425,7 @@ class GameViewModel @AssistedInject constructor(
 
     private fun setPersonalBest(result: Int) = viewModelScope.launch(Dispatchers.IO) {
         try {
-            setPersonalBestUseCase(id = userId, name = username, score = result)
+            setPersonalBestUseCase(id = userId, score = result)
         } catch (e: Exception) {
             Log.e(this@GameViewModel::class.simpleName, e.message ?: e.toString())
         }

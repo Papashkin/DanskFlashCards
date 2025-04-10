@@ -43,11 +43,8 @@ class DataRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateUserScore(id: String, name: String, score: Int) {
-        val userData = hashMapOf<String, Any>(
-            FIELD_NAME to name,
-            FIELD_SCORE to score,
-        )
+    override suspend fun updateUserScore(id: String, score: Int) {
+        val userData = hashMapOf<String, Any>(FIELD_SCORE to score)
         return remoteSource.updateUser(id, userData)
     }
 
