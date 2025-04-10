@@ -3,6 +3,7 @@ package com.antsfamily.danskflashcards.ui.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.antsfamily.danskflashcards.core.model.Avatar
+import com.antsfamily.danskflashcards.core.model.ErrorType
 import com.antsfamily.danskflashcards.core.model.mapToErrorType
 import com.antsfamily.danskflashcards.core.navigation.NAVIGATION_ANIMATION_DURATION
 import com.antsfamily.danskflashcards.domain.usecase.GetAppVersionUseCase
@@ -54,6 +55,10 @@ class SettingsViewModel @Inject constructor(
     val navigateToAuthFlow: SharedFlow<Unit>
         get() = _navigateToAuthFlow.asSharedFlow()
 
+    private val _showErrorSnackbarFlow = MutableSharedFlow<ErrorType>()
+    val showErrorSnackbarFlow: SharedFlow<ErrorType>
+        get() = _showErrorSnackbarFlow.asSharedFlow()
+
     private val _state = MutableStateFlow<SettingsUiState>(SettingsUiState.Loading)
     val state: StateFlow<SettingsUiState>
         get() = _state.asStateFlow()
@@ -89,7 +94,7 @@ class SettingsViewModel @Inject constructor(
             )
             _state.value = newState
         } catch (e: Exception) {
-            handleErrorState(e)
+            handleErrorState(e, false)
         }
     }
 
@@ -103,7 +108,7 @@ class SettingsViewModel @Inject constructor(
             val newState = (_state.value as SettingsUiState.Content).copy(avatar = newAvatar)
             _state.value = newState
         } catch (e: Exception) {
-            handleErrorState(e)
+            handleErrorState(e, false)
         }
     }
 
@@ -174,7 +179,12 @@ class SettingsViewModel @Inject constructor(
         )
     }
 
-    private fun handleErrorState(e: Exception) {
-        _state.value = SettingsUiState.Error(e.mapToErrorType())
+    private suspend fun handleErrorState(e: Exception, isGeneralError: Boolean = true) {
+        val errorType = e.mapToErrorType()
+        if (isGeneralError) {
+            _state.value = SettingsUiState.Error(errorType)
+        } else {
+            _showErrorSnackbarFlow.emit(errorType)
+        }
     }
 }

@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -41,6 +42,7 @@ import com.antsfamily.danskflashcards.core.presentation.AvatarIcon
 import com.antsfamily.danskflashcards.core.presentation.ErrorViewWithRetry
 import com.antsfamily.danskflashcards.core.presentation.FullScreenLoading
 import com.antsfamily.danskflashcards.core.presentation.TopBar
+import com.antsfamily.danskflashcards.core.util.toErrorMessage
 import com.antsfamily.danskflashcards.core.util.toStringRes
 import com.antsfamily.danskflashcards.domain.model.LanguageType
 import com.antsfamily.danskflashcards.ui.onboarding.model.LanguageItem
@@ -60,6 +62,7 @@ import com.antsfamily.danskflashcards.ui.theme.grey_500
 fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel<SettingsViewModel>(),
     navigateBack: () -> Unit,
+    onErrorSnackbarShow: (String) -> Unit,
     onLogOut: () -> Unit,
 ) {
     SetSystemBarColors(MaterialTheme.colorScheme.background, false)
@@ -72,6 +75,7 @@ fun SettingsScreen(
     val (languages, setLanguages) = remember { mutableStateOf<List<LanguageItem>>(emptyList()) }
 
     val state = viewModel.state.collectAsState()
+    val context = LocalContext.current
 
     when (val stateValue = state.value) {
         is SettingsUiState.Content -> SettingsContent(
@@ -96,7 +100,6 @@ fun SettingsScreen(
             onLogOut()
         }
     }
-
     LaunchedEffect(Unit) {
         viewModel.showLearningLanguageBottomSheetFlow.collect {
             setLanguages(it)
@@ -112,6 +115,11 @@ fun SettingsScreen(
     LaunchedEffect(Unit) {
         viewModel.showAvatarChangeDialogFlow.collect {
             setIsAvatarChangeDialogVisible(true)
+        }
+    }
+    LaunchedEffect(Unit) {
+        viewModel.showErrorSnackbarFlow.collect {
+            onErrorSnackbarShow(context.getString(it.toErrorMessage()))
         }
     }
 
