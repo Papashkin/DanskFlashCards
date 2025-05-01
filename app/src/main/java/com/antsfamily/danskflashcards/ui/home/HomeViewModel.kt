@@ -3,13 +3,13 @@ package com.antsfamily.danskflashcards.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.antsfamily.danskflashcards.core.model.CurrentUserItem
+import com.antsfamily.danskflashcards.core.model.UserItem
 import com.antsfamily.danskflashcards.core.model.mapToErrorType
+import com.antsfamily.danskflashcards.core.model.toItem
 import com.antsfamily.danskflashcards.core.util.orZero
+import com.antsfamily.danskflashcards.domain.model.UserDomain
 import com.antsfamily.danskflashcards.domain.usecase.GetUsersUseCase
 import com.antsfamily.danskflashcards.domain.usecase.UserUpdateFLowUseCase
-import com.antsfamily.danskflashcards.domain.model.UserDomain
-import com.antsfamily.danskflashcards.core.model.UserItem
-import com.antsfamily.danskflashcards.core.model.toItem
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
