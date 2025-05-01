@@ -32,11 +32,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.antsfamily.danskflashcards.R
 import com.antsfamily.danskflashcards.core.model.Avatar
 import com.antsfamily.danskflashcards.core.model.CurrentUserItem
+import com.antsfamily.danskflashcards.core.model.UserItem
 import com.antsfamily.danskflashcards.core.presentation.AvatarIcon
 import com.antsfamily.danskflashcards.core.presentation.ErrorViewWithRetry
 import com.antsfamily.danskflashcards.core.presentation.FullScreenLoading
 import com.antsfamily.danskflashcards.core.presentation.TopBar
-import com.antsfamily.danskflashcards.core.model.UserItem
 import com.antsfamily.danskflashcards.ui.home.view.CurrentUserCard
 import com.antsfamily.danskflashcards.ui.home.view.HomeTitle
 import com.antsfamily.danskflashcards.ui.home.view.LeaderboardView
