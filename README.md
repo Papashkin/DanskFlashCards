@@ -1,8 +1,5 @@
-Boost your Danish language skills with our latest update! Now you can enjoy:
+If you learn English, Danish, Russian or German, try to boost it with this app!
 
-* Improved word pair matching for a smoother experience
-* Enhanced scoring system to challenge yourself even more
-* Fresh new word sets to expand your vocabulary
-* Optimized performance for a faster and more fun game
+Match words from two of mentioned languages with each other, beat the 2-minute timer, and rack up points! 🏆
 
-Match English and Danish words, beat the 2-minute timer, and rack up points! 🏆
+[Google Play link](https://play.google.com/store/apps/details?id=com.antsfamily.danskflashcards)
