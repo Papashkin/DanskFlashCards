@@ -1,8 +1,10 @@
 package com.antsfamily.danskflashcards.domain.usecase
 
-import com.antsfamily.danskflashcards.domain.repository.DataRepository
 import com.antsfamily.danskflashcards.domain.model.SpecificLanguageWordDomain
 import com.antsfamily.danskflashcards.domain.model.toSpecificLanguage
+import com.antsfamily.danskflashcards.domain.repository.DataRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class GetWordsUseCase @Inject constructor(
@@ -11,8 +13,8 @@ class GetWordsUseCase @Inject constructor(
     private val repository: DataRepository
 ) {
 
-    suspend operator fun invoke(): Pair<List<SpecificLanguageWordDomain>, List<SpecificLanguageWordDomain>> {
-        try {
+    suspend operator fun invoke(): Pair<List<SpecificLanguageWordDomain>, List<SpecificLanguageWordDomain>> =
+        withContext(Dispatchers.IO) {
             val learningLanguage = getLearningLanguageUseCase()
             val primaryLanguage = getPrimaryLanguageUseCase()
             val allWords = repository.getWords()
@@ -20,9 +22,6 @@ class GetWordsUseCase @Inject constructor(
             val learningWords = allWords.mapNotNull { it.toSpecificLanguage(learningLanguage) }
             val primaryWords = allWords.mapNotNull { it.toSpecificLanguage(primaryLanguage) }
 
-            return learningWords to primaryWords
-        } catch (e: Exception) {
-            throw e
+            learningWords to primaryWords
         }
-    }
 }

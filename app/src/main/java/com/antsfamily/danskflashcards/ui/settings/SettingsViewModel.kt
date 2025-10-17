@@ -6,15 +6,13 @@ import com.antsfamily.danskflashcards.core.model.Avatar
 import com.antsfamily.danskflashcards.core.model.ErrorType
 import com.antsfamily.danskflashcards.core.model.mapToErrorType
 import com.antsfamily.danskflashcards.core.navigation.NAVIGATION_ANIMATION_DURATION
-import com.antsfamily.danskflashcards.domain.usecase.GetAppVersionUseCase
-import com.antsfamily.danskflashcards.domain.usecase.GetLearningLanguageUseCase
-import com.antsfamily.danskflashcards.domain.usecase.GetLoggedInUserUseCase
-import com.antsfamily.danskflashcards.domain.usecase.GetPrimaryLanguageUseCase
+import com.antsfamily.danskflashcards.domain.model.LanguageType
+import com.antsfamily.danskflashcards.domain.model.Settings
+import com.antsfamily.danskflashcards.domain.usecase.GetSettingsUseCase
 import com.antsfamily.danskflashcards.domain.usecase.SetLanguageUseCase
 import com.antsfamily.danskflashcards.domain.usecase.SetUserAvatarUseCase
 import com.antsfamily.danskflashcards.domain.usecase.SetUsernameUseCase
 import com.antsfamily.danskflashcards.domain.usecase.SignOutWithGoogleUseCase
-import com.antsfamily.danskflashcards.domain.model.LanguageType
 import com.antsfamily.danskflashcards.ui.onboarding.model.LanguageItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -29,10 +27,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val getLoggedInUserUseCase: GetLoggedInUserUseCase,
-    private val getAppVersionUseCase: GetAppVersionUseCase,
-    private val getLearningLanguageUseCase: GetLearningLanguageUseCase,
-    private val getPrimaryLanguageUseCase: GetPrimaryLanguageUseCase,
+    private val getSettingsUseCase: GetSettingsUseCase,
     private val setLanguageUseCase: SetLanguageUseCase,
     private val setUsernameUseCase: SetUsernameUseCase,
     private val signOutWithGoogleUseCase: SignOutWithGoogleUseCase,
@@ -67,12 +62,34 @@ class SettingsViewModel @Inject constructor(
     private lateinit var userAvatar: Avatar
 
     init {
-        getUserData()
+        getSettings()
     }
 
     fun onRetryClick() {
         _state.value = SettingsUiState.Loading
-        getUserData()
+        getSettings()
+    }
+
+    private fun getSettings() = viewModelScope.launch {
+        try {
+            delay(NAVIGATION_ANIMATION_DURATION.toLong())
+            val settings = getSettingsUseCase()
+            handleSettingsSuccessResult(settings)
+        } catch (e: Exception) {
+            handleErrorState(e)
+        }
+    }
+
+    private fun handleSettingsSuccessResult(settings: Settings) {
+        userId = settings.userId
+        userAvatar = settings.avatarId?.let { id -> Avatar.entries[id] } ?: Avatar.DEFAULT
+        _state.value = SettingsUiState.Content(
+            username = settings.username,
+            learningLanguage = settings.learningLanguage,
+            primaryLanguage = settings.primaryLanguage,
+            appVersion = settings.appVersion,
+            avatar = userAvatar
+        )
     }
 
     fun onLogOutConfirm() = viewModelScope.launch {
@@ -89,9 +106,7 @@ class SettingsViewModel @Inject constructor(
     fun onUsernameChanged(username: String) = viewModelScope.launch {
         try {
             setUsernameUseCase(userId, username.trim())
-            val newState = (_state.value as SettingsUiState.Content).copy(
-                username = username
-            )
+            val newState = (_state.value as SettingsUiState.Content).copy(username = username)
             _state.value = newState
         } catch (e: Exception) {
             handleErrorState(e, false)
@@ -144,39 +159,6 @@ class SettingsViewModel @Inject constructor(
             primaryLanguage = if (isPrimary) item.languageType else content.primaryLanguage
         )
         _state.value = newContent
-    }
-
-    private fun getUserData() = viewModelScope.launch {
-        delay(NAVIGATION_ANIMATION_DURATION.toLong())
-        val user = getLoggedInUserUseCase()
-        user?.let {
-            userId = it.id
-            userAvatar = it.avatarId?.let { id -> Avatar.entries[id] } ?: Avatar.DEFAULT
-            getAppVersion(it.username)
-        } ?: run {
-            handleErrorState(Exception("user data is empty"))
-        }
-    }
-
-    private suspend fun getAppVersion(username: String) {
-        val version = getAppVersionUseCase()
-        version?.let {
-            getLanguages(username, it)
-        } ?: run {
-            handleErrorState(Exception("user data is empty"))
-        }
-    }
-
-    private suspend fun getLanguages(username: String, version: String) {
-        val primaryLanguage = getPrimaryLanguageUseCase()
-        val learningLanguage = getLearningLanguageUseCase()
-        _state.value = SettingsUiState.Content(
-            username = username,
-            learningLanguage = learningLanguage,
-            primaryLanguage = primaryLanguage,
-            appVersion = version,
-            avatar = userAvatar
-        )
     }
 
     private suspend fun handleErrorState(e: Exception, isGeneralError: Boolean = true) {
