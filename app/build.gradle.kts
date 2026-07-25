@@ -22,12 +22,12 @@ fun versionCode(): Int {
 
 android {
     namespace = "com.antsfamily.danskflashcards"
-    compileSdk = 35
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.antsfamily.danskflashcards"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 37
         versionCode = versionCode()
         versionName = "1.3.1"
 
