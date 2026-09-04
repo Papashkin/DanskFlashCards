@@ -386,6 +386,9 @@ class GameViewModel @AssistedInject constructor(
         guessingItems = guessingItems.map { item ->
             if (item.id in currentPackIds) item.copy(isGuessed = true) else item
         }
+        if (guessingItems.none { !it.isGuessed }) {
+            guessingItems = guessingItems.map { it.copy(isGuessed = false) }
+        }
         triggerTimeUpAnimation()
         showPackOfWords(GUESSED_ADDITIONAL_TIME)
     }
